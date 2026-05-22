@@ -321,9 +321,17 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
   letter-spacing: 0.02em;
 }
 
+/* ── No-sidebar layout (homepage etc.) ── */
+.no-sidebar .content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 4rem 4rem;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .content { padding: 1.5rem; }
+  .no-sidebar .content { padding: 1.5rem; }
   .content h1 { font-size: 1.8rem; }
 }
