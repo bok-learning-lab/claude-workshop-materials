@@ -1,0 +1,278 @@
+/* =========================================================================
+   Unit Square Pigeonhole Visualizer (W34) — embeddable widget
+   All rules are scoped under .usq-widget. Multiple instances on one page
+   coexist because state lives in JS closures and DOM refs are scoped
+   per-mount via root.querySelector.
+   ========================================================================= */
+
+.usq-widget,
+.usq-widget *,
+.usq-widget *::before,
+.usq-widget *::after {
+  box-sizing: border-box;
+}
+
+.usq-widget {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #f7f7f5;
+  color: #222;
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.usq-widget h1.usq-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+}
+
+.usq-widget .usq-math { font-style: italic; font-family: 'Cambria Math', Cambria, Georgia, serif; }
+
+/* ── Statement / hint ─────────────────────────────────────────────────── */
+.usq-widget .usq-statement {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 12px 18px;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.usq-widget .usq-statement p { margin: 0.4em 0; }
+.usq-widget .usq-statement p:first-child { margin-top: 0; }
+.usq-widget .usq-statement p:last-child { margin-bottom: 0; }
+
+.usq-widget .usq-hint {
+  font-size: 0.88rem;
+  color: #555;
+  background: #f3efe2;
+  border-left: 3px solid #c8a648;
+  padding: 8px 12px;
+  border-radius: 0 3px 3px 0;
+  margin-bottom: 14px;
+}
+.usq-widget .usq-hint p { margin: 0.2em 0; font-style: italic; }
+
+/* ── Two-column layout for visualization + dropdown panel ─────────────── */
+.usq-widget .usq-body {
+  display: grid;
+  grid-template-columns: minmax(380px, 420px) minmax(0, 1fr);
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+/* ── Responsive: stack viz + mapper panels on narrow widgets ──────────
+   Two trigger paths:
+     (a) viewport media query — fires on actual mobile devices
+     (b) .usq-narrow class — set by a ResizeObserver in
+         unit-square-pigeonhole.js based on the widget root's own width,
+         so the layout adapts even when the widget is embedded in a
+         narrow column on a wide-viewport desktop (e.g. LXP content
+         column).
+   ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .usq-widget .usq-body {
+    grid-template-columns: 1fr;
+  }
+}
+.usq-widget.usq-narrow .usq-body {
+  grid-template-columns: 1fr;
+}
+
+.usq-widget .usq-panel {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 14px 16px 16px 16px;
+}
+
+.usq-widget .usq-panel-title {
+  font-size: 0.93rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #444;
+  text-transform: uppercase;
+  margin: 0 0 10px 0;
+}
+
+/* ── Visualization panel ──────────────────────────────────────────────── */
+.usq-widget .usq-viz-svg {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  margin: 0 auto;
+  background: #fafaf6;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: crosshair;
+}
+
+.usq-widget .usq-viz-svg .usq-square-outline {
+  stroke: #333;
+  stroke-width: 2;
+  fill: #fff;
+}
+
+.usq-widget .usq-viz-svg .usq-grid-line {
+  stroke: #6699cc;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.usq-widget .usq-viz-svg .usq-region-shade {
+  fill: #fff7e0;
+  stroke: none;
+}
+
+.usq-widget .usq-viz-svg .usq-point {
+  fill: #344b6b;
+  stroke: #fff;
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: r 80ms ease;
+}
+.usq-widget .usq-viz-svg .usq-point:hover {
+  fill: #c87474;
+}
+
+.usq-widget .usq-viz-svg .usq-pair-line {
+  stroke: #b08a3a;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.usq-widget .usq-viz-svg .usq-pair-label {
+  font-family: 'Cambria Math', Cambria, Georgia, serif;
+  font-style: italic;
+  font-size: 11px;
+  fill: #6e5520;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+/* ── Mapper panel (4 dropdowns) ──────────────────────────────────────── */
+.usq-widget .usq-component {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.usq-widget .usq-component:last-child { margin-bottom: 4px; }
+
+.usq-widget .usq-component-label {
+  font-size: 0.93rem;
+  font-weight: bold;
+  color: #333;
+}
+.usq-widget .usq-component-prompt {
+  font-size: 0.84rem;
+  color: #666;
+  font-style: italic;
+}
+
+.usq-widget .usq-select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.usq-widget select.usq-select {
+  font-family: inherit;
+  font-size: 0.92rem;
+  padding: 7px 10px;
+  border: 1px solid #888;
+  background: #fafaf6;
+  border-radius: 3px;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #222;
+  cursor: pointer;
+}
+.usq-widget select.usq-select:focus {
+  outline: 2px solid #6699cc;
+  outline-offset: 1px;
+}
+
+.usq-widget .usq-marker {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  visibility: hidden;
+}
+.usq-widget .usq-marker.usq-marker-ok { background: #6aa86a; color: #fff; visibility: visible; }
+.usq-widget .usq-marker.usq-marker-bad { background: #c87474; color: #fff; visibility: visible; }
+
+.usq-widget .usq-component-feedback {
+  margin-top: 6px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  border-left: 2px solid #888;
+  border-radius: 0 3px 3px 0;
+  display: none;
+}
+.usq-widget .usq-component-feedback.usq-feedback-ok {
+  display: block; background: #f1faf1; border-left-color: #6aa86a; color: #2e5e2e; font-style: italic;
+}
+.usq-widget .usq-component-feedback.usq-feedback-bad {
+  display: block; background: #fdf2f2; border-left-color: #c87474; color: #884444; font-style: italic;
+}
+.usq-widget .usq-component.usq-component-bad select.usq-select { border-color: #c87474; background: #fdf2f2; }
+.usq-widget .usq-component.usq-component-ok select.usq-select { border-color: #6aa86a; background: #f4faf4; }
+
+/* ── Success banner ──────────────────────────────────────────────────── */
+.usq-widget .usq-success-banner {
+  background: #eaf5ea;
+  border: 1px solid #6aa86a;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: #1f4d1f;
+  display: none;
+}
+.usq-widget .usq-success-banner.usq-visible { display: block; }
+.usq-widget .usq-success-banner strong { color: #1f4d1f; }
+.usq-widget .usq-success-banner p { margin: 0.3em 0; }
+.usq-widget .usq-success-banner p:first-child { margin-top: 0; }
+.usq-widget .usq-success-banner p:last-child { margin-bottom: 0; }
+
+/* ── Controls ──────────────────────────────────────────────────────── */
+.usq-widget .usq-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.usq-widget .usq-btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border: 1px solid #888;
+  background: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.usq-widget .usq-btn:hover { background: #f0f0e8; border-color: #555; }
+.usq-widget .usq-btn-primary { background: #344b6b; color: #fff; border-color: #344b6b; }
+.usq-widget .usq-btn-primary:hover { background: #25395a; border-color: #25395a; }
+
+.usq-widget .usq-status-line {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  min-height: 1.2em;
+}
+.usq-widget .usq-status-line.usq-status-error { color: #884444; }

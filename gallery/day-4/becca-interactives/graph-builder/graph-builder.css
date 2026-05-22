@@ -1,0 +1,555 @@
+/* =========================================================================
+   Graph Builder (W6) — embeddable widget
+   All rules scoped under .gb-widget so styles do not leak to the host page
+   and are not affected by host styles. Multiple instances on the same page
+   coexist because state lives in JS closures and DOM refs are scoped
+   per-mount via root.querySelector.
+
+   Aesthetic preserved from the original Interactives/graph-builder.html
+   single-file widget — "field notebook" feel with linen background, ruled
+   lines, sepia/rose/copper/violet/green palette. CSS variables are defined
+   on .gb-widget so each instance has its own scope.
+   ========================================================================= */
+
+.gb-widget,
+.gb-widget *,
+.gb-widget *::before,
+.gb-widget *::after {
+  box-sizing: border-box;
+}
+
+.gb-widget {
+  /* Palette and typography variables, scoped to this widget. */
+  --gb-linen: #f4ede4;
+  --gb-linen-dark: #e8ddd0;
+  --gb-linen-darker: #d4c5b0;
+  --gb-ink: #1a1612;
+  --gb-ink-light: #3d342a;
+  --gb-ink-faint: rgba(26, 22, 18, 0.12);
+  --gb-ink-ghost: rgba(26, 22, 18, 0.06);
+  --gb-green: #2d5a27;
+  --gb-green-dim: rgba(45, 90, 39, 0.15);
+  --gb-rose: #c4506e;
+  --gb-rose-light: #d4708a;
+  --gb-rose-dim: rgba(196, 80, 110, 0.15);
+  --gb-copper: #3a7d6e;
+  --gb-copper-dim: rgba(58, 125, 110, 0.15);
+  --gb-sepia: #8b6914;
+  --gb-sepia-dim: rgba(139, 105, 20, 0.15);
+  --gb-violet: #7b4daa;
+  --gb-violet-dim: rgba(155, 77, 202, 0.15);
+  --gb-font-display: 'Playfair Display', Georgia, serif;
+  --gb-font-body: 'Crimson Pro', 'Times New Roman', serif;
+  --gb-font-mono: 'Fira Code', monospace;
+  --gb-radius: 3px;
+  --gb-transition: 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  height: 640px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--gb-linen);
+  color: var(--gb-ink);
+  font-family: var(--gb-font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  border: 1px solid var(--gb-ink-faint);
+  border-radius: var(--gb-radius);
+  overflow: hidden;
+  position: relative; /* anchor for absolutely-positioned label input */
+  outline: none;
+}
+
+/* Outer title and intro can sit above the widget — host pages can place a
+   <h1> and intro in their own markup. The widget is the boxed app below. */
+
+/* ── Animations ─────────────────────────────────────────────────────── */
+@keyframes gb-fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes gb-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.gb-widget .gb-stagger-1 { animation: gb-fadeInUp 0.5s ease 0.05s both; }
+.gb-widget .gb-stagger-2 { animation: gb-fadeInUp 0.5s ease 0.1s both; }
+.gb-widget .gb-stagger-3 { animation: gb-fadeInUp 0.5s ease 0.15s both; }
+.gb-widget .gb-stagger-4 { animation: gb-fadeInUp 0.5s ease 0.2s both; }
+.gb-widget .gb-stagger-5 { animation: gb-fadeInUp 0.5s ease 0.25s both; }
+.gb-widget .gb-stagger-6 { animation: gb-fadeInUp 0.5s ease 0.3s both; }
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.gb-widget .gb-header {
+  background: var(--gb-ink);
+  color: var(--gb-linen);
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 8px;
+  gap: 18px;
+  z-index: 100;
+  border-bottom: 3px double var(--gb-sepia);
+  flex: 0 0 auto;
+  animation: gb-fadeIn 0.4s ease both;
+}
+
+.gb-widget .gb-header h2 {
+  font-family: var(--gb-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin: 0;
+}
+.gb-widget .gb-header h2 .gb-subtitle {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 10px;
+  letter-spacing: 0.04em;
+}
+
+.gb-widget .gb-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.gb-widget .gb-tool-btn {
+  font-family: var(--gb-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--gb-linen-dark);
+  border: 1px solid rgba(244, 237, 228, 0.2);
+  border-radius: var(--gb-radius);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all var(--gb-transition);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.gb-widget .gb-tool-btn:hover {
+  background: rgba(244, 237, 228, 0.1);
+  border-color: rgba(244, 237, 228, 0.4);
+  color: var(--gb-linen);
+}
+.gb-widget .gb-tool-btn.gb-active {
+  background: var(--gb-green);
+  border-color: var(--gb-green);
+  color: var(--gb-linen);
+}
+.gb-widget .gb-tool-btn.gb-danger {
+  border-color: rgba(196, 80, 110, 0.4);
+  color: var(--gb-rose-light);
+}
+.gb-widget .gb-tool-btn.gb-danger:hover {
+  background: var(--gb-rose);
+  border-color: var(--gb-rose);
+  color: var(--gb-linen);
+}
+.gb-widget .gb-tool-btn .gb-key-hint {
+  font-family: var(--gb-font-mono);
+  font-size: 10px;
+  opacity: 0.5;
+  margin-left: 4px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 0 3px;
+  vertical-align: 1px;
+}
+.gb-widget .gb-tool-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(244, 237, 228, 0.15);
+  margin: 0 4px;
+}
+
+/* ── Main area: canvas | sidebar ───────────────────────────────────── */
+.gb-widget .gb-main {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.gb-widget .gb-canvas-container {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 29px,
+      var(--gb-ink-ghost) 29px, var(--gb-ink-ghost) 30px),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 29px,
+      var(--gb-ink-ghost) 29px, var(--gb-ink-ghost) 30px),
+    radial-gradient(ellipse at 20% 50%, rgba(45, 90, 39, 0.03), transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(196, 80, 110, 0.02), transparent 50%),
+    var(--gb-linen);
+  animation: gb-fadeIn 0.6s ease 0.15s both;
+}
+
+.gb-widget .gb-canvas-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(139, 105, 20, 0.04), transparent 40%),
+    radial-gradient(circle at 75% 65%, rgba(58, 125, 110, 0.03), transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(139, 105, 20, 0.03), transparent 30%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gb-widget .gb-canvas-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 48px;
+  width: 1px;
+  background: var(--gb-rose-dim);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gb-widget .gb-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.gb-widget .gb-canvas-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--gb-font-body);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--gb-ink-light);
+  opacity: 0.5;
+  z-index: 3;
+  pointer-events: none;
+  transition: opacity var(--gb-transition);
+  text-align: center;
+}
+.gb-widget .gb-canvas-hint.gb-hidden { opacity: 0; }
+
+.gb-widget .gb-mode-indicator {
+  position: absolute;
+  top: 12px;
+  left: 60px;
+  font-family: var(--gb-font-display);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gb-green);
+  z-index: 3;
+  padding: 4px 10px;
+  border: 1px solid var(--gb-green-dim);
+  border-radius: var(--gb-radius);
+  background: rgba(244, 237, 228, 0.9);
+}
+.gb-widget .gb-mode-indicator.gb-edge-mode {
+  color: var(--gb-copper);
+  border-color: var(--gb-copper-dim);
+}
+.gb-widget .gb-mode-indicator.gb-delete-mode {
+  color: var(--gb-rose);
+  border-color: var(--gb-rose-dim);
+}
+.gb-widget .gb-mode-indicator.gb-label-mode {
+  color: var(--gb-sepia);
+  border-color: var(--gb-sepia-dim);
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────── */
+.gb-widget .gb-sidebar {
+  width: 300px;
+  min-width: 300px;
+  border-left: 2px solid var(--gb-ink-faint);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 27px,
+      rgba(26, 22, 18, 0.06) 27px, rgba(26, 22, 18, 0.06) 28px),
+    linear-gradient(135deg, #f4ede4, #f0e8dc);
+}
+
+.gb-widget .gb-sidebar-header {
+  padding: 14px 18px 10px;
+  border-bottom: 2px solid var(--gb-ink-faint);
+  background: rgba(26, 22, 18, 0.03);
+  flex: 0 0 auto;
+}
+.gb-widget .gb-sidebar-header h3 {
+  font-family: var(--gb-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--gb-ink);
+  margin: 0;
+}
+.gb-widget .gb-specimen-count {
+  font-family: var(--gb-font-mono);
+  font-size: 11px;
+  color: var(--gb-ink-light);
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+.gb-widget .gb-prop-section {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--gb-ink-ghost);
+  transition: background var(--gb-transition);
+}
+.gb-widget .gb-prop-section:hover { background: rgba(26, 22, 18, 0.02); }
+
+.gb-widget .gb-prop-section-title {
+  font-family: var(--gb-font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gb-green);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gb-widget .gb-prop-section-title .gb-section-marker {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  flex-shrink: 0;
+}
+
+.gb-widget .gb-prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 0;
+  margin-left: 16px;
+}
+.gb-widget .gb-prop-label {
+  font-family: var(--gb-font-body);
+  font-size: 13px;
+  color: var(--gb-ink-light);
+}
+.gb-widget .gb-prop-value {
+  font-family: var(--gb-font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--gb-ink);
+  text-align: right;
+}
+.gb-widget .gb-prop-value.gb-yes { color: var(--gb-green); }
+.gb-widget .gb-prop-value.gb-no { color: var(--gb-rose); }
+.gb-widget .gb-prop-value.gb-info { color: var(--gb-copper); }
+
+.gb-widget .gb-prop-tooltip {
+  font-family: var(--gb-font-body);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--gb-ink-light);
+  opacity: 0.6;
+  margin: 4px 0 2px 16px;
+  line-height: 1.4;
+}
+
+.gb-widget .gb-degree-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.gb-widget .gb-degree-badge {
+  font-family: var(--gb-font-mono);
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--gb-green-dim);
+  color: var(--gb-green);
+  border: 1px solid rgba(45, 90, 39, 0.2);
+  white-space: nowrap;
+}
+
+/* ── Tree-property lights (Phase 3) ─────────────────────────────────── */
+.gb-widget .gb-prop-lights {
+  margin: 6px 0 4px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.gb-widget .gb-light-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.gb-widget .gb-light-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #ddd;
+  flex-shrink: 0;
+  align-self: center;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.gb-widget .gb-light-dot.gb-light-on {
+  background: #6aa86a;
+  border-color: #2d5a27;
+  box-shadow: 0 0 0 2px rgba(106, 168, 106, 0.2);
+}
+.gb-widget .gb-light-dot.gb-light-off {
+  background: #d4708a;
+  border-color: #c4506e;
+}
+.gb-widget .gb-light-label {
+  font-family: var(--gb-font-body);
+  color: var(--gb-ink-light);
+  flex: 1 1 auto;
+}
+.gb-widget .gb-light-value {
+  font-family: var(--gb-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-align: right;
+}
+.gb-widget .gb-light-value.gb-yes { color: var(--gb-green); }
+.gb-widget .gb-light-value.gb-no { color: var(--gb-rose); }
+
+.gb-widget .gb-color-legend {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.gb-widget .gb-color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--gb-font-mono);
+  font-size: 11px;
+  color: var(--gb-ink-light);
+}
+.gb-widget .gb-color-swatch .gb-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(26, 22, 18, 0.2);
+}
+
+/* ── Node label input (positioned within canvas-container) ─────────── */
+.gb-widget .gb-node-label-input {
+  position: absolute;
+  z-index: 1000;
+  font-family: var(--gb-font-mono);
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 2px solid var(--gb-sepia);
+  border-radius: var(--gb-radius);
+  background: var(--gb-linen);
+  color: var(--gb-ink);
+  outline: none;
+  text-align: center;
+  width: 80px;
+  box-shadow: 0 2px 8px rgba(26, 22, 18, 0.15);
+}
+
+/* ── Sidebar scrollbar (WebKit) ────────────────────────────────────── */
+.gb-widget .gb-sidebar::-webkit-scrollbar { width: 6px; }
+.gb-widget .gb-sidebar::-webkit-scrollbar-track { background: transparent; }
+.gb-widget .gb-sidebar::-webkit-scrollbar-thumb {
+  background: var(--gb-linen-darker);
+  border-radius: 3px;
+}
+.gb-widget .gb-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--gb-ink-faint);
+}
+
+/* ── Responsive: stack sidebar below canvas on narrow widgets ──────────
+   Two trigger paths:
+     (a) viewport media query — fires on actual mobile devices
+     (b) .gb-narrow / .gb-extra-narrow classes — set by a ResizeObserver
+         in graph-builder.js based on the widget root's own width, so
+         the layout adapts even when the widget is embedded in a narrow
+         column on a wide-viewport desktop (e.g. LXP content column).
+   ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .gb-widget {
+    height: auto;
+  }
+  .gb-widget .gb-main {
+    flex-direction: column;
+  }
+  .gb-widget .gb-canvas-container {
+    height: 400px;
+    flex: 0 0 auto;
+  }
+  .gb-widget .gb-sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-height: 360px;
+    border-left: none;
+    border-top: 2px solid var(--gb-ink-faint);
+  }
+  .gb-widget .gb-canvas-container::after { display: none; }
+  .gb-widget .gb-header h2 .gb-subtitle { display: none; }
+}
+.gb-widget.gb-narrow {
+  height: auto;
+}
+.gb-widget.gb-narrow .gb-main {
+  flex-direction: column;
+}
+.gb-widget.gb-narrow .gb-canvas-container {
+  height: 400px;
+  flex: 0 0 auto;
+}
+.gb-widget.gb-narrow .gb-sidebar {
+  width: 100%;
+  min-width: 100%;
+  max-height: 360px;
+  border-left: none;
+  border-top: 2px solid var(--gb-ink-faint);
+}
+.gb-widget.gb-narrow .gb-canvas-container::after { display: none; }
+.gb-widget.gb-narrow .gb-header h2 .gb-subtitle { display: none; }
+
+@media (max-width: 600px) {
+  .gb-widget .gb-header {
+    padding: 8px 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .gb-widget .gb-header h2 { font-size: 15px; }
+  .gb-widget .gb-tool-btn { font-size: 11px; padding: 4px 8px; }
+  .gb-widget .gb-tool-btn .gb-key-hint { display: none; }
+}
+.gb-widget.gb-extra-narrow .gb-header {
+  padding: 8px 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gb-widget.gb-extra-narrow .gb-header h2 { font-size: 15px; }
+.gb-widget.gb-extra-narrow .gb-tool-btn { font-size: 11px; padding: 4px 8px; }
+.gb-widget.gb-extra-narrow .gb-tool-btn .gb-key-hint { display: none; }

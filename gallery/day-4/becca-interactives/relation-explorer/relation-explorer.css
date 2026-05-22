@@ -1,0 +1,523 @@
+/* =========================================================================
+   Relation Explorer (W8) — embeddable widget
+   All rules scoped under .re-widget. Multiple instances on the same page
+   coexist because state lives in JS closures and DOM refs are scoped
+   per-mount via root.querySelector.
+
+   Aesthetic preserved from the original general-directed-graph-builder.html.
+   Relative to W7 (directed-graph-builder), this widget adds self-loop
+   rendering on the canvas and a "Relation Properties" sidebar section.
+   ========================================================================= */
+
+.re-widget,
+.re-widget *,
+.re-widget *::before,
+.re-widget *::after {
+  box-sizing: border-box;
+}
+
+.re-widget {
+  --re-linen: #f4ede4;
+  --re-linen-dark: #e8ddd0;
+  --re-linen-darker: #d4c5b0;
+  --re-ink: #1a1612;
+  --re-ink-light: #3d342a;
+  --re-ink-faint: rgba(26, 22, 18, 0.12);
+  --re-ink-ghost: rgba(26, 22, 18, 0.06);
+  --re-green: #2d5a27;
+  --re-green-dim: rgba(45, 90, 39, 0.15);
+  --re-rose: #c4506e;
+  --re-rose-light: #d4708a;
+  --re-rose-dim: rgba(196, 80, 110, 0.15);
+  --re-copper: #3a7d6e;
+  --re-copper-dim: rgba(58, 125, 110, 0.15);
+  --re-sepia: #8b6914;
+  --re-sepia-dim: rgba(139, 105, 20, 0.15);
+  --re-violet: #7b4daa;
+  --re-violet-dim: rgba(155, 77, 202, 0.15);
+  --re-font-display: 'Playfair Display', Georgia, serif;
+  --re-font-body: 'Crimson Pro', 'Times New Roman', serif;
+  --re-font-mono: 'Fira Code', monospace;
+  --re-radius: 3px;
+  --re-transition: 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--re-linen);
+  color: var(--re-ink);
+  font-family: var(--re-font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  border: 1px solid var(--re-ink-faint);
+  border-radius: var(--re-radius);
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+@keyframes re-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.re-widget .re-header {
+  background: var(--re-ink);
+  color: var(--re-linen);
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  z-index: 100;
+  border-bottom: 3px double var(--re-sepia);
+  flex: 0 0 auto;
+  animation: re-fadeIn 0.4s ease both;
+}
+.re-widget .re-header h2 {
+  font-family: var(--re-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin: 0;
+}
+.re-widget .re-header h2 .re-subtitle {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 10px;
+  letter-spacing: 0.04em;
+}
+.re-widget .re-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.re-widget .re-tool-btn {
+  font-family: var(--re-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--re-linen-dark);
+  border: 1px solid rgba(244, 237, 228, 0.2);
+  border-radius: var(--re-radius);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all var(--re-transition);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.re-widget .re-tool-btn:hover {
+  background: rgba(244, 237, 228, 0.1);
+  border-color: rgba(244, 237, 228, 0.4);
+  color: var(--re-linen);
+}
+.re-widget .re-tool-btn.re-active {
+  background: var(--re-green);
+  border-color: var(--re-green);
+  color: var(--re-linen);
+}
+.re-widget .re-tool-btn.re-danger {
+  border-color: rgba(196, 80, 110, 0.4);
+  color: var(--re-rose-light);
+}
+.re-widget .re-tool-btn.re-danger:hover {
+  background: var(--re-rose);
+  border-color: var(--re-rose);
+  color: var(--re-linen);
+}
+.re-widget .re-tool-btn .re-key-hint {
+  font-family: var(--re-font-mono);
+  font-size: 10px;
+  opacity: 0.5;
+  margin-left: 4px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 0 3px;
+  vertical-align: 1px;
+}
+.re-widget .re-tool-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(244, 237, 228, 0.15);
+  margin: 0 4px;
+}
+
+/* ── Main area: canvas | sidebar ───────────────────────────────────── */
+.re-widget .re-main {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.re-widget .re-canvas-container {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 29px,
+      var(--re-ink-ghost) 29px, var(--re-ink-ghost) 30px),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 29px,
+      var(--re-ink-ghost) 29px, var(--re-ink-ghost) 30px),
+    radial-gradient(ellipse at 20% 50%, rgba(45, 90, 39, 0.03), transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(196, 80, 110, 0.02), transparent 50%),
+    var(--re-linen);
+  animation: re-fadeIn 0.6s ease 0.15s both;
+}
+.re-widget .re-canvas-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(139, 105, 20, 0.04), transparent 40%),
+    radial-gradient(circle at 75% 65%, rgba(58, 125, 110, 0.03), transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(139, 105, 20, 0.03), transparent 30%);
+  pointer-events: none;
+  z-index: 1;
+}
+.re-widget .re-canvas-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 48px;
+  width: 1px;
+  background: var(--re-rose-dim);
+  pointer-events: none;
+  z-index: 1;
+}
+.re-widget .re-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.re-widget .re-canvas-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--re-font-body);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--re-ink-light);
+  opacity: 0.5;
+  z-index: 3;
+  pointer-events: none;
+  transition: opacity var(--re-transition);
+  text-align: center;
+}
+.re-widget .re-canvas-hint.re-hidden { opacity: 0; }
+.re-widget .re-mode-indicator {
+  position: absolute;
+  top: 12px;
+  left: 60px;
+  font-family: var(--re-font-display);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--re-green);
+  z-index: 3;
+  padding: 4px 10px;
+  border: 1px solid var(--re-green-dim);
+  border-radius: var(--re-radius);
+  background: rgba(244, 237, 228, 0.9);
+}
+.re-widget .re-mode-indicator.re-edge-mode { color: var(--re-copper); border-color: var(--re-copper-dim); }
+.re-widget .re-mode-indicator.re-delete-mode { color: var(--re-rose); border-color: var(--re-rose-dim); }
+.re-widget .re-mode-indicator.re-label-mode { color: var(--re-sepia); border-color: var(--re-sepia-dim); }
+
+/* ── Sidebar ───────────────────────────────────────────────────────── */
+.re-widget .re-sidebar {
+  width: 320px;
+  min-width: 320px;
+  border-left: 2px solid var(--re-ink-faint);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 27px,
+      rgba(26, 22, 18, 0.06) 27px, rgba(26, 22, 18, 0.06) 28px),
+    linear-gradient(135deg, #f4ede4, #f0e8dc);
+}
+.re-widget .re-sidebar-header {
+  padding: 14px 18px 10px;
+  border-bottom: 2px solid var(--re-ink-faint);
+  background: rgba(26, 22, 18, 0.03);
+  flex: 0 0 auto;
+}
+.re-widget .re-sidebar-header h3 {
+  font-family: var(--re-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--re-ink);
+  margin: 0;
+}
+.re-widget .re-specimen-count {
+  font-family: var(--re-font-mono);
+  font-size: 11px;
+  color: var(--re-ink-light);
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+.re-widget .re-prop-section {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--re-ink-ghost);
+  transition: background var(--re-transition);
+}
+.re-widget .re-prop-section:hover { background: rgba(26, 22, 18, 0.02); }
+
+.re-widget .re-prop-section-title {
+  font-family: var(--re-font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--re-green);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.re-widget .re-prop-section-title .re-section-marker {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  flex-shrink: 0;
+}
+
+.re-widget .re-prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 0;
+  margin-left: 16px;
+}
+.re-widget .re-prop-label {
+  font-family: var(--re-font-body);
+  font-size: 13px;
+  color: var(--re-ink-light);
+}
+.re-widget .re-prop-value {
+  font-family: var(--re-font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--re-ink);
+  text-align: right;
+}
+.re-widget .re-prop-value.re-yes { color: var(--re-green); }
+.re-widget .re-prop-value.re-no { color: var(--re-rose); }
+.re-widget .re-prop-value.re-info { color: var(--re-copper); }
+
+.re-widget .re-prop-tooltip {
+  font-family: var(--re-font-body);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--re-ink-light);
+  opacity: 0.6;
+  margin: 4px 0 2px 16px;
+  line-height: 1.4;
+}
+
+/* ── Relation properties section (W8-specific) ─────────────────────── */
+.re-widget .re-combined-divider {
+  font-family: var(--re-font-display);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--re-violet);
+  margin: 10px 0 4px 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.85;
+}
+.re-widget .re-combined-divider .re-section-marker {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  flex-shrink: 0;
+}
+
+/* ── SCC / topo / vertex / degree / legend (mirrors W7) ────────────── */
+.re-widget .re-scc-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.re-widget .re-scc-item {
+  font-family: var(--re-font-mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--re-radius);
+  background: var(--re-green-dim);
+  color: var(--re-green);
+  border: 1px solid rgba(45, 90, 39, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.re-widget .re-scc-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(26, 22, 18, 0.2);
+  flex-shrink: 0;
+}
+
+.re-widget .re-topo-order {
+  margin: 6px 0 2px 16px;
+  font-family: var(--re-font-mono);
+  font-size: 12px;
+  color: var(--re-ink-light);
+  line-height: 1.6;
+  word-break: break-word;
+}
+.re-widget .re-topo-order .re-arrow { color: var(--re-copper); margin: 0 2px; }
+
+.re-widget .re-vertex-tag-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.re-widget .re-vertex-tag {
+  font-family: var(--re-font-mono);
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.re-widget .re-vertex-tag.re-source-tag {
+  background: var(--re-copper-dim);
+  color: var(--re-copper);
+  border: 1px solid rgba(58, 125, 110, 0.2);
+}
+.re-widget .re-vertex-tag.re-sink-tag {
+  background: var(--re-sepia-dim);
+  color: var(--re-sepia);
+  border: 1px solid rgba(139, 105, 20, 0.2);
+}
+
+.re-widget .re-degree-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.re-widget .re-degree-badge {
+  font-family: var(--re-font-mono);
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--re-green-dim);
+  color: var(--re-green);
+  border: 1px solid rgba(45, 90, 39, 0.2);
+  white-space: nowrap;
+}
+.re-widget .re-degree-badge.re-source {
+  background: var(--re-copper-dim);
+  color: var(--re-copper);
+  border-color: rgba(58, 125, 110, 0.2);
+}
+.re-widget .re-degree-badge.re-sink {
+  background: var(--re-sepia-dim);
+  color: var(--re-sepia);
+  border-color: rgba(139, 105, 20, 0.2);
+}
+
+.re-widget .re-color-legend {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.re-widget .re-color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--re-font-mono);
+  font-size: 11px;
+  color: var(--re-ink-light);
+}
+.re-widget .re-color-swatch .re-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(26, 22, 18, 0.2);
+}
+
+.re-widget .re-node-label-input {
+  position: absolute;
+  z-index: 1000;
+  font-family: var(--re-font-mono);
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 2px solid var(--re-sepia);
+  border-radius: var(--re-radius);
+  background: var(--re-linen);
+  color: var(--re-ink);
+  outline: none;
+  text-align: center;
+  width: 80px;
+  box-shadow: 0 2px 8px rgba(26, 22, 18, 0.15);
+}
+
+.re-widget .re-sidebar::-webkit-scrollbar { width: 6px; }
+.re-widget .re-sidebar::-webkit-scrollbar-track { background: transparent; }
+.re-widget .re-sidebar::-webkit-scrollbar-thumb {
+  background: var(--re-linen-darker);
+  border-radius: 3px;
+}
+.re-widget .re-sidebar::-webkit-scrollbar-thumb:hover { background: var(--re-ink-faint); }
+
+@media (max-width: 760px) {
+  .re-widget {
+    height: auto;
+  }
+  .re-widget .re-main {
+    flex-direction: column;
+  }
+  .re-widget .re-canvas-container {
+    height: 400px;
+    flex: 0 0 auto;
+  }
+  .re-widget .re-sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-height: 380px;
+    border-left: none;
+    border-top: 2px solid var(--re-ink-faint);
+  }
+  .re-widget .re-canvas-container::after { display: none; }
+  .re-widget .re-header h2 .re-subtitle { display: none; }
+}
+
+@media (max-width: 600px) {
+  .re-widget .re-header {
+    padding: 8px 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .re-widget .re-header h2 { font-size: 15px; }
+  .re-widget .re-tool-btn { font-size: 11px; padding: 4px 8px; }
+  .re-widget .re-tool-btn .re-key-hint { display: none; }
+}

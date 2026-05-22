@@ -131,8 +131,31 @@ gallery:
     url: /gallery/day-4/project-overviews/
     children:
       - title: Interview Coding
-        url: /gallery/day-4/project-overviews/interview-coding/summary/
+        url: /gallery/day-4/project-overviews/interview-coding/summary.html
+        children:
+          - title: Summary
+            url: /gallery/day-4/project-overviews/interview-coding/summary.html
+          - title: Tradition
+            url: /gallery/day-4/project-overviews/interview-coding/tradition.html
+          - title: Affordance
+            url: /gallery/day-4/project-overviews/interview-coding/affordance.html
+          - title: Walkthrough
+            url: /gallery/day-4/project-overviews/interview-coding/walkthrough.html
       - title: Physics Interactives
-        url: /gallery/day-4/project-overviews/physics-interactives/summary/
+        url: /gallery/day-4/project-overviews/physics-interactives/summary.html
+        children:
+          - title: Summary
+            url: /gallery/day-4/project-overviews/physics-interactives/summary.html
+          - title: Tradition
+            url: /gallery/day-4/project-overviews/physics-interactives/tradition.html
+          - title: Affordance
+            url: /gallery/day-4/project-overviews/physics-interactives/affordance.html
       - title: Texts & Translation
-        url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary/
+        url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary.html
+        children:
+          - title: Summary
+            url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary.html
+          - title: Tradition
+            url: /gallery/day-4/project-overviews/texts-and-translation-v0/tradition.html
+          - title: Affordance
+            url: /gallery/day-4/project-overviews/texts-and-translation-v0/affordance.html

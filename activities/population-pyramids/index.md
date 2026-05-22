@@ -1,10 +1,10 @@
 ---
 layout: default
-title: "02 · Population Pyramids"
+title: "Population Pyramids"
 section: activities
 ---
 
-# 02 · Population Pyramids
+# Population Pyramids
 
 <div class="page-lead">Feed Claude UN population data. Ask it to do arithmetic. Watch it fail. Then ask it to write code — and watch it succeed. This is the clearest demonstration in the workshop of why tool use matters.</div>
 

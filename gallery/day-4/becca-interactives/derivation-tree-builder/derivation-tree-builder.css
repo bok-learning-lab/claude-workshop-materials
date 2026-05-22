@@ -1,0 +1,338 @@
+/* =========================================================================
+   Derivation Tree Builder (W25) — embeddable widget
+   All rules scoped under .dt-widget. Multi-instance safe via per-mount
+   closures and root.querySelector.
+   ========================================================================= */
+
+.dt-widget,
+.dt-widget *,
+.dt-widget *::before,
+.dt-widget *::after {
+  box-sizing: border-box;
+}
+
+.dt-widget {
+  --dt-linen: #f4ede4;
+  --dt-linen-dark: #e8ddd0;
+  --dt-linen-darker: #d4c5b0;
+  --dt-ink: #1a1612;
+  --dt-ink-light: #3d342a;
+  --dt-ink-faint: rgba(26, 22, 18, 0.12);
+  --dt-ink-ghost: rgba(26, 22, 18, 0.06);
+  --dt-green: #2d5a27;
+  --dt-green-dim: rgba(45, 90, 39, 0.15);
+  --dt-rose: #c4506e;
+  --dt-rose-dim: rgba(196, 80, 110, 0.15);
+  --dt-amber: #b8841d;
+  --dt-amber-dim: rgba(184, 132, 29, 0.18);
+  --dt-copper: #3a7d6e;
+  --dt-copper-dim: rgba(58, 125, 110, 0.15);
+  --dt-sepia: #8b6914;
+  --dt-violet: #7b4daa;
+  --dt-violet-dim: rgba(123, 77, 170, 0.15);
+  --dt-blue: #4a78c2;
+  --dt-blue-dim: rgba(74, 120, 194, 0.15);
+  --dt-font-display: 'Playfair Display', Georgia, serif;
+  --dt-font-body: 'Crimson Pro', 'Times New Roman', serif;
+  --dt-font-mono: 'Fira Code', monospace;
+  --dt-radius: 3px;
+  --dt-transition: 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--dt-linen);
+  color: var(--dt-ink);
+  font-family: var(--dt-font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  border: 1px solid var(--dt-ink-faint);
+  border-radius: var(--dt-radius);
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.dt-widget .dt-header {
+  background: var(--dt-ink);
+  color: var(--dt-linen);
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 100;
+  border-bottom: 3px double var(--dt-sepia);
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+}
+.dt-widget .dt-header h2 {
+  font-family: var(--dt-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin: 0;
+}
+.dt-widget .dt-header h2 .dt-subtitle {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 10px;
+  letter-spacing: 0.04em;
+}
+.dt-widget .dt-grammar-select {
+  font-family: var(--dt-font-body);
+  font-size: 13px;
+  background: rgba(244, 237, 228, 0.07);
+  color: var(--dt-linen);
+  border: 1px solid rgba(244, 237, 228, 0.25);
+  border-radius: var(--dt-radius);
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: auto;
+}
+.dt-widget .dt-grammar-select option { color: #222; }
+
+/* ── Body ──────────────────────────────────────────────────────────── */
+.dt-widget .dt-body {
+  padding: 16px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Grammar reference card */
+.dt-widget .dt-grammar-card {
+  background: #fff;
+  border: 1px solid var(--dt-ink-faint);
+  border-radius: var(--dt-radius);
+  padding: 10px 14px;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+.dt-widget .dt-grammar-card h3 {
+  font-family: var(--dt-font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--dt-ink-light);
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+}
+.dt-widget .dt-grammar-card .dt-rule-row {
+  display: flex;
+  gap: 12px;
+  font-family: var(--dt-font-mono);
+  font-size: 12.5px;
+  color: var(--dt-ink);
+  margin: 2px 0;
+}
+.dt-widget .dt-grammar-card .dt-rule-key {
+  font-weight: 600;
+  color: var(--dt-violet);
+  min-width: 40px;
+}
+.dt-widget .dt-grammar-card .dt-rule-desc {
+  color: var(--dt-ink-light);
+}
+
+/* Input row */
+.dt-widget .dt-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.dt-widget .dt-input {
+  font-family: var(--dt-font-mono);
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--dt-ink-faint);
+  border-radius: var(--dt-radius);
+  background: #fff;
+  color: var(--dt-ink);
+  flex: 1 1 240px;
+  min-width: 0;
+  outline: none;
+  transition: border-color var(--dt-transition);
+}
+.dt-widget .dt-input:focus {
+  border-color: var(--dt-blue);
+}
+.dt-widget .dt-input.dt-input-error {
+  border-color: var(--dt-rose);
+  background: rgba(196, 80, 110, 0.04);
+}
+.dt-widget .dt-input.dt-input-ok {
+  border-color: var(--dt-green);
+  background: rgba(45, 90, 39, 0.04);
+}
+
+.dt-widget .dt-btn {
+  font-family: var(--dt-font-body);
+  font-size: 13px;
+  padding: 8px 14px;
+  border: 1px solid var(--dt-ink-faint);
+  border-radius: var(--dt-radius);
+  background: #fff;
+  color: var(--dt-ink);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--dt-transition);
+}
+.dt-widget .dt-btn:hover {
+  background: var(--dt-blue-dim);
+  border-color: var(--dt-blue);
+  color: var(--dt-blue);
+}
+.dt-widget .dt-btn-primary {
+  background: var(--dt-blue);
+  color: #fff;
+  border-color: var(--dt-blue);
+}
+.dt-widget .dt-btn-primary:hover {
+  background: #3a5fa3;
+  border-color: #3a5fa3;
+  color: #fff;
+}
+
+/* Example shortcuts */
+.dt-widget .dt-examples-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.dt-widget .dt-examples-label {
+  font-family: var(--dt-font-body);
+  font-size: 12.5px;
+  font-style: italic;
+  color: var(--dt-ink-light);
+  margin-right: 4px;
+}
+.dt-widget .dt-example-chip {
+  font-family: var(--dt-font-mono);
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--dt-ink-faint);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--dt-ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dt-widget .dt-example-chip:hover {
+  background: var(--dt-blue-dim);
+  border-color: var(--dt-blue);
+  color: var(--dt-blue);
+}
+.dt-widget .dt-example-chip.dt-example-bad {
+  background: var(--dt-rose-dim);
+  border-color: rgba(196, 80, 110, 0.3);
+  color: var(--dt-rose);
+}
+.dt-widget .dt-example-chip.dt-example-bad:hover {
+  background: rgba(196, 80, 110, 0.25);
+}
+
+/* Status (success/failure message) */
+.dt-widget .dt-status {
+  font-family: var(--dt-font-body);
+  font-size: 13.5px;
+  padding: 8px 14px;
+  border-radius: var(--dt-radius);
+  border: 1px solid var(--dt-ink-faint);
+  background: #fff;
+  color: var(--dt-ink-light);
+  font-style: italic;
+  min-height: 1.6em;
+}
+.dt-widget .dt-status.dt-status-ok {
+  background: var(--dt-green-dim);
+  border-color: var(--dt-green);
+  color: var(--dt-green);
+  font-style: normal;
+}
+.dt-widget .dt-status.dt-status-bad {
+  background: var(--dt-rose-dim);
+  border-color: var(--dt-rose);
+  color: var(--dt-rose);
+  font-style: normal;
+}
+
+/* Tree visualization area */
+.dt-widget .dt-tree-host {
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 27px,
+      rgba(26, 22, 18, 0.04) 27px, rgba(26, 22, 18, 0.04) 28px),
+    linear-gradient(135deg, #f4ede4, #f0e8dc);
+  border: 1px solid var(--dt-ink-faint);
+  border-radius: var(--dt-radius);
+  padding: 16px 12px;
+  overflow-x: auto;
+  min-height: 240px;
+  position: relative;
+}
+.dt-widget .dt-tree-svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.dt-widget .dt-tree-svg .dt-tree-edge {
+  stroke: rgba(26, 22, 18, 0.5);
+  stroke-width: 1.5;
+  fill: none;
+}
+.dt-widget .dt-tree-svg .dt-node-rect {
+  fill: #fff;
+  stroke: var(--dt-violet);
+  stroke-width: 1.5;
+  rx: 4;
+}
+.dt-widget .dt-tree-svg .dt-node-rect.dt-node-base {
+  stroke: var(--dt-green);
+  fill: var(--dt-green-dim);
+}
+.dt-widget .dt-tree-svg .dt-node-rule {
+  font-family: var(--dt-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--dt-violet);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.dt-widget .dt-tree-svg .dt-node-rule.dt-node-base-text {
+  fill: var(--dt-green);
+}
+.dt-widget .dt-tree-svg .dt-node-string {
+  font-family: var(--dt-font-mono);
+  font-size: 11px;
+  fill: var(--dt-ink-light);
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-style: italic;
+}
+
+/* Empty state */
+.dt-widget .dt-tree-empty {
+  font-family: var(--dt-font-body);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--dt-ink-light);
+  opacity: 0.6;
+  text-align: center;
+  padding: 50px 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dt-widget .dt-header { padding: 8px 14px; gap: 8px; }
+  .dt-widget .dt-header h2 { font-size: 15px; }
+  .dt-widget .dt-header h2 .dt-subtitle { display: none; }
+  .dt-widget .dt-body { padding: 12px 14px; }
+}

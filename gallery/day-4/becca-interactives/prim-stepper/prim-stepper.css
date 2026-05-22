@@ -1,0 +1,451 @@
+/* =========================================================================
+   Prim's Algorithm Stepper (W23) — embeddable widget
+   All rules scoped under .prim-widget. Multi-instance safe via per-mount
+   closures and root.querySelector.
+   ========================================================================= */
+
+.prim-widget,
+.prim-widget *,
+.prim-widget *::before,
+.prim-widget *::after {
+  box-sizing: border-box;
+}
+
+.prim-widget {
+  --prim-linen: #f4ede4;
+  --prim-linen-dark: #e8ddd0;
+  --prim-linen-darker: #d4c5b0;
+  --prim-ink: #1a1612;
+  --prim-ink-light: #3d342a;
+  --prim-ink-faint: rgba(26, 22, 18, 0.12);
+  --prim-ink-ghost: rgba(26, 22, 18, 0.06);
+  --prim-green: #2d5a27;
+  --prim-green-light: #4a8a44;
+  --prim-green-dim: rgba(45, 90, 39, 0.15);
+  --prim-rose: #c4506e;
+  --prim-rose-light: #d4708a;
+  --prim-rose-dim: rgba(196, 80, 110, 0.15);
+  --prim-amber: #b8841d;
+  --prim-amber-light: #d6a040;
+  --prim-amber-dim: rgba(184, 132, 29, 0.18);
+  --prim-copper: #3a7d6e;
+  --prim-copper-dim: rgba(58, 125, 110, 0.15);
+  --prim-sepia: #8b6914;
+  --prim-sepia-dim: rgba(139, 105, 20, 0.15);
+  --prim-violet: #7b4daa;
+  --prim-font-display: 'Playfair Display', Georgia, serif;
+  --prim-font-body: 'Crimson Pro', 'Times New Roman', serif;
+  --prim-font-mono: 'Fira Code', monospace;
+  --prim-radius: 3px;
+  --prim-transition: 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  height: 640px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--prim-linen);
+  color: var(--prim-ink);
+  font-family: var(--prim-font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  border: 1px solid var(--prim-ink-faint);
+  border-radius: var(--prim-radius);
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+@keyframes prim-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.prim-widget .prim-header {
+  background: var(--prim-ink);
+  color: var(--prim-linen);
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 100;
+  border-bottom: 3px double var(--prim-sepia);
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  animation: prim-fadeIn 0.4s ease both;
+}
+.prim-widget .prim-header h2 {
+  font-family: var(--prim-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin: 0;
+}
+.prim-widget .prim-header h2 .prim-subtitle {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 10px;
+  letter-spacing: 0.04em;
+}
+
+.prim-widget .prim-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.prim-widget .prim-preset-select {
+  font-family: var(--prim-font-body);
+  font-size: 13px;
+  background: rgba(244, 237, 228, 0.07);
+  color: var(--prim-linen);
+  border: 1px solid rgba(244, 237, 228, 0.25);
+  border-radius: var(--prim-radius);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.prim-widget .prim-preset-select option { color: #222; }
+
+.prim-widget .prim-tool-btn {
+  font-family: var(--prim-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--prim-linen-dark);
+  border: 1px solid rgba(244, 237, 228, 0.2);
+  border-radius: var(--prim-radius);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all var(--prim-transition);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.prim-widget .prim-tool-btn:hover {
+  background: rgba(244, 237, 228, 0.1);
+  border-color: rgba(244, 237, 228, 0.4);
+  color: var(--prim-linen);
+}
+.prim-widget .prim-tool-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.prim-widget .prim-tool-btn:disabled:hover {
+  background: transparent;
+  border-color: rgba(244, 237, 228, 0.2);
+  color: var(--prim-linen-dark);
+}
+.prim-widget .prim-tool-btn.prim-primary {
+  background: var(--prim-green);
+  border-color: var(--prim-green);
+  color: var(--prim-linen);
+}
+.prim-widget .prim-tool-btn.prim-primary:hover {
+  background: var(--prim-green-light);
+  border-color: var(--prim-green-light);
+}
+.prim-widget .prim-tool-btn.prim-primary:disabled {
+  opacity: 0.35;
+}
+.prim-widget .prim-tool-btn.prim-danger {
+  border-color: rgba(196, 80, 110, 0.4);
+  color: var(--prim-rose-light);
+}
+.prim-widget .prim-tool-btn.prim-danger:hover {
+  background: var(--prim-rose);
+  border-color: var(--prim-rose);
+  color: var(--prim-linen);
+}
+
+/* ── Main area ─────────────────────────────────────────────────────── */
+.prim-widget .prim-main {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.prim-widget .prim-canvas-container {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 29px,
+      var(--prim-ink-ghost) 29px, var(--prim-ink-ghost) 30px),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 29px,
+      var(--prim-ink-ghost) 29px, var(--prim-ink-ghost) 30px),
+    radial-gradient(ellipse at 20% 50%, rgba(45, 90, 39, 0.03), transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(184, 132, 29, 0.04), transparent 50%),
+    var(--prim-linen);
+  animation: prim-fadeIn 0.6s ease 0.15s both;
+}
+.prim-widget .prim-canvas-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(139, 105, 20, 0.04), transparent 40%),
+    radial-gradient(circle at 75% 65%, rgba(58, 125, 110, 0.03), transparent 35%);
+  pointer-events: none;
+  z-index: 1;
+}
+.prim-widget .prim-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.prim-widget .prim-canvas-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--prim-font-body);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--prim-ink-light);
+  opacity: 0.65;
+  z-index: 3;
+  pointer-events: none;
+  text-align: center;
+  background: rgba(244, 237, 228, 0.85);
+  padding: 4px 10px;
+  border-radius: var(--prim-radius);
+}
+.prim-widget .prim-canvas-hint.prim-hidden { display: none; }
+
+.prim-widget .prim-status-banner {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--prim-font-display);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--prim-amber);
+  z-index: 3;
+  padding: 4px 10px;
+  border: 1px solid var(--prim-amber-dim);
+  border-radius: var(--prim-radius);
+  background: rgba(244, 237, 228, 0.92);
+  text-align: center;
+}
+.prim-widget .prim-status-banner.prim-state-pick { color: var(--prim-copper); border-color: var(--prim-copper-dim); }
+.prim-widget .prim-status-banner.prim-state-done { color: var(--prim-green); border-color: var(--prim-green-dim); }
+
+/* ── Sidebar ───────────────────────────────────────────────────────── */
+.prim-widget .prim-sidebar {
+  width: 300px;
+  min-width: 300px;
+  border-left: 2px solid var(--prim-ink-faint);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 27px,
+      rgba(26, 22, 18, 0.06) 27px, rgba(26, 22, 18, 0.06) 28px),
+    linear-gradient(135deg, #f4ede4, #f0e8dc);
+}
+.prim-widget .prim-sidebar-header {
+  padding: 14px 18px 10px;
+  border-bottom: 2px solid var(--prim-ink-faint);
+  background: rgba(26, 22, 18, 0.03);
+  flex: 0 0 auto;
+}
+.prim-widget .prim-sidebar-header h3 {
+  font-family: var(--prim-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--prim-ink);
+  margin: 0;
+}
+.prim-widget .prim-sidebar-sub {
+  font-family: var(--prim-font-mono);
+  font-size: 11px;
+  color: var(--prim-ink-light);
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+.prim-widget .prim-prop-section {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--prim-ink-ghost);
+}
+.prim-widget .prim-prop-section-title {
+  font-family: var(--prim-font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--prim-green);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.prim-widget .prim-section-marker {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  flex-shrink: 0;
+}
+.prim-widget .prim-prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 0;
+  margin-left: 16px;
+}
+.prim-widget .prim-prop-label {
+  font-family: var(--prim-font-body);
+  font-size: 13px;
+  color: var(--prim-ink-light);
+}
+.prim-widget .prim-prop-value {
+  font-family: var(--prim-font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--prim-ink);
+  text-align: right;
+}
+.prim-widget .prim-prop-value.prim-info { color: var(--prim-copper); }
+.prim-widget .prim-prop-value.prim-done { color: var(--prim-green); }
+
+.prim-widget .prim-prop-tooltip {
+  font-family: var(--prim-font-body);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--prim-ink-light);
+  opacity: 0.6;
+  margin: 4px 0 2px 16px;
+  line-height: 1.4;
+}
+
+.prim-widget .prim-edge-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.prim-widget .prim-edge-item {
+  font-family: var(--prim-font-mono);
+  font-size: 11.5px;
+  padding: 3px 8px;
+  border-radius: var(--prim-radius);
+  background: var(--prim-green-dim);
+  color: var(--prim-green);
+  border: 1px solid rgba(45, 90, 39, 0.2);
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.prim-widget .prim-edge-item .prim-edge-step {
+  color: var(--prim-ink-light);
+  opacity: 0.7;
+  margin-right: 6px;
+}
+
+.prim-widget .prim-frontier-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.prim-widget .prim-frontier-tag {
+  font-family: var(--prim-font-mono);
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--prim-amber-dim);
+  color: var(--prim-amber);
+  border: 1px solid rgba(184, 132, 29, 0.3);
+  white-space: nowrap;
+}
+.prim-widget .prim-frontier-tag.prim-chosen {
+  background: var(--prim-amber);
+  color: #fff;
+  border-color: var(--prim-amber);
+  font-weight: 600;
+}
+
+.prim-widget .prim-sidebar::-webkit-scrollbar { width: 6px; }
+.prim-widget .prim-sidebar::-webkit-scrollbar-track { background: transparent; }
+.prim-widget .prim-sidebar::-webkit-scrollbar-thumb {
+  background: var(--prim-linen-darker);
+  border-radius: 3px;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────
+   Two trigger paths:
+     (a) viewport media query — fires on actual mobile devices
+     (b) .prim-narrow / .prim-extra-narrow classes — set by a ResizeObserver
+         in prim-stepper.js based on the widget root's own width, so the
+         layout adapts even when the widget is embedded in a narrow column
+         on a wide-viewport desktop (e.g. LXP content column).
+   ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .prim-widget {
+    height: auto;
+  }
+  .prim-widget .prim-main {
+    flex-direction: column;
+  }
+  .prim-widget .prim-canvas-container {
+    height: 380px;
+    flex: 0 0 auto;
+  }
+  .prim-widget .prim-sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-height: 360px;
+    border-left: none;
+    border-top: 2px solid var(--prim-ink-faint);
+  }
+  .prim-widget .prim-header h2 .prim-subtitle { display: none; }
+}
+.prim-widget.prim-narrow {
+  height: auto;
+}
+.prim-widget.prim-narrow .prim-main {
+  flex-direction: column;
+}
+.prim-widget.prim-narrow .prim-canvas-container {
+  height: 380px;
+  flex: 0 0 auto;
+}
+.prim-widget.prim-narrow .prim-sidebar {
+  width: 100%;
+  min-width: 100%;
+  max-height: 360px;
+  border-left: none;
+  border-top: 2px solid var(--prim-ink-faint);
+}
+.prim-widget.prim-narrow .prim-header h2 .prim-subtitle { display: none; }
+
+@media (max-width: 600px) {
+  .prim-widget .prim-header {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .prim-widget .prim-header h2 { font-size: 15px; }
+  .prim-widget .prim-tool-btn { font-size: 11px; padding: 4px 8px; }
+}
+.prim-widget.prim-extra-narrow .prim-header {
+  padding: 8px 12px;
+  gap: 8px;
+}
+.prim-widget.prim-extra-narrow .prim-header h2 { font-size: 15px; }
+.prim-widget.prim-extra-narrow .prim-tool-btn { font-size: 11px; padding: 4px 8px; }

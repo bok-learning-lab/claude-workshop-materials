@@ -1,0 +1,251 @@
+/* ---- Root ---- */
+.tt-widget {
+  font-family: sans-serif;
+  color: #1a1a1a;
+  max-width: 860px;
+}
+
+/* ---- Table shell ---- */
+.tt-widget table {
+  border-collapse: collapse;
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+.tt-widget th,
+.tt-widget td {
+  border: 1px solid #aaa;
+  padding: 6px 14px;
+  text-align: center;
+  min-width: 60px;
+}
+
+/* Variable column headers — neutral gray */
+.tt-widget thead th {
+  background: #e8e8e8;
+  color: #333;
+}
+
+/* Fixed (instructor) formula column headers — blue tint */
+.tt-widget thead th.col-fixed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Auto-filled variable cells */
+.tt-widget td.var-cell {
+  background: #f5f5f5;
+  color: #444;
+}
+
+/* Formula cells — blank */
+.tt-widget td.formula-cell {
+  background: #e4e4e4;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s;
+}
+
+/* Hover hint on unlocked cells */
+.tt-widget td.formula-cell:not([data-locked]):hover {
+  background: #d0d8e8;
+}
+
+/* Formula cells — filled */
+.tt-widget td.formula-cell[data-value="T"],
+.tt-widget td.formula-cell[data-value="F"] {
+  background: #ffffff;
+  font-weight: bold;
+}
+
+/* Thick left border: first formula col and last formula col */
+.tt-widget th.col-section-start,
+.tt-widget td.col-section-start {
+  border-left: 3px solid #555;
+}
+
+.tt-widget th.col-section-end,
+.tt-widget td.col-section-end {
+  border-left: 3px solid #555;
+}
+
+/* Student-added column header — light lavender, distinct from fixed cols */
+.tt-widget th[data-student] {
+  white-space: nowrap;
+  background: #f0f4ff;
+}
+
+.tt-widget .col-label-input {
+  font-family: monospace;
+  font-size: 0.9rem;
+  width: 9ch;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  padding: 2px 4px;
+  text-align: center;
+}
+
+.tt-widget .remove-col-btn {
+  margin-left: 4px;
+  padding: 1px 5px;
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  background: #f5f5f5;
+  color: #555;
+}
+
+.tt-widget .remove-col-btn:hover {
+  background: #fdd;
+  border-color: #c00;
+  color: #c00;
+}
+
+/* ---- Controls bar ---- */
+.tt-widget .tt-controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tt-widget .tt-add-col-btn {
+  padding: 5px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background: #f0f0f0;
+  color: #333;
+}
+
+.tt-widget .tt-add-col-btn:hover { background: #e0e0e0; }
+
+.tt-widget .tt-check-btn {
+  padding: 5px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid #2a7a2a;
+  border-radius: 4px;
+  background: #d4edda;
+  color: #155724;
+  font-weight: 600;
+}
+
+.tt-widget .tt-check-btn:hover { background: #b8dfc4; }
+
+.tt-widget .tt-reset-btn {
+  padding: 5px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background: #f0f0f0;
+  color: #333;
+}
+
+.tt-widget .tt-reset-btn:hover { background: #e0e0e0; }
+
+/* Symbol insert buttons */
+.tt-widget .sym-btn {
+  padding: 3px 7px;
+  font-size: 0.85rem;
+  font-family: monospace;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  background: #f8f8f8;
+  color: #333;
+}
+
+.tt-widget .sym-btn:hover {
+  background: #eef;
+  border-color: #99a;
+}
+
+/* Thin vertical separator between control groups */
+.tt-widget .controls-sep {
+  display: inline-block;
+  width: 1px;
+  height: 1.5em;
+  background: #ccc;
+  margin: 0 2px;
+  align-self: center;
+}
+
+/* ---- Per-cell feedback after Check ----
+   High-specificity selectors + !important beat td.formula-cell[data-value=…] */
+.tt-widget td.formula-cell.cell-correct,
+.tt-widget td.formula-cell.cell-correct[data-value="T"],
+.tt-widget td.formula-cell.cell-correct[data-value="F"],
+.tt-widget td.formula-cell.cell-correct[data-value=""] {
+  background: #d4edda !important;
+  outline: 2px solid #28a745;
+  outline-offset: -2px;
+}
+
+.tt-widget td.formula-cell.cell-incorrect,
+.tt-widget td.formula-cell.cell-incorrect[data-value="T"],
+.tt-widget td.formula-cell.cell-incorrect[data-value="F"],
+.tt-widget td.formula-cell.cell-incorrect[data-value=""] {
+  background: #f8d7da !important;
+  outline: 2px solid #dc3545;
+  outline-offset: -2px;
+}
+
+/* Locked cells shouldn't suggest interactivity */
+.tt-widget td.formula-cell[data-locked] {
+  cursor: default;
+}
+
+/* ---- Equivalence verdict banner ---- */
+.tt-widget .tt-verdict {
+  display: none;
+  margin-bottom: 10px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+.tt-widget .tt-verdict.verdict-equivalent {
+  display: block;
+  background: #d4edda;
+  border: 2px solid #28a745;
+  color: #155724;
+}
+
+.tt-widget .tt-verdict.verdict-not-equivalent {
+  display: block;
+  background: #f8d7da;
+  border: 2px solid #dc3545;
+  color: #721c24;
+}
+
+/* Counterexample rows — amber on all cells.
+   Formula-cell feedback rules use !important so they still win. */
+.tt-widget tr.row-counterexample td {
+  background: #fff3cd;
+}
+
+/* ---- Problem header ---- */
+.tt-widget .tt-problem-header {
+  margin-bottom: 14px;
+}
+
+.tt-widget .tt-problem-header h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.tt-widget .tt-problem-header p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+}

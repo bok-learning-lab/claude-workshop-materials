@@ -1,0 +1,297 @@
+/* =========================================================================
+   Prime Factor Divisibility Checker — embeddable widget
+   All rules are scoped under .pfd-widget so styles do not leak to the
+   host page and are not affected by host styles.
+   ========================================================================= */
+
+.pfd-widget,
+.pfd-widget *,
+.pfd-widget *::before,
+.pfd-widget *::after {
+  box-sizing: border-box;
+}
+
+.pfd-widget {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #f7f7f5;
+  color: #222;
+  padding: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.pfd-widget h1.pfd-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.pfd-widget .pfd-intro {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin: 0 0 16px 0;
+  color: #333;
+}
+
+/* ── Round header (round counter, prompt) ────────────────────────────── */
+.pfd-widget .pfd-round-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.pfd-widget .pfd-round-counter {
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #666;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.pfd-widget .pfd-score {
+  font-size: 0.82rem;
+  color: #555;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.pfd-widget .pfd-prompt {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 14px 18px;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.pfd-widget .pfd-prompt .pfd-num {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 1.15rem;
+}
+
+/* ── Visualization area ──────────────────────────────────────────────── */
+.pfd-widget .pfd-viz {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  padding: 16px 12px 8px 12px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+}
+
+.pfd-widget .pfd-viz svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pfd-widget .pfd-row-label {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 14px;
+  fill: #333;
+}
+
+.pfd-widget .pfd-row-value {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  fill: #555;
+}
+
+.pfd-widget .pfd-prime-label {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 14px;
+  font-weight: bold;
+  fill: #444;
+  text-anchor: middle;
+}
+
+.pfd-widget .pfd-block {
+  stroke: rgba(0, 0, 0, 0.18);
+  stroke-width: 1;
+  transition: opacity 0.15s, filter 0.15s;
+}
+
+.pfd-widget .pfd-block.dim { opacity: 0.35; }
+
+.pfd-widget .pfd-block.highlight {
+  stroke: #145a32;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 3px rgba(40, 140, 80, 0.55));
+}
+
+.pfd-widget .pfd-column-rect {
+  fill: transparent;
+  stroke: none;
+}
+
+.pfd-widget .pfd-column-rect.fail {
+  fill: rgba(192, 57, 43, 0.12);
+  stroke: #c0392b;
+  stroke-width: 1.5;
+  stroke-dasharray: 4, 3;
+}
+
+.pfd-widget .pfd-axis-line {
+  stroke: #bbb;
+  stroke-width: 1;
+}
+
+.pfd-widget .pfd-empty-slot {
+  fill: #f3f3f1;
+  stroke: #e0e0dc;
+  stroke-width: 1;
+  stroke-dasharray: 2, 2;
+}
+
+/* ── Answer buttons ──────────────────────────────────────────────────── */
+.pfd-widget .pfd-answers {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.pfd-widget .pfd-btn {
+  padding: 9px 22px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  line-height: 1.4;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.pfd-widget .pfd-btn:hover:not(:disabled) {
+  background: #f0f0ee;
+  border-color: #999;
+}
+
+.pfd-widget .pfd-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.pfd-widget .pfd-btn.chosen-correct {
+  background: #e8f8ef;
+  border-color: #52be80;
+  color: #145a32;
+  font-weight: bold;
+}
+
+.pfd-widget .pfd-btn.chosen-wrong {
+  background: #fdeaea;
+  border-color: #c0392b;
+  color: #6b1c14;
+  font-weight: bold;
+}
+
+.pfd-widget .pfd-btn.show-correct {
+  border-color: #52be80;
+  color: #145a32;
+  font-weight: bold;
+}
+
+/* ── Feedback panel ──────────────────────────────────────────────────── */
+.pfd-widget .pfd-feedback {
+  border-radius: 4px;
+  padding: 11px 16px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.pfd-widget .pfd-feedback.hidden { display: none; }
+
+.pfd-widget .pfd-feedback.correct {
+  background: #e8f8ef;
+  border-left: 3px solid #52be80;
+  color: #145a32;
+}
+
+.pfd-widget .pfd-feedback.wrong {
+  background: #fdeaea;
+  border-left: 3px solid #c0392b;
+  color: #6b1c14;
+}
+
+.pfd-widget .pfd-feedback strong { font-weight: bold; }
+
+/* ── Next/finish bar ─────────────────────────────────────────────────── */
+.pfd-widget .pfd-nav {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pfd-widget .pfd-next-btn {
+  padding: 7px 18px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #444;
+}
+
+.pfd-widget .pfd-next-btn:hover:not(:disabled) {
+  background: #f0f0ee;
+  border-color: #999;
+}
+
+.pfd-widget .pfd-next-btn:disabled {
+  color: #bbb;
+  background: #f5f5f5;
+  cursor: default;
+}
+
+.pfd-widget .pfd-next-btn.hidden { display: none; }
+
+/* ── Summary panel ───────────────────────────────────────────────────── */
+.pfd-widget .pfd-summary {
+  background: #eef3fb;
+  border: 2px solid #4a7fc1;
+  border-radius: 4px;
+  padding: 16px 18px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.pfd-widget .pfd-summary.hidden { display: none; }
+
+.pfd-widget .pfd-summary .pfd-summary-headline {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #1a3660;
+  margin-bottom: 4px;
+}
+
+.pfd-widget .pfd-summary .pfd-summary-detail {
+  font-size: 0.92rem;
+  color: #1a3660;
+}
+
+.pfd-widget .pfd-restart-btn {
+  margin-top: 10px;
+  padding: 6px 16px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  background: #fff;
+  border: 1px solid #4a7fc1;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #1a3660;
+}
+
+.pfd-widget .pfd-restart-btn:hover {
+  background: #dbeafe;
+}

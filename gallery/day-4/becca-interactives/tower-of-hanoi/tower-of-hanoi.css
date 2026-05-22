@@ -1,0 +1,337 @@
+/* =========================================================================
+   Tower of Hanoi (W26) — embeddable widget
+   All rules scoped under .hanoi-widget. Multi-instance safe via per-mount
+   closures and root.querySelector.
+   ========================================================================= */
+
+.hanoi-widget,
+.hanoi-widget *,
+.hanoi-widget *::before,
+.hanoi-widget *::after {
+  box-sizing: border-box;
+}
+
+.hanoi-widget {
+  --hanoi-linen: #f4ede4;
+  --hanoi-linen-dark: #e8ddd0;
+  --hanoi-ink: #1a1612;
+  --hanoi-ink-light: #3d342a;
+  --hanoi-ink-faint: rgba(26, 22, 18, 0.12);
+  --hanoi-ink-ghost: rgba(26, 22, 18, 0.06);
+  --hanoi-green: #2d5a27;
+  --hanoi-green-dim: rgba(45, 90, 39, 0.2);
+  --hanoi-rose: #c4506e;
+  --hanoi-rose-dim: rgba(196, 80, 110, 0.18);
+  --hanoi-amber: #b8841d;
+  --hanoi-amber-dim: rgba(184, 132, 29, 0.2);
+  --hanoi-copper: #3a7d6e;
+  --hanoi-copper-dim: rgba(58, 125, 110, 0.15);
+  --hanoi-sepia: #8b6914;
+  --hanoi-blue: #4a78c2;
+  --hanoi-blue-dim: rgba(74, 120, 194, 0.18);
+  --hanoi-font-display: 'Playfair Display', Georgia, serif;
+  --hanoi-font-body: 'Crimson Pro', 'Times New Roman', serif;
+  --hanoi-font-mono: 'Fira Code', monospace;
+  --hanoi-radius: 3px;
+  --hanoi-transition: 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--hanoi-linen);
+  color: var(--hanoi-ink);
+  font-family: var(--hanoi-font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  border: 1px solid var(--hanoi-ink-faint);
+  border-radius: var(--hanoi-radius);
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.hanoi-widget .hanoi-header {
+  background: var(--hanoi-ink);
+  color: var(--hanoi-linen);
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 100;
+  border-bottom: 3px double var(--hanoi-sepia);
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+}
+.hanoi-widget .hanoi-header h2 {
+  font-family: var(--hanoi-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin: 0;
+}
+.hanoi-widget .hanoi-header h2 .hanoi-subtitle {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 10px;
+  letter-spacing: 0.04em;
+}
+.hanoi-widget .hanoi-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.hanoi-widget .hanoi-disk-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--hanoi-linen-dark);
+}
+.hanoi-widget .hanoi-disk-control label {
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+.hanoi-widget .hanoi-disk-control select {
+  font-family: var(--hanoi-font-mono);
+  font-size: 13px;
+  background: rgba(244, 237, 228, 0.07);
+  color: var(--hanoi-linen);
+  border: 1px solid rgba(244, 237, 228, 0.25);
+  border-radius: var(--hanoi-radius);
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.hanoi-widget .hanoi-disk-control select option { color: #222; }
+
+.hanoi-widget .hanoi-tool-btn {
+  font-family: var(--hanoi-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--hanoi-linen-dark);
+  border: 1px solid rgba(244, 237, 228, 0.2);
+  border-radius: var(--hanoi-radius);
+  padding: 6px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--hanoi-transition);
+}
+.hanoi-widget .hanoi-tool-btn:hover {
+  background: rgba(244, 237, 228, 0.1);
+  border-color: rgba(244, 237, 228, 0.4);
+  color: var(--hanoi-linen);
+}
+.hanoi-widget .hanoi-tool-btn.hanoi-danger {
+  border-color: rgba(196, 80, 110, 0.4);
+  color: #d4708a;
+}
+.hanoi-widget .hanoi-tool-btn.hanoi-danger:hover {
+  background: var(--hanoi-rose);
+  border-color: var(--hanoi-rose);
+  color: #fff;
+}
+
+/* ── Main area ─────────────────────────────────────────────────────── */
+.hanoi-widget .hanoi-main {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.hanoi-widget .hanoi-board-host {
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(139, 105, 20, 0.08), transparent 60%),
+    repeating-linear-gradient(0deg,
+      transparent, transparent 27px,
+      var(--hanoi-ink-ghost) 27px, var(--hanoi-ink-ghost) 28px),
+    var(--hanoi-linen);
+  padding: 10px;
+}
+.hanoi-widget .hanoi-board-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* SVG element styles */
+.hanoi-widget .hanoi-board-svg .hanoi-base {
+  fill: #6e5520;
+  stroke: var(--hanoi-ink);
+  stroke-width: 1;
+}
+.hanoi-widget .hanoi-board-svg .hanoi-peg-rod {
+  fill: #8b6914;
+  stroke: var(--hanoi-ink);
+  stroke-width: 0.5;
+}
+.hanoi-widget .hanoi-board-svg .hanoi-peg-hit {
+  fill: rgba(0, 0, 0, 0);
+  cursor: pointer;
+}
+.hanoi-widget .hanoi-board-svg .hanoi-peg-hit.hanoi-peg-selected {
+  fill: rgba(74, 120, 194, 0.08);
+  stroke: var(--hanoi-blue);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+.hanoi-widget .hanoi-board-svg .hanoi-peg-hit.hanoi-peg-shake {
+  fill: rgba(196, 80, 110, 0.12);
+  stroke: var(--hanoi-rose);
+  stroke-width: 2;
+  animation: hanoi-shake 0.32s ease;
+}
+.hanoi-widget .hanoi-board-svg .hanoi-peg-label {
+  font-family: var(--hanoi-font-display);
+  font-style: italic;
+  font-size: 13px;
+  fill: var(--hanoi-ink-light);
+  text-anchor: middle;
+  dominant-baseline: hanging;
+  user-select: none;
+}
+
+@keyframes hanoi-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.hanoi-widget .hanoi-board-svg .hanoi-disk {
+  stroke: rgba(26, 22, 18, 0.55);
+  stroke-width: 1.2;
+  rx: 4;
+  transition: x 200ms ease, y 200ms ease, width 200ms ease;
+}
+.hanoi-widget .hanoi-board-svg .hanoi-disk.hanoi-disk-held {
+  stroke: var(--hanoi-blue);
+  stroke-width: 2.5;
+}
+.hanoi-widget .hanoi-board-svg .hanoi-disk-text {
+  font-family: var(--hanoi-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  fill: #fff;
+  text-anchor: middle;
+  dominant-baseline: central;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────── */
+.hanoi-widget .hanoi-sidebar {
+  width: 260px;
+  min-width: 260px;
+  flex: 0 0 auto;
+  border-left: 2px solid var(--hanoi-ink-faint);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 27px,
+      rgba(26, 22, 18, 0.05) 27px, rgba(26, 22, 18, 0.05) 28px),
+    linear-gradient(135deg, #f4ede4, #f0e8dc);
+}
+.hanoi-widget .hanoi-sidebar-header {
+  padding: 14px 18px 10px;
+  border-bottom: 2px solid var(--hanoi-ink-faint);
+  background: rgba(26, 22, 18, 0.03);
+}
+.hanoi-widget .hanoi-sidebar-header h3 {
+  font-family: var(--hanoi-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--hanoi-ink);
+  margin: 0;
+}
+
+.hanoi-widget .hanoi-prop-section {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--hanoi-ink-ghost);
+}
+.hanoi-widget .hanoi-prop-title {
+  font-family: var(--hanoi-font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hanoi-amber);
+  margin-bottom: 7px;
+}
+.hanoi-widget .hanoi-prop-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  font-size: 13px;
+}
+.hanoi-widget .hanoi-prop-label {
+  color: var(--hanoi-ink-light);
+}
+.hanoi-widget .hanoi-prop-value {
+  font-family: var(--hanoi-font-mono);
+  font-weight: 500;
+  color: var(--hanoi-ink);
+}
+.hanoi-widget .hanoi-prop-value.hanoi-info { color: var(--hanoi-copper); }
+.hanoi-widget .hanoi-prop-value.hanoi-good { color: var(--hanoi-green); font-weight: 600; }
+
+.hanoi-widget .hanoi-prop-tooltip {
+  font-family: var(--hanoi-font-body);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--hanoi-ink-light);
+  opacity: 0.65;
+  margin: 4px 0 0 0;
+  line-height: 1.45;
+}
+
+.hanoi-widget .hanoi-status-banner {
+  margin: 12px 18px;
+  padding: 12px 14px;
+  border-radius: var(--hanoi-radius);
+  background: var(--hanoi-green-dim);
+  border: 1px solid var(--hanoi-green);
+  color: var(--hanoi-green);
+  font-family: var(--hanoi-font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  display: none;
+}
+.hanoi-widget .hanoi-status-banner.hanoi-visible { display: block; }
+.hanoi-widget .hanoi-status-banner strong { font-weight: 700; }
+
+/* Responsive */
+@media (max-width: 760px) {
+  .hanoi-widget {
+    height: auto;
+  }
+  .hanoi-widget .hanoi-main {
+    flex-direction: column;
+  }
+  .hanoi-widget .hanoi-board-host {
+    height: 360px;
+    flex: 0 0 auto;
+  }
+  .hanoi-widget .hanoi-sidebar {
+    width: 100%;
+    min-width: 100%;
+    border-left: none;
+    border-top: 2px solid var(--hanoi-ink-faint);
+  }
+  .hanoi-widget .hanoi-header h2 .hanoi-subtitle { display: none; }
+}

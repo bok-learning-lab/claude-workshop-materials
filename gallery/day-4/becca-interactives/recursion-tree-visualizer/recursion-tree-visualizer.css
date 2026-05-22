@@ -1,0 +1,588 @@
+/* =========================================================================
+   Recursion Tree Visualizer (W27) — embeddable widget
+   All rules scoped under .rt-widget. Multi-instance safe via per-mount
+   closures and root.querySelector.
+   ========================================================================= */
+
+.rt-widget,
+.rt-widget *,
+.rt-widget *::before,
+.rt-widget *::after {
+  box-sizing: border-box;
+}
+
+.rt-widget {
+  --rt-linen: #f4ede4;
+  --rt-linen-dark: #e8ddd0;
+  --rt-linen-darker: #d4c5b0;
+  --rt-ink: #1a1612;
+  --rt-ink-light: #3d342a;
+  --rt-ink-faint: rgba(26, 22, 18, 0.12);
+  --rt-ink-ghost: rgba(26, 22, 18, 0.06);
+  --rt-green: #2d5a27;
+  --rt-green-dim: rgba(45, 90, 39, 0.18);
+  --rt-rose: #c4506e;
+  --rt-rose-dim: rgba(196, 80, 110, 0.15);
+  --rt-amber: #b8841d;
+  --rt-amber-light: #d6a040;
+  --rt-amber-dim: rgba(184, 132, 29, 0.22);
+  --rt-copper: #3a7d6e;
+  --rt-copper-dim: rgba(58, 125, 110, 0.15);
+  --rt-sepia: #8b6914;
+  --rt-blue: #4a78c2;
+  --rt-blue-dim: rgba(74, 120, 194, 0.18);
+  --rt-violet: #7b4daa;
+  --rt-violet-dim: rgba(123, 77, 170, 0.15);
+  --rt-font-display: 'Playfair Display', Georgia, serif;
+  --rt-font-body: 'Crimson Pro', 'Times New Roman', serif;
+  --rt-font-mono: 'Fira Code', monospace;
+  --rt-font-math: 'Cambria Math', Cambria, Georgia, serif;
+  --rt-radius: 3px;
+  --rt-transition: 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--rt-linen);
+  color: var(--rt-ink);
+  font-family: var(--rt-font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  border: 1px solid var(--rt-ink-faint);
+  border-radius: var(--rt-radius);
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.rt-widget .rt-header {
+  background: var(--rt-ink);
+  color: var(--rt-linen);
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 100;
+  border-bottom: 3px double var(--rt-sepia);
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+}
+.rt-widget .rt-header h2 {
+  font-family: var(--rt-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin: 0;
+}
+.rt-widget .rt-header h2 .rt-subtitle {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Recurrence-input panel ─────────────────────────────────────────── */
+.rt-widget .rt-input-panel {
+  padding: 14px 22px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(74, 120, 194, 0.05), transparent 60%),
+    var(--rt-linen);
+  border-bottom: 1px solid var(--rt-ink-faint);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rt-widget .rt-form-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.rt-widget .rt-form-label {
+  font-family: var(--rt-font-body);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--rt-ink-light);
+  letter-spacing: 0.02em;
+}
+.rt-widget .rt-form-toggle {
+  display: inline-flex;
+  border: 1px solid var(--rt-ink-faint);
+  border-radius: var(--rt-radius);
+  overflow: hidden;
+}
+.rt-widget .rt-form-toggle button {
+  font-family: var(--rt-font-body);
+  font-size: 13px;
+  background: #fff;
+  color: var(--rt-ink-light);
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all var(--rt-transition);
+}
+.rt-widget .rt-form-toggle button:not(:last-child) {
+  border-right: 1px solid var(--rt-ink-faint);
+}
+.rt-widget .rt-form-toggle button.rt-active {
+  background: var(--rt-blue);
+  color: #fff;
+}
+
+.rt-widget .rt-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.rt-widget .rt-input-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.rt-widget .rt-input-group label {
+  font-family: var(--rt-font-math);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--rt-ink);
+}
+.rt-widget .rt-input-group input,
+.rt-widget .rt-input-group select {
+  font-family: var(--rt-font-mono);
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid var(--rt-ink-faint);
+  border-radius: var(--rt-radius);
+  background: #fff;
+  color: var(--rt-ink);
+  width: 64px;
+}
+.rt-widget .rt-input-group select {
+  width: 76px;
+}
+.rt-widget .rt-input-group input:focus,
+.rt-widget .rt-input-group select:focus {
+  outline: 2px solid var(--rt-blue);
+  outline-offset: 1px;
+  border-color: var(--rt-blue);
+}
+.rt-widget .rt-input-group input.rt-input-error {
+  border-color: var(--rt-rose);
+  background: rgba(196, 80, 110, 0.05);
+}
+
+.rt-widget .rt-build-btn {
+  font-family: var(--rt-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: var(--rt-blue);
+  color: #fff;
+  border: 1px solid var(--rt-blue);
+  border-radius: var(--rt-radius);
+  cursor: pointer;
+  transition: all var(--rt-transition);
+}
+.rt-widget .rt-build-btn:hover {
+  background: #3a5fa3;
+  border-color: #3a5fa3;
+}
+.rt-widget .rt-build-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.rt-widget .rt-recurrence-display {
+  font-family: var(--rt-font-math);
+  font-size: 16px;
+  color: var(--rt-ink);
+  background: rgba(74, 120, 194, 0.06);
+  border: 1px solid var(--rt-blue-dim);
+  border-radius: var(--rt-radius);
+  padding: 8px 14px;
+  margin-top: 4px;
+  font-style: italic;
+}
+.rt-widget .rt-recurrence-display .rt-recurrence-base {
+  margin-left: 16px;
+  color: var(--rt-ink-light);
+}
+
+.rt-widget .rt-validation {
+  font-family: var(--rt-font-body);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--rt-rose);
+  min-height: 1.3em;
+}
+.rt-widget .rt-validation.rt-validation-info {
+  color: var(--rt-amber);
+}
+
+/* ── Main body: tree + depth panel ───────────────────────────────────── */
+.rt-widget .rt-main {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid var(--rt-ink-faint);
+}
+
+.rt-widget .rt-tree-host {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 27px,
+      rgba(26, 22, 18, 0.04) 27px, rgba(26, 22, 18, 0.04) 28px),
+    linear-gradient(135deg, #f4ede4, #f0e8dc);
+  position: relative;
+}
+.rt-widget .rt-tree-svg {
+  display: block;
+  margin: 16px auto;
+}
+.rt-widget .rt-tree-empty {
+  font-family: var(--rt-font-body);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--rt-ink-light);
+  opacity: 0.6;
+  text-align: center;
+  padding: 50px 20px;
+}
+
+/* SVG element styles */
+.rt-widget .rt-tree-svg .rt-tree-edge {
+  stroke: rgba(26, 22, 18, 0.45);
+  stroke-width: 1.4;
+  fill: none;
+}
+.rt-widget .rt-tree-svg .rt-tree-edge.rt-edge-highlight {
+  stroke: var(--rt-amber);
+  stroke-width: 2;
+}
+
+.rt-widget .rt-tree-svg .rt-node-rect {
+  fill: #fff;
+  stroke: var(--rt-blue);
+  stroke-width: 1.5;
+  rx: 4;
+}
+.rt-widget .rt-tree-svg .rt-node-rect.rt-node-base {
+  stroke: var(--rt-green);
+  fill: var(--rt-green-dim);
+}
+.rt-widget .rt-tree-svg .rt-node-rect.rt-node-highlight {
+  stroke: var(--rt-amber);
+  stroke-width: 2.5;
+  fill: var(--rt-amber-dim);
+}
+
+.rt-widget .rt-tree-svg .rt-node-size {
+  font-family: var(--rt-font-math);
+  font-size: 11.5px;
+  font-style: italic;
+  fill: var(--rt-blue);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.rt-widget .rt-tree-svg .rt-node-rect.rt-node-base + .rt-node-size {
+  fill: var(--rt-green);
+}
+.rt-widget .rt-tree-svg .rt-node-work {
+  font-family: var(--rt-font-mono);
+  font-size: 10px;
+  fill: var(--rt-ink-light);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* ── Right: depth-by-depth panel ────────────────────────────────────── */
+.rt-widget .rt-depth-panel {
+  width: 290px;
+  min-width: 290px;
+  flex: 0 0 auto;
+  border-left: 2px solid var(--rt-ink-faint);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fdfaf3, #f4ede4);
+}
+.rt-widget .rt-depth-header {
+  padding: 14px 18px 8px;
+  border-bottom: 2px solid var(--rt-ink-faint);
+  background: rgba(26, 22, 18, 0.03);
+}
+.rt-widget .rt-depth-header h3 {
+  font-family: var(--rt-font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--rt-ink);
+  margin: 0;
+}
+.rt-widget .rt-depth-summary {
+  font-family: var(--rt-font-mono);
+  font-size: 11.5px;
+  color: var(--rt-ink-light);
+  margin-top: 2px;
+  opacity: 0.75;
+}
+
+.rt-widget .rt-depth-rows {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rt-widget .rt-depth-row {
+  font-family: var(--rt-font-mono);
+  font-size: 11.5px;
+  padding: 6px 10px;
+  border-radius: var(--rt-radius);
+  background: rgba(74, 120, 194, 0.04);
+  border: 1px solid rgba(74, 120, 194, 0.12);
+  color: var(--rt-ink);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: baseline;
+}
+.rt-widget .rt-depth-row.rt-row-base {
+  background: var(--rt-green-dim);
+  border-color: var(--rt-green);
+}
+.rt-widget .rt-depth-row.rt-row-highlight {
+  background: var(--rt-amber-dim);
+  border-color: var(--rt-amber);
+  font-weight: 600;
+}
+.rt-widget .rt-depth-row .rt-row-label {
+  color: var(--rt-ink-light);
+  font-style: italic;
+  font-family: var(--rt-font-body);
+  font-size: 12px;
+}
+.rt-widget .rt-depth-row .rt-row-formula {
+  font-family: var(--rt-font-math);
+  font-size: 13px;
+}
+.rt-widget .rt-depth-row .rt-row-total {
+  text-align: right;
+  font-weight: 600;
+  color: var(--rt-blue);
+}
+.rt-widget .rt-depth-row.rt-row-base .rt-row-total { color: var(--rt-green); }
+.rt-widget .rt-depth-row.rt-row-highlight .rt-row-total { color: var(--rt-amber); }
+
+.rt-widget .rt-depth-totals {
+  border-top: 2px solid var(--rt-ink-faint);
+  padding: 12px 14px;
+  background: rgba(26, 22, 18, 0.03);
+}
+.rt-widget .rt-depth-totals .rt-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin: 2px 0;
+}
+.rt-widget .rt-depth-totals .rt-total-label {
+  color: var(--rt-ink-light);
+  font-style: italic;
+  font-family: var(--rt-font-body);
+}
+.rt-widget .rt-depth-totals .rt-total-value {
+  font-family: var(--rt-font-mono);
+  font-weight: 600;
+  color: var(--rt-ink);
+}
+.rt-widget .rt-depth-totals .rt-grand-total .rt-total-value {
+  color: var(--rt-blue);
+  font-size: 15px;
+}
+
+.rt-widget .rt-step-controls {
+  border-top: 1px solid var(--rt-ink-faint);
+  padding: 10px 14px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: rgba(26, 22, 18, 0.02);
+}
+.rt-widget .rt-step-btn {
+  font-family: var(--rt-font-body);
+  font-size: 12.5px;
+  padding: 5px 12px;
+  border: 1px solid var(--rt-ink-faint);
+  border-radius: var(--rt-radius);
+  background: #fff;
+  color: var(--rt-ink);
+  cursor: pointer;
+  flex: 1;
+  white-space: nowrap;
+  transition: all var(--rt-transition);
+}
+.rt-widget .rt-step-btn:hover {
+  background: var(--rt-amber-dim);
+  border-color: var(--rt-amber);
+  color: var(--rt-amber);
+}
+.rt-widget .rt-step-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.rt-widget .rt-step-btn.rt-step-primary {
+  background: var(--rt-amber);
+  color: #fff;
+  border-color: var(--rt-amber);
+}
+.rt-widget .rt-step-btn.rt-step-primary:hover {
+  background: #9d6f15;
+  border-color: #9d6f15;
+}
+
+/* ── Practice mode ──────────────────────────────────────────────────── */
+.rt-widget .rt-tree-svg .rt-node-rect.rt-node-blank {
+  fill: #fff;
+  stroke: var(--rt-ink-faint);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 2;
+}
+.rt-widget .rt-tree-svg .rt-node-rect.rt-node-blank.rt-node-base {
+  stroke: var(--rt-green);
+  stroke-dasharray: 3 2;
+  fill: #fff;
+}
+
+.rt-widget .rt-edit-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1px;
+  padding: 3px 4px;
+  pointer-events: auto;
+  font-family: var(--rt-font-mono);
+  font-size: 11px;
+}
+.rt-widget .rt-edit-cell.rt-edit-base {
+  /* base nodes get a subtle green tint via the rect underneath */
+}
+.rt-widget .rt-edit-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.1;
+}
+.rt-widget .rt-edit-lbl {
+  font-family: var(--rt-font-math);
+  font-style: italic;
+  font-size: 10.5px;
+  color: var(--rt-ink-light);
+}
+.rt-widget .rt-edit-in {
+  font-family: var(--rt-font-mono);
+  font-size: 11px;
+  text-align: center;
+  width: 32px;
+  padding: 1px 2px;
+  border: 1px solid var(--rt-ink-faint);
+  border-radius: 2px;
+  background: #fff;
+  color: var(--rt-ink);
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.rt-widget .rt-edit-in.rt-edit-work {
+  width: 40px;
+}
+.rt-widget .rt-edit-in:focus {
+  border-color: var(--rt-blue);
+  outline: 2px solid var(--rt-blue-dim);
+  outline-offset: 0;
+}
+.rt-widget .rt-edit-in.rt-correct {
+  border-color: var(--rt-green);
+  background: rgba(45, 90, 39, 0.10);
+  color: var(--rt-green);
+  font-weight: 600;
+}
+.rt-widget .rt-edit-in.rt-wrong {
+  border-color: var(--rt-rose);
+  background: rgba(196, 80, 110, 0.08);
+  color: var(--rt-rose);
+}
+.rt-widget .rt-edit-in.rt-correct:focus {
+  outline-color: var(--rt-green-dim);
+}
+.rt-widget .rt-edit-in.rt-wrong:focus {
+  outline-color: var(--rt-rose-dim);
+}
+
+.rt-widget .rt-row-progress {
+  font-family: var(--rt-font-mono);
+  font-size: 10.5px;
+  color: var(--rt-ink-light);
+  opacity: 0.7;
+  font-style: normal;
+}
+.rt-widget .rt-depth-row.rt-row-practice {
+  background: rgba(123, 77, 170, 0.04);
+  border-color: rgba(123, 77, 170, 0.14);
+}
+.rt-widget .rt-depth-row.rt-row-practice .rt-row-total {
+  color: var(--rt-ink-faint);
+}
+.rt-widget .rt-depth-row.rt-row-practice.rt-row-complete {
+  background: var(--rt-green-dim);
+  border-color: var(--rt-green);
+}
+.rt-widget .rt-depth-row.rt-row-practice.rt-row-complete .rt-row-total {
+  color: var(--rt-green);
+}
+.rt-widget .rt-depth-row.rt-row-practice.rt-row-base.rt-row-complete {
+  background: var(--rt-green-dim);
+}
+
+.rt-widget .rt-practice-controls {
+  display: none;
+}
+
+/* Scrollbar */
+.rt-widget .rt-tree-host::-webkit-scrollbar,
+.rt-widget .rt-depth-rows::-webkit-scrollbar { width: 6px; height: 6px; }
+.rt-widget .rt-tree-host::-webkit-scrollbar-thumb,
+.rt-widget .rt-depth-rows::-webkit-scrollbar-thumb {
+  background: var(--rt-linen-darker);
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+  .rt-widget .rt-main {
+    flex-direction: column;
+  }
+  .rt-widget .rt-tree-host {
+    height: 380px;
+    flex: 0 0 auto;
+  }
+  .rt-widget .rt-depth-panel {
+    width: 100%;
+    min-width: 100%;
+    border-left: none;
+    border-top: 2px solid var(--rt-ink-faint);
+  }
+  .rt-widget .rt-header h2 .rt-subtitle { display: none; }
+}

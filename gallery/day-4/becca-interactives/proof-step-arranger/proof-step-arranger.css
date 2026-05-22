@@ -1,0 +1,312 @@
+/* =========================================================================
+   Proof-Step Arranger — embeddable widget
+   All rules are scoped under .psa-widget so styles do not leak to the host
+   page and are not affected by host styles. Multiple instances on the same
+   page coexist because state lives in JS closures and DOM refs are scoped
+   per-mount via root.querySelector.
+   ========================================================================= */
+
+.psa-widget,
+.psa-widget *,
+.psa-widget *::before,
+.psa-widget *::after {
+  box-sizing: border-box;
+}
+
+.psa-widget {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #f7f7f5;
+  color: #222;
+  padding: 24px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.psa-widget h1.psa-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+}
+
+/* ── Intro card ─────────────────────────────────────────────────────── */
+.psa-widget .psa-intro {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.psa-widget .psa-intro p { margin: 0.4em 0; }
+.psa-widget .psa-intro p:first-child { margin-top: 0; }
+.psa-widget .psa-intro p:last-child { margin-bottom: 0; }
+
+/* ── Zone (Bench / Proof) shell ─────────────────────────────────────── */
+.psa-widget .psa-zone {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 14px 14px 10px 14px;
+  margin-bottom: 16px;
+}
+
+.psa-widget .psa-zone-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.psa-widget .psa-zone-title {
+  font-size: 0.95rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.psa-widget .psa-zone-hint {
+  font-size: 0.82rem;
+  color: #777;
+  font-style: italic;
+}
+
+/* List of cards inside a zone. Empty zones still need a height so they
+   can act as a drop target. */
+.psa-widget .psa-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 64px;
+}
+
+.psa-widget .psa-list-empty-message {
+  color: #aaa;
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 18px 6px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+}
+
+/* When a list is the active drop target, show a subtle highlight on the
+   zone wrapper. The class is toggled by JS on dragenter/dragleave. */
+.psa-widget .psa-zone.psa-drop-active {
+  background: #eef6ff;
+  border-color: #6699cc;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────── */
+.psa-widget .psa-card {
+  background: #fafaf6;
+  border: 1px solid #bbb;
+  border-left: 4px solid #888;
+  border-radius: 3px;
+  padding: 10px 12px 10px 14px;
+  font-size: 0.96rem;
+  line-height: 1.5;
+  cursor: grab;
+  user-select: none;
+  position: relative;
+  transition: background 80ms ease, border-color 80ms ease;
+}
+
+.psa-widget .psa-card:hover {
+  background: #fff;
+  border-color: #888;
+}
+
+.psa-widget .psa-card.psa-dragging {
+  opacity: 0.45;
+  cursor: grabbing;
+}
+
+.psa-widget .psa-card .psa-card-grip {
+  display: inline-block;
+  color: #aaa;
+  margin-right: 8px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: -1px;
+  vertical-align: middle;
+  font-size: 0.95rem;
+}
+
+.psa-widget .psa-card .psa-card-body {
+  display: inline;
+  vertical-align: middle;
+}
+
+.psa-widget .psa-card .psa-card-body em {
+  font-style: italic;
+}
+
+/* Drop indicator: a small horizontal bar inserted between cards while
+   dragging, marking the slot the card would land in. */
+.psa-widget .psa-drop-indicator {
+  height: 0;
+  border-top: 2px solid #6699cc;
+  margin: -1px 0;
+  pointer-events: none;
+}
+
+/* ── Feedback states (after Check) ─────────────────────────────────── */
+.psa-widget .psa-card.psa-feedback-ok {
+  border-color: #6aa86a;
+  background: #f1faf1;
+}
+
+.psa-widget .psa-card.psa-feedback-bad {
+  border-color: #c87474;
+  background: #fdf2f2;
+}
+
+.psa-widget .psa-feedback-message {
+  display: block;
+  margin-top: 6px;
+  padding-left: 8px;
+  border-left: 2px solid #c87474;
+  font-size: 0.86rem;
+  font-style: italic;
+  color: #884444;
+}
+
+.psa-widget .psa-card.psa-feedback-ok .psa-feedback-message {
+  border-left-color: #6aa86a;
+  color: #336633;
+}
+
+/* ── Success state: role-coloured cards ────────────────────────────── */
+.psa-widget .psa-card.psa-role-claim {
+  border-left-color: #555;
+  background: #f0f0ee;
+  border-color: #777;
+}
+
+.psa-widget .psa-card.psa-role-assumption {
+  border-left-color: #4a78c2;
+  background: #eef3fb;
+  border-color: #4a78c2;
+}
+
+.psa-widget .psa-card.psa-role-derivation {
+  border-left-color: #b08a3a;
+  background: #fbf6e8;
+  border-color: #b08a3a;
+}
+
+.psa-widget .psa-card.psa-role-contradiction {
+  border-left-color: #a84a6e;
+  background: #fbeef3;
+  border-color: #a84a6e;
+}
+
+.psa-widget .psa-success-banner {
+  background: #eaf5ea;
+  border: 1px solid #6aa86a;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: #1f4d1f;
+}
+
+.psa-widget .psa-success-banner strong { color: #1f4d1f; }
+
+.psa-widget .psa-role-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.psa-widget .psa-role-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.psa-widget .psa-role-legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid #888;
+  vertical-align: middle;
+}
+
+.psa-widget .psa-role-legend-swatch.psa-role-claim {
+  background: #f0f0ee; border-color: #777;
+}
+.psa-widget .psa-role-legend-swatch.psa-role-assumption {
+  background: #eef3fb; border-color: #4a78c2;
+}
+.psa-widget .psa-role-legend-swatch.psa-role-derivation {
+  background: #fbf6e8; border-color: #b08a3a;
+}
+.psa-widget .psa-role-legend-swatch.psa-role-contradiction {
+  background: #fbeef3; border-color: #a84a6e;
+}
+
+/* ── Controls ──────────────────────────────────────────────────────── */
+.psa-widget .psa-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.psa-widget .psa-btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border: 1px solid #888;
+  background: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 80ms ease, border-color 80ms ease;
+}
+
+.psa-widget .psa-btn:hover {
+  background: #f0f0e8;
+  border-color: #555;
+}
+
+.psa-widget .psa-btn-primary {
+  background: #344b6b;
+  color: #fff;
+  border-color: #344b6b;
+}
+
+.psa-widget .psa-btn-primary:hover {
+  background: #25395a;
+  border-color: #25395a;
+}
+
+.psa-widget .psa-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.psa-widget .psa-btn:disabled:hover {
+  background: #fff;
+  border-color: #888;
+}
+
+.psa-widget .psa-status-line {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  min-height: 1.2em;
+}
+
+.psa-widget .psa-status-line.psa-status-error { color: #884444; }
+
+/* ── Helpers ───────────────────────────────────────────────────────── */
+.psa-widget .psa-hidden { display: none !important; }

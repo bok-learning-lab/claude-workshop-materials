@@ -1,0 +1,401 @@
+/* =========================================================================
+   Lazy Susan Pigeonhole Visualizer (W35) — embeddable widget
+   All rules are scoped under .lzs-widget. Multiple instances on one page
+   coexist because state lives in JS closures and DOM refs are scoped
+   per-mount via root.querySelector.
+   ========================================================================= */
+
+.lzs-widget,
+.lzs-widget *,
+.lzs-widget *::before,
+.lzs-widget *::after {
+  box-sizing: border-box;
+}
+
+.lzs-widget {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #f7f7f5;
+  color: #222;
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.lzs-widget h1.lzs-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+}
+
+.lzs-widget .lzs-math { font-style: italic; font-family: 'Cambria Math', Cambria, Georgia, serif; }
+
+/* ── Statement / hint ─────────────────────────────────────────────────── */
+.lzs-widget .lzs-statement {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 12px 18px;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.lzs-widget .lzs-statement p { margin: 0.4em 0; }
+.lzs-widget .lzs-statement p:first-child { margin-top: 0; }
+.lzs-widget .lzs-statement p:last-child { margin-bottom: 0; }
+
+.lzs-widget .lzs-hint {
+  font-size: 0.88rem;
+  color: #555;
+  background: #f3efe2;
+  border-left: 3px solid #c8a648;
+  padding: 8px 12px;
+  border-radius: 0 3px 3px 0;
+  margin-bottom: 14px;
+}
+.lzs-widget .lzs-hint p { margin: 0.2em 0; font-style: italic; }
+
+/* ── Two-column body ─────────────────────────────────────────────────── */
+.lzs-widget .lzs-body {
+  display: grid;
+  grid-template-columns: minmax(380px, 420px) minmax(0, 1fr);
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+/* ── Responsive: stack mapper panel below viz on narrow widgets ─────────
+   Two trigger paths:
+     (a) viewport media query — fires on actual mobile devices
+     (b) .lzs-narrow class — set by a ResizeObserver in
+         lazy-susan-pigeonhole.js based on the widget root's own width,
+         so the layout adapts even when the widget is embedded in a
+         narrow column on a wide-viewport desktop (e.g. LXP content
+         column).
+   ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .lzs-widget .lzs-body { grid-template-columns: 1fr; }
+}
+.lzs-widget.lzs-narrow .lzs-body { grid-template-columns: 1fr; }
+
+.lzs-widget .lzs-panel {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 14px 16px 16px 16px;
+}
+
+.lzs-widget .lzs-panel-title {
+  font-size: 0.93rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #444;
+  text-transform: uppercase;
+  margin: 0 0 10px 0;
+}
+
+/* ── Visualization SVG ───────────────────────────────────────────────── */
+.lzs-widget .lzs-viz-svg {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  margin: 0 auto;
+  background: #fafaf6;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-table-bg {
+  fill: #f5efe1;
+  stroke: #b8a878;
+  stroke-width: 1;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-susan-group {
+  transition: transform 250ms cubic-bezier(.4, .0, .2, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-susan-disk {
+  fill: #ffffff;
+  stroke: #888;
+  stroke-width: 1.5;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-susan-spindle {
+  fill: #888;
+  stroke: none;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-seat-circle {
+  fill: #fff;
+  stroke: #344b6b;
+  stroke-width: 1.5;
+}
+.lzs-widget .lzs-viz-svg .lzs-seat-circle.lzs-matched {
+  fill: #eaf5ea;
+  stroke: #2e6a2e;
+  stroke-width: 2.5;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-seat-text {
+  font-family: 'Cambria Math', Cambria, Georgia, serif;
+  font-size: 14px;
+  font-weight: bold;
+  fill: #344b6b;
+  text-anchor: middle;
+  dominant-baseline: central;
+  user-select: none;
+}
+.lzs-widget .lzs-viz-svg .lzs-seat-circle.lzs-matched + .lzs-seat-text { fill: #1f4d1f; }
+
+.lzs-widget .lzs-viz-svg .lzs-dish-circle {
+  fill: #fffaf0;
+  stroke: #b08a3a;
+  stroke-width: 1.2;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-dish-text {
+  font-family: 'Cambria Math', Cambria, Georgia, serif;
+  font-size: 12px;
+  font-weight: 600;
+  fill: #6e5520;
+  text-anchor: middle;
+  dominant-baseline: central;
+  user-select: none;
+}
+
+.lzs-widget .lzs-viz-svg .lzs-match-line {
+  stroke: #2e6a2e;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ── Rotation controls (below SVG) ───────────────────────────────────── */
+.lzs-widget .lzs-rotation-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.lzs-widget .lzs-rotate-btn {
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: bold;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #888;
+  background: #fff;
+  color: #344b6b;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lzs-widget .lzs-rotate-btn:hover {
+  background: #eef3fb;
+  border-color: #344b6b;
+}
+
+.lzs-widget .lzs-rotation-status {
+  font-family: 'Cambria Math', Cambria, Georgia, serif;
+  font-size: 0.9rem;
+  color: #444;
+  min-width: 130px;
+  text-align: center;
+}
+.lzs-widget .lzs-rotation-status .lzs-match-count.lzs-active {
+  color: #2e6a2e;
+  font-weight: bold;
+}
+
+/* ── Tool links (new derangement) ───────────────────────────────────── */
+.lzs-widget .lzs-tools-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+.lzs-widget .lzs-tool-link {
+  font-family: inherit;
+  font-size: 0.85rem;
+  background: none;
+  border: none;
+  color: #4a78c2;
+  cursor: pointer;
+  padding: 2px 6px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.lzs-widget .lzs-tool-link:hover { color: #25395a; }
+
+/* ── Needed-rotations disclosure ─────────────────────────────────────── */
+.lzs-widget .lzs-needed-details {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+.lzs-widget .lzs-needed-details summary {
+  cursor: pointer;
+  color: #4a78c2;
+  padding: 4px 0;
+  user-select: none;
+}
+.lzs-widget .lzs-needed-details summary:hover { color: #25395a; }
+
+.lzs-widget .lzs-needed-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-family: 'Cambria Math', Cambria, Georgia, serif;
+}
+.lzs-widget .lzs-needed-table th,
+.lzs-widget .lzs-needed-table td {
+  border: 1px solid #ddd;
+  padding: 5px 8px;
+  text-align: left;
+}
+.lzs-widget .lzs-needed-table th {
+  background: #f0ece0;
+  font-weight: bold;
+}
+.lzs-widget .lzs-needed-table tr.lzs-needed-dup td {
+  background: #f4e0e8;
+  color: #6e2546;
+  font-weight: 600;
+}
+.lzs-widget .lzs-needed-summary {
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: #f9f4f6;
+  border-left: 3px solid #a84a6e;
+  font-size: 0.83rem;
+  color: #6e2546;
+  font-style: italic;
+}
+
+/* ── Mapper panel (4 dropdowns) ──────────────────────────────────────── */
+.lzs-widget .lzs-component {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.lzs-widget .lzs-component:last-child { margin-bottom: 4px; }
+
+.lzs-widget .lzs-component-label {
+  font-size: 0.93rem;
+  font-weight: bold;
+  color: #333;
+}
+.lzs-widget .lzs-component-prompt {
+  font-size: 0.84rem;
+  color: #666;
+  font-style: italic;
+}
+
+.lzs-widget .lzs-select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.lzs-widget select.lzs-select {
+  font-family: inherit;
+  font-size: 0.92rem;
+  padding: 7px 10px;
+  border: 1px solid #888;
+  background: #fafaf6;
+  border-radius: 3px;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #222;
+  cursor: pointer;
+}
+.lzs-widget select.lzs-select:focus {
+  outline: 2px solid #6699cc;
+  outline-offset: 1px;
+}
+
+.lzs-widget .lzs-marker {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  visibility: hidden;
+}
+.lzs-widget .lzs-marker.lzs-marker-ok { background: #6aa86a; color: #fff; visibility: visible; }
+.lzs-widget .lzs-marker.lzs-marker-bad { background: #c87474; color: #fff; visibility: visible; }
+
+.lzs-widget .lzs-component-feedback {
+  margin-top: 6px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  border-left: 2px solid #888;
+  border-radius: 0 3px 3px 0;
+  display: none;
+}
+.lzs-widget .lzs-component-feedback.lzs-feedback-ok {
+  display: block; background: #f1faf1; border-left-color: #6aa86a; color: #2e5e2e; font-style: italic;
+}
+.lzs-widget .lzs-component-feedback.lzs-feedback-bad {
+  display: block; background: #fdf2f2; border-left-color: #c87474; color: #884444; font-style: italic;
+}
+.lzs-widget .lzs-component.lzs-component-bad select.lzs-select { border-color: #c87474; background: #fdf2f2; }
+.lzs-widget .lzs-component.lzs-component-ok select.lzs-select { border-color: #6aa86a; background: #f4faf4; }
+
+/* ── Success banner ──────────────────────────────────────────────────── */
+.lzs-widget .lzs-success-banner {
+  background: #eaf5ea;
+  border: 1px solid #6aa86a;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: #1f4d1f;
+  display: none;
+}
+.lzs-widget .lzs-success-banner.lzs-visible { display: block; }
+.lzs-widget .lzs-success-banner strong { color: #1f4d1f; }
+.lzs-widget .lzs-success-banner p { margin: 0.3em 0; }
+
+/* ── Controls ──────────────────────────────────────────────────────── */
+.lzs-widget .lzs-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.lzs-widget .lzs-btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border: 1px solid #888;
+  background: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.lzs-widget .lzs-btn:hover { background: #f0f0e8; border-color: #555; }
+.lzs-widget .lzs-btn-primary { background: #344b6b; color: #fff; border-color: #344b6b; }
+.lzs-widget .lzs-btn-primary:hover { background: #25395a; border-color: #25395a; }
+
+.lzs-widget .lzs-status-line {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  min-height: 1.2em;
+}
+.lzs-widget .lzs-status-line.lzs-status-error { color: #884444; }

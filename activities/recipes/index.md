@@ -1,10 +1,10 @@
 ---
 layout: default
-title: "03 · Recipes"
+title: "Recipes"
 section: activities
 ---
 
-# 03 · Recipes
+# Recipes
 
 <div class="page-lead">A gentle introduction to multimodal prompting and context sensitivity. Give Claude a photo, a partial recipe, or a list of ingredients — and observe how much it can reconstruct from partial context.</div>
 

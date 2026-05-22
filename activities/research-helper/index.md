@@ -4,7 +4,7 @@ title: "Research Helper"
 section: activities
 ---
 
-# 06 · Research Helper
+# Research Helper
 
 <div class="page-lead">Summarize, cross-link, and synthesize a set of research papers — with Claude doing the reading loop and you directing the synthesis.</div>
 

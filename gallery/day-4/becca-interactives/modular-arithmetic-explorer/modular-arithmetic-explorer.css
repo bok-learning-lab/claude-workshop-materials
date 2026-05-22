@@ -1,0 +1,358 @@
+/* =========================================================================
+   Modular Arithmetic Explorer — embeddable widget
+   All rules are scoped under .mae-widget so styles do not leak to the host
+   page and are not affected by host styles.
+   ========================================================================= */
+
+.mae-widget,
+.mae-widget *,
+.mae-widget *::before,
+.mae-widget *::after {
+  box-sizing: border-box;
+}
+
+.mae-widget {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #f7f7f5;
+  color: #222;
+  padding: 24px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.mae-widget h1.mae-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.mae-widget .mae-intro {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0 0 16px 0;
+  color: #333;
+}
+
+.mae-widget .mae-intro p { margin: 0 0 10px 0; }
+.mae-widget .mae-intro p:last-child { margin-bottom: 0; }
+
+.mae-widget em { font-style: italic; }
+
+/* ── Controls bar ──────────────────────────────────────────────────────── */
+.mae-widget .mae-controls {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+
+.mae-widget .mae-control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mae-widget .mae-control-label {
+  font-size: 0.88rem;
+  color: #555;
+  font-style: italic;
+}
+
+.mae-widget .mae-modulus-select {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  color: #222;
+  cursor: pointer;
+}
+
+.mae-widget .mae-op-toggle {
+  display: inline-flex;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mae-widget .mae-op-btn {
+  padding: 5px 14px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  background: #fff;
+  border: none;
+  border-left: 1px solid #ddd;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.1s;
+}
+
+.mae-widget .mae-op-btn:first-child { border-left: none; }
+
+.mae-widget .mae-op-btn:hover {
+  background: #f0f0ee;
+}
+
+.mae-widget .mae-op-btn.active {
+  background: #dbeafe;
+  color: #1e3f8a;
+  font-weight: bold;
+}
+
+/* ── Table panel ──────────────────────────────────────────────────────── */
+.mae-widget .mae-table-panel {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 14px 18px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  margin-bottom: 14px;
+  overflow-x: auto;
+}
+
+.mae-widget .mae-table-caption {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #444;
+  margin: 0 0 10px 0;
+}
+
+.mae-widget .mae-table {
+  border-collapse: collapse;
+  font-family: 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.88rem;
+  margin: 0 auto;
+}
+
+.mae-widget .mae-table th,
+.mae-widget .mae-table td {
+  border: 1px solid #ddd;
+  padding: 5px 9px;
+  text-align: center;
+  min-width: 32px;
+  height: 30px;
+  color: #333;
+  background: #fff;
+  transition: background 0.08s;
+}
+
+.mae-widget .mae-table thead th {
+  background: #f0f0ee;
+  color: #444;
+  font-weight: bold;
+  font-size: 0.82rem;
+}
+
+.mae-widget .mae-table thead th.mae-corner {
+  background: #e6e6e2;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.mae-widget .mae-table tbody th.mae-row-label {
+  background: #fafaf8;
+  font-weight: bold;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #888;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.08s;
+}
+
+.mae-widget .mae-table tbody th.mae-row-label:hover {
+  background: #eef0f5;
+}
+
+.mae-widget .mae-table tbody th.mae-row-label.mae-row-invertible {
+  color: #2a8a3e;
+}
+
+.mae-widget .mae-table tbody th.mae-row-label.mae-row-zerodiv {
+  color: #c0392b;
+}
+
+.mae-widget .mae-table tbody th.mae-row-label.mae-row-trivial {
+  color: #999;
+}
+
+.mae-widget .mae-table tbody th.mae-row-label.selected {
+  background: #fff7cc;
+  outline: 2px solid #c9a437;
+  outline-offset: -2px;
+}
+
+/* Cell shadings — only used in mult mode */
+.mae-widget .mae-table td.mae-cell-one {
+  background: #e8f8ef;
+  font-weight: bold;
+  color: #1e6b34;
+}
+
+.mae-widget .mae-table td.mae-cell-zero-bad {
+  background: #fdecea;
+  color: #8a2a1f;
+  font-weight: bold;
+}
+
+.mae-widget .mae-table td.mae-hover-row,
+.mae-widget .mae-table th.mae-hover-row,
+.mae-widget .mae-table td.mae-hover-col,
+.mae-widget .mae-table th.mae-hover-col {
+  background: #eef3fb;
+}
+
+.mae-widget .mae-table td.mae-cell-one.mae-hover-row,
+.mae-widget .mae-table td.mae-cell-one.mae-hover-col {
+  background: #d6f0e0;
+}
+
+.mae-widget .mae-table td.mae-cell-zero-bad.mae-hover-row,
+.mae-widget .mae-table td.mae-cell-zero-bad.mae-hover-col {
+  background: #fcdcd6;
+}
+
+.mae-widget .mae-table tbody tr.mae-row-selected td,
+.mae-widget .mae-table tbody tr.mae-row-selected th {
+  background: #fffbea;
+}
+
+.mae-widget .mae-table tbody tr.mae-row-selected td.mae-cell-one {
+  background: #d6f0e0;
+}
+
+.mae-widget .mae-table tbody tr.mae-row-selected td.mae-cell-zero-bad {
+  background: #fcdcd6;
+}
+
+/* ── Summary panel ────────────────────────────────────────────────────── */
+.mae-widget .mae-summary {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.mae-widget .mae-summary h2 {
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin: 0 0 8px 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.mae-widget .mae-summary-line {
+  margin: 4px 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.88rem;
+  color: #333;
+}
+
+.mae-widget .mae-summary-line .mae-class-list {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+}
+
+.mae-widget .mae-summary-invertible-label {
+  color: #2a8a3e;
+  font-weight: bold;
+}
+
+.mae-widget .mae-summary-zerodiv-label {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.mae-widget .mae-summary-detail {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #ddd;
+  font-size: 0.9rem;
+  color: #333;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.mae-widget .mae-summary-detail .mae-math {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.92rem;
+  color: #222;
+}
+
+.mae-widget .mae-summary-detail .mae-detail-conclusion {
+  font-style: italic;
+  margin-top: 4px;
+  color: #555;
+}
+
+.mae-widget .mae-summary-detail.mae-detail-empty {
+  color: #888;
+  font-style: italic;
+}
+
+/* ── Theorem panel (addition mode) ────────────────────────────────────── */
+.mae-widget .mae-add-note {
+  background: #eef3fb;
+  border-left: 3px solid #4a7fc1;
+  border-radius: 0 4px 4px 0;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  color: #1a3660;
+}
+
+/* ── Reveal-answer prompt ─────────────────────────────────────────────── */
+.mae-widget .mae-prompt {
+  background: #fffbea;
+  border-left: 3px solid #e5b800;
+  border-radius: 0 4px 4px 0;
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.mae-widget .mae-prompt-question {
+  font-style: italic;
+  color: #5a4a00;
+  margin-bottom: 6px;
+}
+
+.mae-widget .mae-reveal-btn {
+  padding: 5px 14px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #444;
+  margin-top: 4px;
+  transition: background 0.1s;
+}
+
+.mae-widget .mae-reveal-btn:hover {
+  background: #f0f0ee;
+  border-color: #999;
+}
+
+.mae-widget .mae-reveal-answer {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #2a8a3e;
+}
+
+.mae-widget .mae-reveal-answer.hidden { display: none; }
+.mae-widget .hidden { display: none; }

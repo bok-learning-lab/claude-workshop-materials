@@ -1,0 +1,470 @@
+/* ============================================================================
+   Monty Hall LoTP Partition Visualizer — styles.
+
+   All selectors are scoped to .mhl-widget so multiple instances on the same
+   Canvas page never collide. No document-wide IDs.
+============================================================================ */
+
+.mhl-widget {
+  --mhl-bg:        #fbf9f5;
+  --mhl-bg-card:   #ffffff;
+  --mhl-border:    #d4cebf;
+  --mhl-border-strong: #8a7a5e;
+  --mhl-text:      #1f1d18;
+  --mhl-muted:     #6d665a;
+  --mhl-accent:    #8b3550;     /* rose — primary accent */
+  --mhl-accent-bg: #fbe7ec;
+  --mhl-prize:     #b8841d;     /* gold — prize doors */
+  --mhl-prize-bg:  #fdf2dd;
+  --mhl-goat:      #5a4a3a;     /* sepia — goat doors */
+  --mhl-pick:      #2c5fa3;     /* blue — your initial pick */
+  --mhl-pick-bg:   #e1ecfa;
+  --mhl-reveal:    #b22e1c;     /* red — Monty's revealed door */
+  --mhl-reveal-bg: #fbe1dc;
+  --mhl-switch:    #2d6f4a;     /* green — switch target */
+  --mhl-switch-bg: #e0f3e8;
+
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--mhl-text);
+  background: var(--mhl-bg);
+  border: 1px solid var(--mhl-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  max-width: 980px;
+  box-sizing: border-box;
+}
+
+.mhl-widget *,
+.mhl-widget *::before,
+.mhl-widget *::after {
+  box-sizing: border-box;
+}
+
+/* ----- header ----- */
+.mhl-widget .mhl-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.01em;
+}
+
+.mhl-widget .mhl-intro {
+  margin: 0 0 14px 0;
+}
+
+.mhl-widget .mhl-intro p {
+  margin: 0 0 8px 0;
+}
+
+/* ----- controls ----- */
+.mhl-widget .mhl-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--mhl-bg-card);
+  border: 1px solid var(--mhl-border);
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.mhl-widget .mhl-control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mhl-widget .mhl-control-group label {
+  font-size: 0.85rem;
+  color: var(--mhl-muted);
+  font-weight: 600;
+}
+
+.mhl-widget .mhl-control-group .mhl-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mhl-widget .mhl-controls input[type="range"] {
+  width: 110px;
+}
+
+.mhl-widget .mhl-controls .mhl-num-readout {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: right;
+  color: var(--mhl-accent);
+}
+
+.mhl-widget .mhl-controls .mhl-prize-readout { color: var(--mhl-prize); }
+.mhl-widget .mhl-controls .mhl-goat-readout  { color: var(--mhl-goat); }
+
+.mhl-widget .mhl-controls button {
+  font: inherit;
+  padding: 5px 12px;
+  border: 1px solid var(--mhl-border);
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  color: var(--mhl-text);
+}
+
+.mhl-widget .mhl-controls button:hover {
+  background: #f1ebe0;
+}
+
+/* ----- setup summary ----- */
+.mhl-widget .mhl-setup {
+  padding: 8px 14px;
+  background: var(--mhl-bg-card);
+  border-left: 4px solid var(--mhl-accent);
+  border-radius: 4px;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+}
+
+.mhl-widget .mhl-setup-line {
+  margin: 2px 0;
+}
+
+.mhl-widget .mhl-setup .mhl-prize-text { color: var(--mhl-prize); font-weight: 600; }
+.mhl-widget .mhl-setup .mhl-goat-text  { color: var(--mhl-goat);  font-weight: 600; }
+
+.mhl-widget .mhl-setup-doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* ----- branch panels ----- */
+.mhl-widget .mhl-branches {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 880px) {
+  .mhl-widget .mhl-branches {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.mhl-widget .mhl-branch {
+  background: var(--mhl-bg-card);
+  border: 1px solid var(--mhl-border);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.mhl-widget .mhl-branch.mhl-branch-prize {
+  border-top: 4px solid var(--mhl-prize);
+}
+
+.mhl-widget .mhl-branch.mhl-branch-goat {
+  border-top: 4px solid var(--mhl-goat);
+}
+
+.mhl-widget .mhl-branch-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+}
+
+.mhl-widget .mhl-branch-prob {
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 0.88rem;
+  color: var(--mhl-muted);
+  margin-bottom: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mhl-widget .mhl-branch-prob .mhl-value {
+  color: var(--mhl-accent);
+  font-weight: 700;
+}
+
+/* ----- door row ----- */
+.mhl-widget .mhl-doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+  padding: 6px;
+  background: #f5f1e8;
+  border-radius: 4px;
+  justify-content: center;
+}
+
+.mhl-widget .mhl-door {
+  position: relative;
+  width: 50px;
+  height: 70px;
+  border: 2px solid var(--mhl-border-strong);
+  border-radius: 4px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.mhl-widget .mhl-door-role {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  color: var(--mhl-muted);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.mhl-widget .mhl-door.mhl-prize-door {
+  background: var(--mhl-prize-bg);
+  border-color: var(--mhl-prize);
+}
+
+.mhl-widget .mhl-door.mhl-goat-door {
+  background: #f5efe5;
+  border-color: var(--mhl-goat);
+}
+
+.mhl-widget .mhl-door.mhl-door-pick {
+  border-color: var(--mhl-pick);
+  border-width: 3px;
+  box-shadow: 0 0 0 2px var(--mhl-pick-bg);
+}
+
+.mhl-widget .mhl-door.mhl-door-pick .mhl-door-role {
+  color: var(--mhl-pick);
+}
+
+.mhl-widget .mhl-door.mhl-door-revealed {
+  opacity: 0.55;
+  background: var(--mhl-reveal-bg);
+  border-color: var(--mhl-reveal);
+}
+
+.mhl-widget .mhl-door.mhl-door-revealed .mhl-door-role {
+  color: var(--mhl-reveal);
+}
+
+.mhl-widget .mhl-door.mhl-door-revealed::after {
+  /* big red X overlay */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, transparent 45%, var(--mhl-reveal) 47%, var(--mhl-reveal) 53%, transparent 55%),
+    linear-gradient( 45deg, transparent 45%, var(--mhl-reveal) 47%, var(--mhl-reveal) 53%, transparent 55%);
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+.mhl-widget .mhl-door.mhl-door-switch-target {
+  outline: 2px dashed var(--mhl-switch);
+  outline-offset: 2px;
+}
+
+.mhl-widget .mhl-door.mhl-door-switch-target .mhl-door-role {
+  color: var(--mhl-switch);
+}
+
+/* The door's icon (goat or prize). Inline SVG from W31's vocabulary. */
+.mhl-widget .mhl-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* Larger spacing under each row to make room for absolute-positioned roles. */
+.mhl-widget .mhl-doors-wrap {
+  padding-bottom: 22px;
+}
+
+/* ----- per-branch math summary ----- */
+.mhl-widget .mhl-branch-math {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--mhl-border);
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--mhl-muted);
+}
+
+.mhl-widget .mhl-math-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+}
+
+.mhl-widget .mhl-math-line .mhl-math-label {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: var(--mhl-text);
+}
+
+.mhl-widget .mhl-math-line .mhl-math-rhs {
+  color: var(--mhl-text);
+}
+
+.mhl-widget .mhl-math-line.mhl-math-result {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--mhl-border);
+  font-weight: 700;
+  color: var(--mhl-accent);
+}
+
+.mhl-widget .mhl-math-line.mhl-math-result .mhl-math-rhs {
+  color: var(--mhl-accent);
+  font-size: 1.0rem;
+}
+
+.mhl-widget .mhl-math-line .mhl-stay-tag,
+.mhl-widget .mhl-math-line .mhl-switch-tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-right: 6px;
+  color: #ffffff;
+}
+
+.mhl-widget .mhl-math-line .mhl-stay-tag   { background: var(--mhl-muted); }
+.mhl-widget .mhl-math-line .mhl-switch-tag { background: var(--mhl-switch); }
+
+/* ----- LoTP combination card ----- */
+.mhl-widget .mhl-lotp {
+  background: var(--mhl-bg-card);
+  border: 2px solid var(--mhl-accent);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+
+.mhl-widget .mhl-lotp-title {
+  font-weight: 700;
+  font-size: 1.0rem;
+  margin: 0 0 8px 0;
+  color: var(--mhl-accent);
+  letter-spacing: 0.02em;
+}
+
+.mhl-widget .mhl-lotp-formula-block {
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--mhl-muted);
+  margin-bottom: 8px;
+  background: #f7f3eb;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mhl-widget .mhl-lotp-formula-line .mhl-formula-symbol {
+  color: var(--mhl-text);
+}
+
+.mhl-widget .mhl-lotp-final {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .mhl-widget .mhl-lotp-final { grid-template-columns: 1fr; }
+}
+
+.mhl-widget .mhl-final-card {
+  padding: 10px 12px;
+  border: 1px solid var(--mhl-border);
+  border-radius: 5px;
+  background: #fbf9f5;
+}
+
+.mhl-widget .mhl-final-card.mhl-final-switch {
+  border-color: var(--mhl-switch);
+  background: var(--mhl-switch-bg);
+}
+
+.mhl-widget .mhl-final-card .mhl-final-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--mhl-muted);
+  margin-bottom: 4px;
+}
+
+.mhl-widget .mhl-final-card.mhl-final-switch .mhl-final-label {
+  color: var(--mhl-switch);
+}
+
+.mhl-widget .mhl-final-card .mhl-final-value {
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--mhl-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.mhl-widget .mhl-final-card.mhl-final-switch .mhl-final-value {
+  color: var(--mhl-switch);
+}
+
+.mhl-widget .mhl-final-card .mhl-final-detail {
+  font-size: 0.75rem;
+  color: var(--mhl-muted);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* ----- legend ----- */
+.mhl-widget .mhl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: var(--mhl-muted);
+  margin: 6px 0 0 0;
+  padding: 6px 10px;
+  background: #fbf9f5;
+  border-radius: 4px;
+  align-items: center;
+}
+
+.mhl-widget .mhl-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mhl-widget .mhl-legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid;
+  border-radius: 2px;
+}
+
+.mhl-widget .mhl-legend-pick    { border-color: var(--mhl-pick);    background: var(--mhl-pick-bg); }
+.mhl-widget .mhl-legend-reveal  { border-color: var(--mhl-reveal);  background: var(--mhl-reveal-bg); }
+.mhl-widget .mhl-legend-switch  { border-color: var(--mhl-switch);  background: var(--mhl-switch-bg); }
+.mhl-widget .mhl-legend-prize   { border-color: var(--mhl-prize);   background: var(--mhl-prize-bg); }
+.mhl-widget .mhl-legend-goat    { border-color: var(--mhl-goat);    background: #f5efe5; }

@@ -1,0 +1,354 @@
+/* ============================================================
+   Logic Equivalence Practice — embeddable widget
+   Inherits font/color/background from the host page.
+   Override --widget-accent on .widget to theme the accent color.
+   ============================================================ */
+
+.widget {
+  --widget-accent:    currentColor;
+  --widget-muted:     rgba(0, 0, 0, 0.55);
+  --widget-soft:      rgba(0, 0, 0, 0.12);
+  --widget-softer:    rgba(0, 0, 0, 0.06);
+  --widget-hover:     rgba(0, 0, 0, 0.04);
+  --widget-selection: rgba(255, 210, 100, 0.5);
+
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+.widget *,
+.widget *::before,
+.widget *::after { box-sizing: inherit; }
+
+/* ============ TARGET LINE ============ */
+
+.target-line {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+.target-formula {
+  font-weight: 600;
+  padding: 0 0.15em;
+}
+
+/* ============ LAYOUT ============ */
+
+.widget-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 230px);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ============ DERIVATION AREA ============ */
+
+.derivation-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  min-height: 1.9em;
+}
+
+.selection-status {
+  flex: 1;
+  font-size: 0.95rem;
+}
+.selection-status .muted {
+  color: var(--widget-muted);
+  font-style: italic;
+}
+.selection-status .picked {
+  font-weight: 600;
+  color: var(--widget-accent);
+  padding: 0.05em 0.3em;
+  background: var(--widget-selection);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.undo-btn {
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--widget-soft);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.undo-btn:hover:not(:disabled) {
+  background: var(--widget-hover);
+  border-color: var(--widget-muted);
+}
+.undo-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.derivation {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  column-gap: 0.75rem;
+  row-gap: 0.15rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--widget-softer);
+}
+
+.step-num {
+  font-size: 0.85rem;
+  color: var(--widget-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.step-formula {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  user-select: none;
+}
+.step.current .step-formula {
+  font-weight: 600;
+}
+.step:not(.current) .step-formula {
+  color: var(--widget-muted);
+}
+
+.step-rule {
+  grid-column: 2;
+  font-size: 0.82rem;
+  color: var(--widget-muted);
+  line-height: 1.3;
+}
+.step-rule .tag-name {
+  font-weight: 600;
+  color: var(--widget-accent);
+}
+.step-rule .tag-sep {
+  margin: 0 0.35em;
+  color: var(--widget-muted);
+  opacity: 0.6;
+}
+.step-rule .tag-detail {
+  color: var(--widget-muted);
+}
+
+/* subexpression hover/select — the interaction the user liked */
+.expr {
+  display: inline;
+  padding: 0 0.08em;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  position: relative;
+}
+/* Keep the leading space + operator glued together so line breaks happen
+   AFTER the operator (between op and the right operand), not before ∧/∨/etc. */
+.op {
+  white-space: nowrap;
+}
+.step:not(.current) .expr {
+  pointer-events: none;
+  cursor: default;
+}
+.step.current .expr.hovering {
+  background: var(--widget-selection);
+}
+.step.current .expr.selected {
+  background: var(--widget-selection);
+  box-shadow: 0 0 0 1px var(--widget-accent);
+  color: var(--widget-accent);
+}
+.step.current .expr.selected .expr {
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+}
+
+/* solved indicator — subtle inline */
+.solved-indicator {
+  margin-top: 0.85rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--widget-accent);
+}
+
+/* ============ RULES (right column) ============ */
+
+.rules-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.rules-toggle {
+  font: inherit;
+  font-size: 0.82rem;
+  align-self: flex-end;
+  padding: 0.25rem 0.6rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--widget-soft);
+  background: transparent;
+  color: var(--widget-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.rules-toggle:hover {
+  background: var(--widget-hover);
+  border-color: var(--widget-muted);
+  color: inherit;
+}
+
+.widget-main.rules-collapsed {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.widget-main.rules-collapsed .rules-index {
+  display: none;
+}
+
+.rules-index {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--widget-soft);
+  font-size: 0.9rem;
+}
+
+.rule-family {
+  border-bottom: 1px solid var(--widget-soft);
+  transition: opacity 0.15s ease;
+}
+.rule-family.dim {
+  opacity: 0.45;
+}
+.rule-family[open].dim {
+  opacity: 0.7;
+}
+
+.rule-family-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.3rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--widget-accent);
+  user-select: none;
+}
+.rule-family-summary::-webkit-details-marker { display: none; }
+.rule-family-summary::marker { content: ""; }
+
+.rule-family-summary::before {
+  content: "▸";
+  display: inline-block;
+  width: 0.9rem;
+  font-size: 0.75rem;
+  color: var(--widget-muted);
+  transition: transform 0.15s ease;
+}
+.rule-family[open] .rule-family-summary::before {
+  transform: rotate(90deg);
+}
+
+.rule-family-summary:hover,
+.rule-family-summary:focus-visible {
+  background: var(--widget-hover);
+  outline: none;
+}
+
+.family-name {
+  flex: 1;
+}
+
+.family-indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+}
+.rule-family.has-applicable .family-indicator {
+  background: var(--widget-accent);
+}
+
+.rule-family-body {
+  padding: 0.15rem 0.3rem 0.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.rule-entry {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.35rem;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+  transition: background 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  position: relative;
+}
+.rule-entry:hover:not(:disabled) {
+  background: var(--widget-hover);
+}
+.rule-entry:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.rule-entry .rule-schema {
+  line-height: 1.3;
+}
+.rule-entry .rule-dir {
+  font-size: 0.78rem;
+  color: var(--widget-muted);
+  line-height: 1.2;
+}
+
+.rule-entry[data-reason]:hover::after {
+  content: attr(data-reason);
+  position: absolute;
+  bottom: calc(100% - 4px);
+  right: 0;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 0.45rem 0.7rem;
+  z-index: 10;
+  pointer-events: none;
+  max-width: 280px;
+  width: max-content;
+  white-space: normal;
+  line-height: 1.35;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+/* ============ RESPONSIVE ============ */
+
+@media (max-width: 720px) {
+  .widget-main {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .step {
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+  }
+}

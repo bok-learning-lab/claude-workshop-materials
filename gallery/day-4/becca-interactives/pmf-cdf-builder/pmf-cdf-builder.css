@@ -1,0 +1,482 @@
+/* ============================================================================
+   PMF / CDF Builder (W32) — styles.
+
+   All selectors are scoped to .pmf-widget so multiple instances on the same
+   Canvas page never collide. No document-wide IDs.
+============================================================================ */
+
+.pmf-widget {
+  --pmf-bg:        #ffffff;
+  --pmf-border:    #d8dde6;
+  --pmf-text:      #1f2330;
+  --pmf-muted:     #6b7280;
+  --pmf-accent:    #5b3ab8;     /* deep purple — bars, primary controls */
+  --pmf-accent-hi: #f3eefb;     /* tinted background highlight */
+  --pmf-cdf:       #1d6f8a;     /* teal — CDF step plot */
+  --pmf-cdf-hi:    #def0f4;     /* tinted background for selected step */
+  --pmf-good:      #14784f;
+  --pmf-good-bg:   #defbe7;
+  --pmf-bad:       #b22e1c;
+  --pmf-bad-bg:    #fde6e1;
+  --pmf-warn:      #b87a17;
+
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--pmf-text);
+  background: var(--pmf-bg);
+  border: 1px solid var(--pmf-border);
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 920px;
+  box-sizing: border-box;
+}
+
+.pmf-widget *,
+.pmf-widget *::before,
+.pmf-widget *::after {
+  box-sizing: border-box;
+}
+
+/* ----- Header ----- */
+.pmf-widget .pmf-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0 0 8px 0;
+}
+
+.pmf-widget .pmf-intro {
+  margin: 0 0 14px 0;
+  color: var(--pmf-text);
+}
+
+.pmf-widget .pmf-intro p {
+  margin: 0 0 8px 0;
+}
+
+/* ----- Controls row (preset selector + add-row button) ----- */
+.pmf-widget .pmf-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #f6f7fb;
+  border: 1px solid var(--pmf-border);
+  border-radius: 6px;
+}
+
+.pmf-widget .pmf-control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pmf-widget .pmf-controls label {
+  font-size: 0.85rem;
+  color: var(--pmf-muted);
+  font-weight: 500;
+}
+
+.pmf-widget .pmf-controls select,
+.pmf-widget .pmf-controls button {
+  font: inherit;
+  padding: 5px 10px;
+  border: 1px solid var(--pmf-border);
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.pmf-widget .pmf-controls button:hover {
+  background: #eef0f7;
+}
+
+.pmf-widget .pmf-controls button.pmf-primary {
+  background: var(--pmf-accent);
+  border-color: var(--pmf-accent);
+  color: #ffffff;
+}
+
+.pmf-widget .pmf-controls button.pmf-primary:hover {
+  background: #4a2d9a;
+}
+
+/* ----- Two-column layout: input table on left, charts + readouts on right ----- */
+.pmf-widget .pmf-body {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .pmf-widget .pmf-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----- Input table ----- */
+.pmf-widget .pmf-input-card {
+  border: 1px solid var(--pmf-border);
+  border-radius: 6px;
+  padding: 10px;
+  background: #fbfbfd;
+}
+
+.pmf-widget .pmf-input-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pmf-widget .pmf-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.pmf-widget .pmf-table thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--pmf-muted);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--pmf-border);
+}
+
+.pmf-widget .pmf-table th.pmf-col-x      { width: 38%; }
+.pmf-widget .pmf-table th.pmf-col-p      { width: 42%; }
+.pmf-widget .pmf-table th.pmf-col-action { width: 20%; text-align: center; }
+
+.pmf-widget .pmf-table tbody tr {
+  transition: background 0.15s;
+}
+
+.pmf-widget .pmf-table tbody tr.pmf-row-selected {
+  background: var(--pmf-accent-hi);
+}
+
+.pmf-widget .pmf-table td {
+  padding: 3px 4px;
+  vertical-align: middle;
+}
+
+.pmf-widget .pmf-table input[type="text"] {
+  width: 100%;
+  font: inherit;
+  padding: 4px 6px;
+  border: 1px solid var(--pmf-border);
+  border-radius: 3px;
+  background: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmf-widget .pmf-table input[type="text"]:focus {
+  outline: none;
+  border-color: var(--pmf-accent);
+  box-shadow: 0 0 0 2px var(--pmf-accent-hi);
+}
+
+.pmf-widget .pmf-table input.pmf-input-bad {
+  border-color: var(--pmf-bad);
+  background: var(--pmf-bad-bg);
+}
+
+.pmf-widget .pmf-row-delete {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--pmf-border);
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--pmf-muted);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pmf-widget .pmf-row-delete:hover {
+  background: var(--pmf-bad-bg);
+  color: var(--pmf-bad);
+  border-color: var(--pmf-bad);
+}
+
+.pmf-widget .pmf-add-row-cell {
+  text-align: center;
+  padding-top: 8px !important;
+}
+
+.pmf-widget .pmf-add-row {
+  font: inherit;
+  padding: 4px 12px;
+  border: 1px dashed var(--pmf-border);
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  color: var(--pmf-muted);
+}
+
+.pmf-widget .pmf-add-row:hover {
+  background: var(--pmf-accent-hi);
+  color: var(--pmf-accent);
+  border-color: var(--pmf-accent);
+}
+
+/* ----- Right column: stacked readouts and charts ----- */
+.pmf-widget .pmf-output-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0; /* let SVGs shrink in narrow Canvas frames */
+}
+
+/* ----- Readout strip ----- */
+.pmf-widget .pmf-readouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pmf-widget .pmf-readout {
+  border: 1px solid var(--pmf-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #fbfbfd;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pmf-widget .pmf-readout-label {
+  font-size: 0.8rem;
+  color: var(--pmf-muted);
+  font-weight: 500;
+}
+
+.pmf-widget .pmf-readout-value {
+  font-weight: 700;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmf-widget .pmf-validity-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmf-widget .pmf-validity-pill.pmf-ok {
+  background: var(--pmf-good-bg);
+  color: var(--pmf-good);
+}
+
+.pmf-widget .pmf-validity-pill.pmf-bad {
+  background: var(--pmf-bad-bg);
+  color: var(--pmf-bad);
+}
+
+.pmf-widget .pmf-validity-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* ----- Chart cards ----- */
+.pmf-widget .pmf-chart-card {
+  border: 1px solid var(--pmf-border);
+  border-radius: 6px;
+  padding: 10px;
+  background: #fbfbfd;
+}
+
+.pmf-widget .pmf-chart-card h4 {
+  margin: 0 0 6px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pmf-widget .pmf-chart-card h4 .pmf-chart-hint {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--pmf-muted);
+}
+
+.pmf-widget .pmf-chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* PMF bars */
+.pmf-widget .pmf-bar {
+  fill: var(--pmf-accent);
+  cursor: pointer;
+  transition: fill 0.12s;
+}
+
+.pmf-widget .pmf-bar:hover {
+  fill: #4a2d9a;
+}
+
+.pmf-widget .pmf-bar.pmf-bar-selected {
+  fill: #2c1666;
+  stroke: #2c1666;
+  stroke-width: 1.5;
+}
+
+.pmf-widget .pmf-bar.pmf-bar-zero {
+  fill: #d8dde6;
+}
+
+.pmf-widget .pmf-bar-label {
+  fill: var(--pmf-text);
+  font-size: 10px;
+  text-anchor: middle;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmf-widget .pmf-axis-line {
+  stroke: #b6bcc8;
+  stroke-width: 1;
+}
+
+.pmf-widget .pmf-axis-tick {
+  fill: var(--pmf-muted);
+  font-size: 10px;
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmf-widget .pmf-axis-tick-y {
+  text-anchor: end;
+}
+
+.pmf-widget .pmf-axis-title {
+  fill: var(--pmf-muted);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.pmf-widget .pmf-grid-line {
+  stroke: #eef0f7;
+  stroke-width: 1;
+}
+
+/* CDF step plot */
+.pmf-widget .pmf-cdf-step {
+  fill: none;
+  stroke: var(--pmf-cdf);
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+
+.pmf-widget .pmf-cdf-dot {
+  fill: var(--pmf-cdf);
+  cursor: pointer;
+}
+
+.pmf-widget .pmf-cdf-dot.pmf-cdf-dot-open {
+  fill: #ffffff;
+  stroke: var(--pmf-cdf);
+  stroke-width: 1.5;
+}
+
+.pmf-widget .pmf-cdf-step-marker {
+  cursor: pointer;
+  fill: transparent;
+}
+
+.pmf-widget .pmf-cdf-step-marker:hover {
+  fill: rgba(29, 111, 138, 0.10);
+}
+
+.pmf-widget .pmf-cdf-step-marker.pmf-cdf-step-selected {
+  fill: var(--pmf-cdf-hi);
+}
+
+/* ----- Errors / warnings list ----- */
+.pmf-widget .pmf-errors {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.pmf-widget .pmf-errors li {
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  background: var(--pmf-bad-bg);
+  color: var(--pmf-bad);
+}
+
+.pmf-widget .pmf-errors li.pmf-warning {
+  background: #fdf2dd;
+  color: var(--pmf-warn);
+}
+
+/* ----- CDF table panel ----- */
+.pmf-widget .pmf-cdf-table-card {
+  border: 1px solid var(--pmf-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #fbfbfd;
+}
+
+.pmf-widget .pmf-cdf-table-card h4 {
+  margin: 0 0 6px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pmf-widget .pmf-cdf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}
+
+.pmf-widget .pmf-cdf-table th,
+.pmf-widget .pmf-cdf-table td {
+  border-bottom: 1px solid var(--pmf-border);
+  padding: 3px 6px;
+  text-align: right;
+}
+
+.pmf-widget .pmf-cdf-table th:first-child,
+.pmf-widget .pmf-cdf-table td:first-child {
+  text-align: left;
+}
+
+.pmf-widget .pmf-cdf-table thead th {
+  font-weight: 600;
+  color: var(--pmf-muted);
+  font-size: 0.78rem;
+}
+
+.pmf-widget .pmf-cdf-table tbody tr.pmf-row-selected {
+  background: var(--pmf-cdf-hi);
+}
+
+.pmf-widget .pmf-empty-msg {
+  color: var(--pmf-muted);
+  font-style: italic;
+  padding: 12px;
+  text-align: center;
+}

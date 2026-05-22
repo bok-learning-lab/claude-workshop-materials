@@ -1,10 +1,10 @@
 ---
 layout: default
-title: "01 · Close Reading"
+title: "Close Reading"
 section: activities
 ---
 
-# 01 · Close Reading
+# Close Reading
 
 <div class="page-lead">Use Claude to analyze Shakespeare scenes, then reflect on what it catches, what it misses, and how to prompt for more useful literary observations.</div>
 

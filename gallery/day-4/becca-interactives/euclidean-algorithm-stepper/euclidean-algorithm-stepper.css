@@ -1,0 +1,336 @@
+/* =========================================================================
+   Euclidean Algorithm Stepper — embeddable widget
+   All rules are scoped under .eas-widget so styles do not leak to the host
+   page and are not affected by host styles.
+   ========================================================================= */
+
+.eas-widget,
+.eas-widget *,
+.eas-widget *::before,
+.eas-widget *::after {
+  box-sizing: border-box;
+}
+
+.eas-widget {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #f7f7f5;
+  color: #222;
+  padding: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.eas-widget h1.eas-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+}
+
+.eas-widget .eas-math { font-style: italic; }
+
+/* ── Intro card ─────────────────────────────────────────────────────── */
+.eas-widget .eas-intro {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+.eas-widget .eas-intro p { margin: 0 0 8px 0; }
+.eas-widget .eas-intro p:last-child { margin-bottom: 0; }
+
+/* ── Round header ──────────────────────────────────────────────────── */
+.eas-widget .eas-round-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.eas-widget .eas-round-counter {
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+}
+
+.eas-widget .eas-round-label {
+  font-size: 0.85rem;
+  color: #555;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+/* ── Annotation (running theorem reminder) ─────────────────────────── */
+.eas-widget .eas-annotation {
+  background: #eef3fb;
+  border-left: 3px solid #4a7fc1;
+  border-radius: 0 4px 4px 0;
+  padding: 9px 16px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 10px;
+  color: #1a3660;
+}
+
+.eas-widget .eas-annotation .eas-math { font-style: italic; }
+
+/* ── Step table ────────────────────────────────────────────────────── */
+.eas-widget .eas-table-wrap {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 14px 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 12px;
+}
+
+.eas-widget .eas-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.eas-widget .eas-table th,
+.eas-widget .eas-table td {
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  text-align: center;
+}
+
+.eas-widget .eas-table thead th {
+  background: #f0f0ee;
+  color: #444;
+  font-size: 0.8rem;
+  font-weight: bold;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.eas-widget .eas-table tbody td {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+  color: #222;
+  min-width: 90px;
+}
+
+.eas-widget .eas-table tbody tr.eas-final-row td {
+  background: #fafaf8;
+  color: #888;
+}
+
+.eas-widget .eas-table tbody td.eas-r-correct {
+  color: #2a8a3e;
+  font-weight: bold;
+}
+
+.eas-widget .eas-table tbody td.eas-r-correct .eas-check {
+  margin-right: 4px;
+}
+
+.eas-widget .eas-table tbody td.eas-r-revealed {
+  color: #b46b00;
+  font-weight: bold;
+  background: #fffbea;
+}
+
+.eas-widget .eas-table tbody td.eas-r-input-cell {
+  padding: 4px 8px;
+}
+
+.eas-widget .eas-table tbody td.eas-r-pending {
+  color: #bbb;
+}
+
+.eas-widget .eas-table tbody td.eas-gcd-cell {
+  background: #e8f8ef;
+  color: #145a32;
+  font-weight: bold;
+}
+
+/* ── Inline input ──────────────────────────────────────────────────── */
+.eas-widget .eas-r-input {
+  width: 80px;
+  padding: 5px 8px;
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+  text-align: center;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  background: #fff;
+  color: #222;
+}
+
+.eas-widget .eas-r-input:focus {
+  outline: none;
+  border-color: #4a7fc1;
+  box-shadow: 0 0 0 2px rgba(74,127,193,0.18);
+}
+
+.eas-widget .eas-r-input.eas-shake {
+  animation: eas-shake 0.32s ease;
+  border-color: #c0392b;
+  background: #fdecea;
+}
+
+@keyframes eas-shake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-4px); }
+  40%  { transform: translateX(4px); }
+  60%  { transform: translateX(-3px); }
+  80%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* ── Submit / hint area for current row ────────────────────────────── */
+.eas-widget .eas-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.eas-widget .eas-btn {
+  padding: 6px 14px;
+  font-size: 0.875rem;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #444;
+  line-height: 1.4;
+  transition: background 0.1s;
+}
+
+.eas-widget .eas-btn:hover:not(:disabled) {
+  background: #f0f0ee;
+  border-color: #999;
+}
+
+.eas-widget .eas-btn:disabled {
+  color: #ccc;
+  cursor: default;
+  background: #f5f5f5;
+}
+
+.eas-widget .eas-btn-primary {
+  background: #dbeafe;
+  border-color: #5a8fd4;
+  color: #1e3f8a;
+  font-weight: bold;
+}
+
+.eas-widget .eas-btn-primary:hover:not(:disabled) {
+  background: #cee0fb;
+  border-color: #4a7fc1;
+}
+
+/* ── Inline feedback ───────────────────────────────────────────────── */
+.eas-widget .eas-feedback {
+  font-size: 0.88rem;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  line-height: 1.5;
+}
+
+.eas-widget .eas-feedback.hidden { display: none; }
+
+.eas-widget .eas-feedback.eas-feedback-wrong {
+  background: #fdecea;
+  border-left: 3px solid #c0392b;
+  color: #7a1e15;
+}
+
+.eas-widget .eas-feedback.eas-feedback-reveal {
+  background: #fffbea;
+  border-left: 3px solid #e5b800;
+  color: #6b5500;
+}
+
+.eas-widget .eas-feedback.eas-feedback-done {
+  background: #e8f8ef;
+  border-left: 3px solid #52be80;
+  color: #145a32;
+}
+
+.eas-widget .eas-feedback .eas-math { font-style: italic; }
+
+/* ── Round nav ─────────────────────────────────────────────────────── */
+.eas-widget .eas-round-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.eas-widget .eas-round-nav .hidden { display: none; }
+
+/* ── Summary panel ─────────────────────────────────────────────────── */
+.eas-widget .eas-summary {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 18px 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-top: 14px;
+}
+
+.eas-widget .eas-summary.hidden { display: none; }
+
+.eas-widget .eas-summary h2 {
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin: 0 0 10px 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.eas-widget .eas-summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px 0;
+}
+
+.eas-widget .eas-summary-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.eas-widget .eas-summary-list li:last-child { border-bottom: none; }
+
+.eas-widget .eas-summary-list .eas-summary-pair {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  color: #444;
+}
+
+.eas-widget .eas-summary-list .eas-summary-result {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  color: #145a32;
+  font-weight: bold;
+}
+
+.eas-widget .eas-restart-btn {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* ── Hidden util ───────────────────────────────────────────────────── */
+.eas-widget .hidden { display: none; }
