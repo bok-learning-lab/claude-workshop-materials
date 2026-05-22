@@ -20,7 +20,7 @@ The whole sequence took one conversation, about an hour of back-and-forth, five 
 
 > Can you put all of these in a claude-thoughts doc so I can read more easily?
 
-**What happened:** Claude wrote [claude-thoughts.md](../../projects/interview-coding/claude-thoughts.md) with the full brainstorm, organized into sections A through H — covering testing coding systems against ground, scaling up coding, hybrid grounded-but-Waters-epistemology moves, transparency and methods reporting, secondary analysis, team workflows, Claude Code–specific affordances, and a section H listing things to flag *against* in front of Mary.
+**What happened:** Claude wrote [claude-thoughts.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/claude-thoughts.md) with the full brainstorm, organized into sections A through H — covering testing coding systems against ground, scaling up coding, hybrid grounded-but-Waters-epistemology moves, transparency and methods reporting, secondary analysis, team workflows, Claude Code–specific affordances, and a section H listing things to flag *against* in front of Mary.
 
 **The move worth noticing:** brainstorming in chat is fast, but chat scrolls away. Asking Claude to commit the thinking to a markdown file turns it into a durable artifact that future Claude sessions can read — and that you can share with collaborators.
 
@@ -42,12 +42,12 @@ The whole sequence took one conversation, about an hour of back-and-forth, five 
 
 **What happened:** Claude explained why generating is better than finding (real transcripts are IRB-restricted or in gated archives, and the public ones are stripped of conversational texture), then produced four synthetic transcripts modeled on Deterding's actual published study of low-income mothers planning their kids' college paths. Each transcript was designed to showcase a specific demo move:
 
-- [R001 Tasha](../../projects/interview-coding/inputs/transcripts/R001-Transcript.md) — textbook instrumental
-- [R002 Marisol](../../projects/interview-coding/inputs/transcripts/R002-Transcript.md) — textbook expressive
-- [R003 Carla](../../projects/interview-coding/inputs/transcripts/R003-Transcript.md) — mixed, self-aware about the tension
-- [R004 Denise](../../projects/interview-coding/inputs/transcripts/R004-Transcript.md) — instrumental reasoning dressed in emotional/family language. Designed to trip up a naive coder — the construct-validity stress test
+- [R001 Tasha](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/inputs/transcripts/R001-Transcript.md) — textbook instrumental
+- [R002 Marisol](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/inputs/transcripts/R002-Transcript.md) — textbook expressive
+- [R003 Carla](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/inputs/transcripts/R003-Transcript.md) — mixed, self-aware about the tension
+- [R004 Denise](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/inputs/transcripts/R004-Transcript.md) — instrumental reasoning dressed in emotional/family language. Designed to trip up a naive coder — the construct-validity stress test
 
-Plus [protocol.md](../../projects/interview-coding/inputs/protocol.md) (the interview guide), [attributes.csv](../../projects/interview-coding/inputs/attributes.csv) (the demographic spreadsheet), and a [README](../../projects/interview-coding/inputs/README.md) documenting design choices.
+Plus [protocol.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/inputs/protocol.md) (the interview guide), [attributes.csv](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/inputs/attributes.csv) (the demographic spreadsheet), and a [README](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/inputs/README.md) documenting design choices.
 
 **The move worth noticing:** for a methods demo, synthetic data designed to surface specific challenges is more useful than real data. Claude can generate transcripts at the right length for live workshop reading and engineer specific edge cases — like Denise — that let you show what a skill is actually doing.
 
@@ -57,7 +57,7 @@ Plus [protocol.md](../../projects/interview-coding/inputs/protocol.md) (the inte
 
 > Also add the three skill ideas to PLAN.md so I can get different Claudes working in parallel.
 
-**What happened:** Claude wrote [PLAN.md](../../projects/interview-coding/PLAN.md) as three self-contained task sections, each copy-pasteable into a fresh Claude session. Shared context up top (required reading, hard constraints, output conventions). Each task spells out the skill's behavior, what good output looks like, what to avoid, where to build, and how to validate.
+**What happened:** Claude wrote [PLAN.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/PLAN.md) as three self-contained task sections, each copy-pasteable into a fresh Claude session. Shared context up top (required reading, hard constraints, output conventions). Each task spells out the skill's behavior, what good output looks like, what to avoid, where to build, and how to validate.
 
 **The move worth noticing:** the hand-off from "Claude brainstorms" to "Claude builds" benefits from explicit constraints and validation steps. Without them, each parallel session would drift in a different direction. With them, three Claudes building three skills in parallel will produce work that fits together.
 
@@ -135,7 +135,7 @@ Run the demo sequence on the corpus: `/index-transcript` across all four transcr
 
 > I think we should build the skills in a `.claude/skills` folder inside `interview-coding`, and we'll get people to open that up as a project. So let's also create a CLAUDE.md file for that project that sketches out what it's about.
 
-**What happened:** Claude wrote a project-level [CLAUDE.md](../../projects/interview-coding/CLAUDE.md) that loads automatically when Claude Code is started with this folder as the working directory. It points new participants at the right reading order, names the hard constraints (no "discovering themes," no line-by-line open coding, don't replace the immersive first read), and clarifies that skills built in `.claude/skills/<skill-name>/` resolve under this folder — so the skills travel with the project when shared.
+**What happened:** Claude wrote a project-level [CLAUDE.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/CLAUDE.md) that loads automatically when Claude Code is started with this folder as the working directory. It points new participants at the right reading order, names the hard constraints (no "discovering themes," no line-by-line open coding, don't replace the immersive first read), and clarifies that skills built in `.claude/skills/<skill-name>/` resolve under this folder — so the skills travel with the project when shared.
 
 **The move worth noticing:** project-scoped `CLAUDE.md` and project-scoped `.claude/skills/` together turn this folder into a portable, self-explaining workshop unit. A participant who clones just this folder gets the corpus, the brainstorm, the plan, the skills, and the alignment constraints all in one bundle — no need to ship the rest of the workshop repo with them. The CLAUDE.md is what makes the project *self-introducing* to any Claude session that opens it.
 
@@ -155,9 +155,9 @@ Run the demo sequence on the corpus: `/index-transcript` across all four transcr
 
 After the audits, the orchestrating Claude promoted the skills' validated example outputs into the project's shared `output/` tree:
 
-- [output/indexed/](../../projects/interview-coding/output/indexed/) — four indexed transcripts and four coverage reports
-- [output/negative-cases/](../../projects/interview-coding/output/negative-cases/) — two audit memos for the two demo claims
-- [output/methods/methods-paragraph.md](../../projects/interview-coding/output/methods/methods-paragraph.md) — generated against the now-populated state, replacing the empty-project version
+- [output/indexed/](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/interview-coding/output/indexed/) — four indexed transcripts and four coverage reports
+- [output/negative-cases/](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/interview-coding/output/negative-cases/) — two audit memos for the two demo claims
+- [output/methods/methods-paragraph.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/output/methods/methods-paragraph.md) — generated against the now-populated state, replacing the empty-project version
 
 Relative paths inside the promoted files were rewritten because `output/<subdir>/` sits at a different depth than `.claude/skills/<name>/examples/`. The deferred `examples/methods-paragraph-full.md` — which Session 3 correctly declined to fabricate without real Stage 1 and 3 outputs — was generated against the populated state for the skill's own documentation.
 
@@ -167,10 +167,10 @@ Relative paths inside the promoted files were rewritten because `output/<subdir>
 
 The interview-coding folder now contains the artifacts of a complete flexible-coding pipeline at small scale:
 
-- The corpus and protocol in [inputs/](../../projects/interview-coding/inputs/).
-- Three working skills under [.claude/skills/](../../projects/interview-coding/.claude/skills/) with their SKILL.md, supporting references, and worked examples.
-- A populated [output/](../../projects/interview-coding/output/) tree showing the actual end-to-end run.
-- Project-level [CLAUDE.md](../../projects/interview-coding/CLAUDE.md), [PLAN.md](../../projects/interview-coding/PLAN.md), [claude-thoughts.md](../../projects/interview-coding/claude-thoughts.md), and a project-internal [walkthrough.md](../../projects/interview-coding/walkthrough.md).
+- The corpus and protocol in [inputs/](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/interview-coding/inputs/).
+- Three working skills under [.claude/skills/](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/interview-coding/.claude/skills/) with their SKILL.md, supporting references, and worked examples.
+- A populated [output/](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/interview-coding/output/) tree showing the actual end-to-end run.
+- Project-level [CLAUDE.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/CLAUDE.md), [PLAN.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/PLAN.md), [claude-thoughts.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/claude-thoughts.md), and a project-internal [walkthrough.md](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/_projects/interview-coding/walkthrough.md).
 
 That sequence — index, audit, document — is the three-act demo: scaling, rigor, transparency. Each act is a direct response to one of Deterding & Waters' three main complaints about the field.
 
