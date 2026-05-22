@@ -25,7 +25,7 @@ thinkengraved-cutting-board-3-x5-engraved-handwritten-recipe-wood-card-personali
 
 The images themselves are a mix: a photo of finished dumplings, a handwritten card for peanut butter fudge, a printed marmalade recipe, an engraved cutting board. Claude can read all of them.
 
-**[Browse the inputs folder]({{ site.baseurl }}/activities/recipes/inputs/)**
+**[Browse the inputs folder](https://github.com/bok-learning-lab/claude-code-20260519/tree/main/projects/03_recipes/inputs)**
 
 ---
 
