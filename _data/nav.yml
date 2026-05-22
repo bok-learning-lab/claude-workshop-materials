@@ -15,6 +15,11 @@ encyclopedia:
             url: /encyclopedia/get-started/claude-code-windows-setup/
       - title: Setup Checklists
         url: /encyclopedia/get-started/checklists/
+        children:
+          - title: Mac Checklist
+            url: /encyclopedia/get-started/checklists/mac/
+          - title: Windows Checklist
+            url: /encyclopedia/get-started/checklists/windows/
   - title: Glossary
     url: /encyclopedia/glossary/
     children:
@@ -96,32 +101,32 @@ encyclopedia:
 activities:
   - title: Overview
     url: /activities/
+  - label: Quick Activities
   - title: Tokenization
-    url: /activities/05-tokenization/
+    url: /activities/tokenization/
   - title: Multiplication
-    url: /activities/04-multiplication/
+    url: /activities/multiplication/
   - title: Close Reading
-    url: /activities/01-close-reading/
+    url: /activities/close-reading/
   - title: Population Pyramids
-    url: /activities/02-population-pyramids/
+    url: /activities/population-pyramids/
   - title: Recipes
-    url: /activities/03-recipes/
+    url: /activities/recipes/
+  - label: Longer Projects
+  - title: Schedule Conflict
+    url: /activities/schedule-conflict/
+  - title: Makeup Exams
+    url: /activities/makeup-exams/
+  - title: Research Helper
+    url: /activities/research-helper/
+  - title: How to Build an MCP
+    url: /activities/how-to-build-an-mcp/
 
 gallery:
   - title: Overview
     url: /gallery/
-  - label: Day 1 Projects
-  - title: Schedule Conflict
-    url: /gallery/04-schedule-conflict/
-  - title: Makeup Exams
-    url: /gallery/05-makeup-exams/
-  - title: Research Helper
-    url: /gallery/06-research-helper/
-  - label: Day 4 Projects
   - title: Becca's Interactives
     url: /gallery/day-4/becca-interactives/
-  - title: How to Build an MCP
-    url: /gallery/day-4/how-to-build-an-mcp/
   - title: Project Overviews
     url: /gallery/day-4/project-overviews/
     children:

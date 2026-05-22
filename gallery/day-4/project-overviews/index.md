@@ -28,11 +28,15 @@ Mary Waters' "flexible coding" approach to qualitative interview research, scale
 
 [Summary](interview-coding/summary.md) · [Tradition](interview-coding/tradition.md) · [Affordance](interview-coding/affordance.md) · [How we built it](interview-coding/walkthrough.md)
 
+**Working project files** (skills, transcripts, CLAUDE.md): [`_source/day-4/projects/interview-coding/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/_source/day-4/projects/interview-coding)
+
 ### [Physics interactives](physics-interactives/summary.md)
 
 PhET-style interactive simulations as single-file HTML pages, authored by faculty themselves with the `/phet-sim` skill, paired with `/phet-activity`, which produces Wieman-style classroom lesson plans around each simulation. The lineage runs from Carl Wieman's PhET Interactive Simulations project at the University of Colorado Boulder; the new affordance is that the kind of artifact that historically required a development team is now available to a faculty member with an afternoon.
 
 [Summary](physics-interactives/summary.md) · [Tradition](physics-interactives/tradition.md) · [Affordance](physics-interactives/affordance.md)
+
+**Working project files** (skills, templates, pedagogy research): [`_source/day-4/projects/physics-interactives/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/_source/day-4/projects/physics-interactives)
 
 ### [Texts and translation](texts-and-translation-v0/summary.md)
 
@@ -40,8 +44,8 @@ LLM-assisted close textual work across languages. Two corpora in place at the ti
 
 [Summary](texts-and-translation-v0/summary.md) · [Tradition](texts-and-translation-v0/tradition.md) · [Affordance](texts-and-translation-v0/affordance.md)
 
+**Working project files** (skills, Odyssey translations, Sanskrit text): [`_source/day-4/projects/texts-and-translation/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/_source/day-4/projects/texts-and-translation)
+
 ---
 
 The three projects are deliberately not arranged in a hierarchy. They sit alongside each other because the workshop's claim is that the same authoring move is now genuinely available across all three of these traditions — even though the traditions themselves could not look more different.
-
-For the workshop's overall description and per-day overview, see [../about-this-workshop/](../../about-this-workshop/).

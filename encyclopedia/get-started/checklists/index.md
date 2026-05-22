@@ -6,7 +6,10 @@ section: encyclopedia
 
 # Setup Checklists
 
-Interactive HTML checklists — open one and check items off as you complete them.
+One-page step-by-step checklists — work through them top to bottom during setup. Check items off as you go.
 
-- **[Mac Claude Code Checklist]({{ site.baseurl }}/encyclopedia/get-started/checklists/claude-code-mac-checklist.html)** — step-by-step setup verification for macOS
-- **[Windows Claude Code Checklist]({{ site.baseurl }}/encyclopedia/get-started/checklists/claude-code-windows-checklist.html)** — step-by-step setup verification for Windows
+**[Mac Setup Checklist]({{ site.baseurl }}/encyclopedia/get-started/checklists/mac/)** — Homebrew, core tools, Claude Code, clone, log in.
+
+**[Windows Setup Checklist]({{ site.baseurl }}/encyclopedia/get-started/checklists/windows/)** — winget, core tools, Claude Code, clone, log in.
+
+For the full setup guides with screenshots and troubleshooting, see [Mac Setup]({{ site.baseurl }}/encyclopedia/get-started/claude-code-mac-setup/) and [Windows Setup]({{ site.baseurl }}/encyclopedia/get-started/claude-code-windows-setup/).
