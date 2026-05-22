@@ -6,66 +6,76 @@ section: activities
 
 # Tokenization
 
-<div class="page-lead">Paste text into a tokenizer and watch how an LLM "reads." This is the fastest way to make the gap between human reading and machine reading visible.</div>
+<div class="page-lead">Before anything else: LLMs don't read. Not the way you do. This activity makes that visible in about five minutes — and once you've seen it, you can't unsee it.</div>
 
-## The activity
+## A strange kind of mind
 
-Go to **[tiktokenizer.vercel.app](https://tiktokenizer.vercel.app/)** and paste in this sentence:
+When you read the sentence *"The cat sat on the mat,"* you perceive words. You know what a cat is. You have a felt sense of sitting, of mats, of the whole small scene.
+
+A language model sees none of that. It sees a sequence of integers.
+
+Everything — every poem, every equation, every medical record, every line of code — enters the model as a list of numbers. Tokens are the bridge: short fragments of text (sometimes whole words, sometimes syllable-pieces, sometimes just a few letters) that have been mapped to integers in the model's vocabulary. The model operates entirely on those integers. It never looks at letters.
+
+This is not a technical footnote. It is the thing about LLMs that explains almost everything else — what they're good at, where they fail, and why those failure modes have the particular shape they do.
+
+---
+
+## Try it
+
+Go to **[tiktokenizer.vercel.app](https://tiktokenizer.vercel.app/)** and paste this:
 
 ```
 Unsurprisingly, they had to cancel the show. The crowd went home unhappily.
 ```
 
-Watch how the model breaks the text into colored chunks — tokens.
+Watch the model break the text into colored chunks. Each color is one token — one integer.
 
 **What to notice:**
-- "Unsurprisingly" is probably split across multiple tokens
-- Common short words ("the", "to", "they") are likely single tokens
-- Punctuation often gets its own token, or attaches to the word before it
-- The word "unhappily" may split at a morpheme boundary — or may not
 
-Try changing the model in the dropdown (GPT-4, GPT-2, etc.) and notice how the tokenization differs.
+- Common short words ("the", "to", "they") are single tokens — the model has seen them millions of times, they get their own slot
+- "Unsurprisingly" probably splits: the model has seen *parts* of it, not the whole thing
+- Punctuation often gets its own token, or fuses to the preceding word
+- "Unhappily" may or may not split at the morpheme boundary — interesting either way
 
----
+Now try the Welsh place name:
 
-## Things to try
-
-**Rare or long words:**
 ```
 Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
 ```
-*(A Welsh place name — watch it fragment)*
 
-**Whitespace:**
-```
-hello    hello  hello
-```
-*(Leading spaces often become part of the following token)*
+Watch it fragment. The model has almost certainly never seen this as a unit. It falls back to small sub-word pieces — many more tokens than letters would suggest, many more than a Welsh reader would need.
 
-**Code vs. prose:**
+Now try some code:
+
 ```python
 def fibonacci(n):
     if n <= 1:
         return n
     return fibonacci(n-1) + fibonacci(n-2)
 ```
-*(Programming keywords often tokenize very cleanly — they're extremely common in training data)*
 
-**Non-English text:**
-```
-Привет мир
-```
-*(Cyrillic and other non-Latin scripts often tokenize less efficiently — more tokens per word)*
+Notice how cleanly the keywords tokenize. `def`, `return`, `if` — single tokens, no fragmentation. Python keywords are extremely common in training data. The model has a slot for them.
 
 ---
 
-## The takeaway
+## What this tells you
 
-LLMs don't read words. They read tokens — integers that represent fragments of text. The model's "vocabulary" is typically 50,000–100,000 tokens, and every piece of text you send is first converted into a sequence of these integers.
+The tokenization is not neutral. It reflects what the model has seen. Common English words: efficient, single tokens. Rare words: fragmented, expensive. Non-English text: often very fragmented — more tokens per idea, more of the context window consumed per sentence. Code in common languages: surprisingly clean.
 
 This has real consequences:
-- **Token count ≠ word count.** A 1,000-word document might be 1,200–1,500 tokens depending on vocabulary.
-- **Rare words cost more.** Unusual words, technical jargon, and non-English text fragment into more tokens and use more of the context window.
-- **The model predicts the next token, not the next word.** When it generates text, it's choosing from a distribution over ~50,000 possible next tokens. That's fundamentally different from how humans produce language.
 
-The multiplication activity showed you what the model *can't* do (calculate). This one shows you the *unit of processing* it's actually working with.
+- **Rare words cost more.** Unusual vocabulary, technical jargon, and non-English text use more tokens and fill the context window faster.
+- **The model predicts the *next token*, not the next word.** Generation is a sequence of choices over ~50,000 possible next integers. That is a fundamentally different operation from how a person writes.
+- **Token count ≠ word count.** A 1,000-word document is probably 1,200–1,500 tokens.
+
+---
+
+## This is a small window into a big subject
+
+We won't go deep on how LLMs actually work in this workshop — that's a course in itself. If you want the best available explanation aimed at people who can read code, Andrej Karpathy's talk [Let's build the GPT Tokenizer](https://www.youtube.com/watch?v=7xTGNNLPyMI) is the place to start. Two hours, no hand-waving, builds it from scratch.
+
+What matters for our purposes is this: **the model is, at bottom, a very sophisticated function over sequences of integers.** Not words. Not ideas. Integers.
+
+Which raises an obvious question. If it's all numbers — if the model is fundamentally doing arithmetic over a vocabulary of integers — maybe it's actually good at math?
+
+**Spoiler: it isn't. [Try the multiplication activity →]({{ site.baseurl }}/activities/04-multiplication/)**

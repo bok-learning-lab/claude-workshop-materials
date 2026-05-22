@@ -8,6 +8,8 @@ section: activities
 
 <div class="page-lead">The fastest way to understand what an LLM actually is: ask it to multiply two large numbers without using code, watch it fail, then ask it to write Python and watch it succeed.</div>
 
+*In the [Tokenization activity]({{ site.baseurl }}/activities/05-tokenization/), you saw that a language model processes text as a sequence of integers — tokens. No words, no concepts: numbers all the way down. That raises a natural question: is a model that operates entirely on numbers actually good at arithmetic? This activity answers that.*
+
 ## Step 1 — Ask for raw multiplication
 
 Open Claude.ai (or try with Gemini Flash, Llama, or any older model). Use this exact prompt — the "without using code" constraint is what forces the LLM to rely on pattern prediction rather than calculation:
