@@ -1,0 +1,1874 @@
+<!--
+  DFA BUILDER — Interactive Deterministic Finite Automaton Builder
+  ================================================================
+
+  DESIGN DECISIONS:
+  1. Aesthetic Direction: "Chalkboard Laboratory" — a computer science classroom
+     chalkboard meets vintage computing terminal. The canvas area is styled as a
+     dark slate chalkboard with chalk-textured elements, while the UI panels use
+     a warm parchment/paper tone reminiscent of old CS textbooks.
+
+  2. Typography:
+     - Space Grotesk: Geometric, technical display font for headings and UI chrome
+     - JetBrains Mono: Monospaced font for state labels, transitions, and test strings
+     - Source Serif 4: Warm serif for challenge descriptions and body text
+
+  3. Color Palette:
+     - Slate/Charcoal (#1e2a3a) — primary background, the "chalkboard"
+     - Warm Parchment (#f5f0e8) — sidebar/panel backgrounds
+     - Chalk White (#e8e4dc) — text on dark surfaces
+     - Amber Gold (#e8a824) — highlights, start state indicator, active elements
+     - Teal (#2a9d8f) — accepting states, success indicators
+     - Coral (#e76f51) — reject, error, delete actions
+     - Dusty Blue (#5e7ea1) — regular states, secondary elements
+
+  4. The Memorable Thing: The "tape reader" simulation — when stepping through
+     a string, a glowing amber read-head moves across input characters displayed
+     as cells in a Turing-machine-style tape, while the current state pulses
+     with a chalk-dust glow effect on the chalkboard canvas.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DFA Builder — Automata Laboratory</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slate: #1e2a3a;
+    --slate-light: #2a3a4e;
+    --slate-lighter: #354a62;
+    --parchment: #f5f0e8;
+    --parchment-dark: #e8e0d0;
+    --chalk: #e8e4dc;
+    --chalk-dim: #9ea8b4;
+    --amber: #e8a824;
+    --amber-glow: #e8a82466;
+    --teal: #2a9d8f;
+    --teal-dim: #2a9d8f55;
+    --coral: #e76f51;
+    --coral-dim: #e76f5155;
+    --dusty-blue: #5e7ea1;
+    --dusty-blue-dim: #5e7ea166;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Source Serif 4', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--slate);
+    color: var(--chalk);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  header {
+    background: var(--slate);
+    border-bottom: 2px solid var(--slate-lighter);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 100;
+    position: relative;
+    animation: headerSlide 0.5s ease-out;
+  }
+  @keyframes headerSlide {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+  header h1 span {
+    color: var(--chalk);
+    font-weight: 400;
+    font-size: 0.85rem;
+    margin-left: 8px;
+    opacity: 0.6;
+  }
+
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  /* ── BUTTONS ────────────────────────────────────── */
+  .btn {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-amber {
+    background: var(--amber);
+    color: var(--slate);
+  }
+  .btn-amber:hover { background: #d49a1e; }
+  .btn-teal {
+    background: var(--teal);
+    color: #fff;
+  }
+  .btn-teal:hover { background: #238b7f; }
+  .btn-coral {
+    background: var(--coral);
+    color: #fff;
+  }
+  .btn-coral:hover { background: #d4613f; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--chalk);
+    border: 1.5px solid var(--slate-lighter);
+  }
+  .btn-ghost:hover { border-color: var(--chalk-dim); background: var(--slate-light); }
+  .btn-small {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+  }
+
+  /* ── LAYOUT ─────────────────────────────────────── */
+  .app-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    animation: fadeIn 0.6s ease-out 0.2s both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── SIDEBAR ────────────────────────────────────── */
+  .sidebar {
+    width: 320px;
+    min-width: 320px;
+    background: var(--parchment);
+    color: var(--slate);
+    display: flex;
+    flex-direction: column;
+    border-right: 3px solid var(--slate-lighter);
+    overflow: hidden;
+    animation: sideSlide 0.5s ease-out 0.3s both;
+  }
+  @keyframes sideSlide {
+    from { transform: translateX(-40px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .sidebar-section {
+    padding: 16px 18px;
+    border-bottom: 2px solid var(--parchment-dark);
+  }
+  .sidebar-section:last-child { border-bottom: none; }
+
+  .sidebar-section h2 {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--slate-lighter);
+    margin-bottom: 10px;
+  }
+
+  .challenge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .challenge-item {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1.5px solid transparent;
+    background: transparent;
+    text-align: left;
+    color: var(--slate);
+  }
+  .challenge-item:hover {
+    background: var(--parchment-dark);
+  }
+  .challenge-item.active {
+    background: var(--slate);
+    color: var(--amber);
+    border-color: var(--slate);
+  }
+
+  .challenge-desc {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--slate-light);
+  }
+  .challenge-desc strong {
+    color: var(--slate);
+  }
+
+  /* ── TEST RESULTS ───────────────────────────────── */
+  .test-results-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 18px;
+  }
+  .test-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    border-bottom: 1px solid var(--parchment-dark);
+  }
+  .test-string {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .test-expected {
+    font-size: 0.7rem;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .test-expected.accept { background: var(--teal-dim); color: var(--teal); }
+  .test-expected.reject { background: var(--coral-dim); color: var(--coral); }
+  .test-result-icon {
+    font-size: 1rem;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .test-result-icon.pass { color: var(--teal); }
+  .test-result-icon.fail { color: var(--coral); }
+  .test-result-icon.pending { color: var(--chalk-dim); opacity: 0.3; }
+
+  .test-summary {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .test-summary.all-pass { color: var(--teal); background: var(--teal-dim); }
+  .test-summary.some-fail { color: var(--coral); background: var(--coral-dim); }
+
+  /* ── MAIN AREA ──────────────────────────────────── */
+  .main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    position: relative;
+  }
+
+  /* ── TOOLBAR ────────────────────────────────────── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--slate-light);
+    border-bottom: 1px solid var(--slate-lighter);
+    flex-wrap: wrap;
+  }
+  .toolbar .separator {
+    width: 1px;
+    height: 24px;
+    background: var(--slate-lighter);
+    margin: 0 4px;
+  }
+  .tool-btn {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--chalk-dim);
+    border: 1.5px solid var(--slate-lighter);
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .tool-btn:hover { color: var(--chalk); border-color: var(--chalk-dim); }
+  .tool-btn.active {
+    background: var(--amber);
+    color: var(--slate);
+    border-color: var(--amber);
+  }
+  .tool-btn.danger { color: var(--coral); border-color: var(--coral-dim); }
+  .tool-btn.danger:hover { background: var(--coral); color: #fff; border-color: var(--coral); }
+
+  .toolbar-info {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--chalk-dim);
+    margin-left: auto;
+  }
+
+  /* ── CANVAS AREA ────────────────────────────────── */
+  .canvas-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--slate);
+    /* chalkboard texture via CSS */
+    background-image:
+      radial-gradient(ellipse at 20% 50%, #1e2a3a11 0%, transparent 70%),
+      radial-gradient(ellipse at 80% 50%, #2a3a4e22 0%, transparent 70%);
+  }
+  .canvas-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* Chalk rail at bottom */
+  .canvas-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(to bottom, var(--slate-lighter), #151f2b);
+    z-index: 1;
+  }
+
+  .canvas-svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  /* ── SVG STYLES ─────────────────────────────────── */
+  .state-circle {
+    fill: var(--slate-light);
+    stroke: var(--dusty-blue);
+    stroke-width: 2.5;
+    cursor: grab;
+    transition: fill 0.2s ease;
+  }
+  .state-circle:hover {
+    fill: var(--slate-lighter);
+  }
+  .state-circle.start-state {
+    stroke: var(--amber);
+    stroke-width: 3;
+  }
+  .state-circle.accept-state {
+    stroke: var(--teal);
+    stroke-width: 3;
+  }
+  .state-circle.start-accept-state {
+    stroke: var(--amber);
+    stroke-width: 3;
+  }
+  .state-circle.active-state {
+    fill: var(--amber-glow);
+    stroke: var(--amber);
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 12px var(--amber-glow)) drop-shadow(0 0 24px var(--amber-glow));
+  }
+  .accept-ring {
+    fill: none;
+    stroke: var(--teal);
+    stroke-width: 2;
+    pointer-events: none;
+  }
+  .accept-ring.active-state {
+    stroke: var(--amber);
+    filter: drop-shadow(0 0 8px var(--amber-glow));
+  }
+  .state-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--chalk);
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+    user-select: none;
+  }
+  .start-arrow {
+    stroke: var(--amber);
+    stroke-width: 2.5;
+    fill: none;
+    marker-end: url(#arrowAmber);
+  }
+  .transition-path {
+    fill: none;
+    stroke: var(--chalk-dim);
+    stroke-width: 2;
+    marker-end: url(#arrowChalk);
+    cursor: pointer;
+  }
+  .transition-path:hover {
+    stroke: var(--chalk);
+    stroke-width: 2.5;
+  }
+  .transition-path.active-transition {
+    stroke: var(--amber);
+    stroke-width: 3;
+    marker-end: url(#arrowAmber);
+    filter: drop-shadow(0 0 6px var(--amber-glow));
+  }
+  .transition-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--chalk);
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+    user-select: none;
+  }
+  .transition-label-bg {
+    fill: var(--slate);
+    rx: 3;
+    ry: 3;
+    pointer-events: none;
+  }
+  .transition-hitarea {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 16;
+    cursor: pointer;
+  }
+
+  /* ── TAPE SIMULATION ────────────────────────────── */
+  .tape-bar {
+    background: var(--slate-light);
+    border-top: 2px solid var(--slate-lighter);
+    padding: 12px 16px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    animation: slideUp 0.3s ease-out;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .tape-bar.visible { display: flex; }
+
+  .tape-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tape-header label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--chalk-dim);
+  }
+  .tape-input {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    background: var(--slate);
+    border: 1.5px solid var(--slate-lighter);
+    color: var(--chalk);
+    padding: 5px 10px;
+    border-radius: 4px;
+    width: 180px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .tape-input:focus { border-color: var(--amber); }
+
+  .tape-container {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    justify-content: center;
+    min-height: 48px;
+    position: relative;
+  }
+  .tape-cell {
+    width: 38px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 1.5px solid var(--slate-lighter);
+    background: var(--slate);
+    color: var(--chalk);
+    border-radius: 3px;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .tape-cell.read {
+    background: var(--amber);
+    color: var(--slate);
+    border-color: var(--amber);
+    box-shadow: 0 0 16px var(--amber-glow), 0 0 32px #e8a82422;
+    transform: scale(1.12);
+    z-index: 2;
+  }
+  .tape-cell.consumed {
+    opacity: 0.35;
+    background: var(--slate-light);
+  }
+  .tape-cell.blank {
+    border-style: dashed;
+    color: var(--chalk-dim);
+    opacity: 0.3;
+  }
+  .tape-readhead {
+    position: absolute;
+    bottom: -10px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 8px solid var(--amber);
+    transition: left 0.3s ease;
+  }
+
+  .sim-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+  .sim-status {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-left: 12px;
+  }
+  .sim-status.running { background: var(--amber-glow); color: var(--amber); }
+  .sim-status.accepted { background: var(--teal-dim); color: var(--teal); }
+  .sim-status.rejected { background: var(--coral-dim); color: var(--coral); }
+
+  /* ── CONTEXT MENU ───────────────────────────────── */
+  .context-menu {
+    position: fixed;
+    background: var(--parchment);
+    border: 2px solid var(--parchment-dark);
+    border-radius: 6px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    z-index: 1000;
+    padding: 4px;
+    min-width: 180px;
+    display: none;
+    animation: menuPop 0.15s ease-out;
+  }
+  @keyframes menuPop {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .context-menu.visible { display: block; }
+  .ctx-item {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 7px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--slate);
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background 0.1s;
+    display: block;
+  }
+  .ctx-item:hover { background: var(--parchment-dark); }
+  .ctx-item.danger { color: var(--coral); }
+  .ctx-item.danger:hover { background: var(--coral-dim); }
+  .ctx-sep {
+    height: 1px;
+    background: var(--parchment-dark);
+    margin: 3px 6px;
+  }
+
+  /* ── MODAL ──────────────────────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: var(--parchment);
+    border-radius: 8px;
+    padding: 24px;
+    min-width: 300px;
+    box-shadow: 0 16px 64px rgba(0,0,0,0.5);
+    color: var(--slate);
+    animation: menuPop 0.2s ease-out;
+  }
+  .modal h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .modal label {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+    color: var(--slate-light);
+  }
+  .modal input, .modal select {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border: 1.5px solid var(--parchment-dark);
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 12px;
+    background: #fff;
+    color: var(--slate);
+    outline: none;
+  }
+  .modal input:focus, .modal select:focus {
+    border-color: var(--amber);
+  }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+
+  /* ── EMPTY STATE ────────────────────────────────── */
+  .empty-canvas-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .empty-canvas-hint .hint-text {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--chalk-dim);
+    opacity: 0.4;
+    text-align: center;
+    line-height: 1.8;
+  }
+  .empty-canvas-hint .hint-text kbd {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--slate-light);
+    border: 1px solid var(--slate-lighter);
+    border-radius: 3px;
+    padding: 1px 6px;
+    margin: 0 2px;
+  }
+
+  /* ── SCROLLBAR ──────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--parchment-dark); border-radius: 3px; }
+  .test-results-area::-webkit-scrollbar-thumb { background: #ccc; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DFA Builder<span>Automata Laboratory</span></h1>
+  <div class="header-controls">
+    <button class="btn btn-amber" id="btnTest" title="Run all test strings against your DFA">Test Machine</button>
+    <button class="btn btn-teal" id="btnSim" title="Step through a string interactively">Simulate</button>
+    <button class="btn btn-ghost" id="btnClear" title="Remove all states and transitions">Clear All</button>
+  </div>
+</header>
+
+<div class="app-body">
+  <!-- ── SIDEBAR ──────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h2>Challenges</h2>
+      <div class="challenge-list" id="challengeList"></div>
+    </div>
+    <div class="sidebar-section">
+      <h2>Description</h2>
+      <div class="challenge-desc" id="challengeDesc"></div>
+    </div>
+    <div class="sidebar-section" style="padding-bottom: 8px;">
+      <h2>Test Results</h2>
+      <div id="testSummary"></div>
+    </div>
+    <div class="test-results-area" id="testResultsArea"></div>
+  </aside>
+
+  <!-- ── MAIN CANVAS ──────────────────────────────── -->
+  <div class="main-area">
+    <div class="toolbar">
+      <button class="tool-btn active" data-tool="select" title="Select and drag states">Select</button>
+      <button class="tool-btn" data-tool="addState" title="Click canvas to add a state">+ State</button>
+      <button class="tool-btn" data-tool="addTransition" title="Click source state, then target state">+ Transition</button>
+      <div class="separator"></div>
+      <button class="tool-btn" data-tool="setStart" title="Click a state to make it the start state">Set Start</button>
+      <button class="tool-btn" data-tool="toggleAccept" title="Click a state to toggle accepting">Toggle Accept</button>
+      <button class="tool-btn danger" data-tool="delete" title="Click a state or transition to delete it">Delete</button>
+      <div class="toolbar-info" id="toolbarInfo">Right-click states for options</div>
+    </div>
+
+    <div class="canvas-wrapper" id="canvasWrapper">
+      <div class="empty-canvas-hint" id="emptyHint">
+        <div class="hint-text">
+          Click <kbd>+ State</kbd> then click here to add states<br>
+          Use <kbd>+ Transition</kbd> to connect them<br>
+          Right-click any state for more options
+        </div>
+      </div>
+      <svg class="canvas-svg" id="svgCanvas">
+        <defs>
+          <marker id="arrowChalk" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" markerUnits="strokeWidth">
+            <polygon points="0 0, 10 3.5, 0 7" fill="var(--chalk-dim)" />
+          </marker>
+          <marker id="arrowAmber" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" markerUnits="strokeWidth">
+            <polygon points="0 0, 10 3.5, 0 7" fill="var(--amber)" />
+          </marker>
+          <marker id="arrowChalkHover" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" markerUnits="strokeWidth">
+            <polygon points="0 0, 10 3.5, 0 7" fill="var(--chalk)" />
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <!-- ── TAPE BAR ─────────────────────────────────── -->
+    <div class="tape-bar" id="tapeBar">
+      <div class="tape-header">
+        <label>Input String:</label>
+        <input type="text" class="tape-input" id="tapeInput" placeholder="e.g. 01101" pattern="[01]*">
+        <button class="btn btn-amber btn-small" id="btnSimLoad">Load</button>
+        <button class="btn btn-ghost btn-small" id="btnSimStep">Step</button>
+        <button class="btn btn-ghost btn-small" id="btnSimRun">Run All</button>
+        <button class="btn btn-ghost btn-small" id="btnSimReset">Reset</button>
+        <span class="sim-status" id="simStatus"></span>
+        <button class="btn btn-ghost btn-small" id="btnSimClose" style="margin-left:auto;">Close</button>
+      </div>
+      <div class="tape-container" id="tapeContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTEXT MENU ─────────────────────────────── -->
+<div class="context-menu" id="contextMenu">
+  <button class="ctx-item" data-action="setStart">Set as Start State</button>
+  <button class="ctx-item" data-action="toggleAccept">Toggle Accepting</button>
+  <button class="ctx-item" data-action="rename">Rename State</button>
+  <div class="ctx-sep"></div>
+  <button class="ctx-item danger" data-action="deleteState">Delete State</button>
+</div>
+
+<!-- ── TRANSITION MODAL ─────────────────────────── -->
+<div class="modal-overlay" id="transitionModal">
+  <div class="modal">
+    <h3>Add Transition</h3>
+    <label>Symbol (0, 1, or 0,1 for both)</label>
+    <input type="text" id="transSymbol" placeholder="0 or 1 or 0,1" maxlength="3">
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-small" id="transCancel">Cancel</button>
+      <button class="btn btn-amber btn-small" id="transOk">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── RENAME MODAL ─────────────────────────────── -->
+<div class="modal-overlay" id="renameModal">
+  <div class="modal">
+    <h3>Rename State</h3>
+    <label>New label</label>
+    <input type="text" id="renameInput" maxlength="6" placeholder="q0">
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-small" id="renameCancel">Cancel</button>
+      <button class="btn btn-amber btn-small" id="renameOk">Rename</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  DFA BUILDER — Core Application
+// ═══════════════════════════════════════════════════════════════════
+
+(() => {
+  'use strict';
+
+  // ── CHALLENGES ─────────────────────────────────────────────────
+  const CHALLENGES = [
+    {
+      id: 'ends01',
+      name: 'Strings ending in 01',
+      description: 'Build a DFA that <strong>accepts</strong> all binary strings that end with <strong>01</strong>, and rejects all others. The empty string should be rejected.',
+      alphabet: ['0', '1'],
+      tests: [
+        { input: '01', accept: true },
+        { input: '001', accept: true },
+        { input: '101', accept: true },
+        { input: '0101', accept: true },
+        { input: '1101', accept: true },
+        { input: '00101', accept: true },
+        { input: '', accept: false },
+        { input: '0', accept: false },
+        { input: '1', accept: false },
+        { input: '10', accept: false },
+        { input: '00', accept: false },
+        { input: '11', accept: false },
+        { input: '010', accept: false },
+        { input: '0100', accept: false },
+        { input: '111', accept: false },
+      ]
+    },
+    {
+      id: 'even1s',
+      name: 'Even number of 1s',
+      description: 'Build a DFA that <strong>accepts</strong> binary strings containing an <strong>even number of 1s</strong> (including zero 1s). The empty string has zero 1s, which is even, so it should be accepted.',
+      alphabet: ['0', '1'],
+      tests: [
+        { input: '', accept: true },
+        { input: '0', accept: true },
+        { input: '00', accept: true },
+        { input: '11', accept: true },
+        { input: '000', accept: true },
+        { input: '011', accept: true },
+        { input: '110', accept: true },
+        { input: '101', accept: true },
+        { input: '1001', accept: true },
+        { input: '1', accept: false },
+        { input: '10', accept: false },
+        { input: '01', accept: false },
+        { input: '111', accept: false },
+        { input: '100', accept: false },
+        { input: '001', accept: false },
+      ]
+    },
+    {
+      id: 'noConsec0',
+      name: 'No consecutive 0s',
+      description: 'Build a DFA that <strong>accepts</strong> binary strings that contain <strong>no two consecutive 0s</strong>. The empty string should be accepted.',
+      alphabet: ['0', '1'],
+      tests: [
+        { input: '', accept: true },
+        { input: '0', accept: true },
+        { input: '1', accept: true },
+        { input: '10', accept: true },
+        { input: '01', accept: true },
+        { input: '11', accept: true },
+        { input: '101', accept: true },
+        { input: '010', accept: true },
+        { input: '1010', accept: true },
+        { input: '10101', accept: true },
+        { input: '00', accept: false },
+        { input: '100', accept: false },
+        { input: '001', accept: false },
+        { input: '000', accept: false },
+        { input: '1001', accept: false },
+        { input: '10010', accept: false },
+      ]
+    },
+    {
+      id: 'contains110',
+      name: 'Contains 110 as substring',
+      description: 'Build a DFA that <strong>accepts</strong> binary strings that contain <strong>110</strong> as a substring somewhere in the string.',
+      alphabet: ['0', '1'],
+      tests: [
+        { input: '110', accept: true },
+        { input: '1100', accept: true },
+        { input: '1101', accept: true },
+        { input: '0110', accept: true },
+        { input: '01100', accept: true },
+        { input: '11011', accept: true },
+        { input: '00110', accept: true },
+        { input: '', accept: false },
+        { input: '0', accept: false },
+        { input: '1', accept: false },
+        { input: '11', accept: false },
+        { input: '01', accept: false },
+        { input: '010', accept: false },
+        { input: '011', accept: false },
+        { input: '0101', accept: false },
+      ]
+    },
+    {
+      id: 'div3',
+      name: 'Binary number divisible by 3',
+      description: 'Build a DFA that <strong>accepts</strong> binary strings that, when interpreted as a binary number (reading left to right, most significant bit first), are <strong>divisible by 3</strong>. The empty string represents 0, which is divisible by 3.',
+      alphabet: ['0', '1'],
+      tests: [
+        { input: '', accept: true },
+        { input: '0', accept: true },
+        { input: '00', accept: true },
+        { input: '11', accept: true },
+        { input: '110', accept: true },
+        { input: '1001', accept: true },
+        { input: '1100', accept: true },
+        { input: '1111', accept: true },
+        { input: '1', accept: false },
+        { input: '10', accept: false },
+        { input: '100', accept: false },
+        { input: '101', accept: false },
+        { input: '111', accept: false },
+        { input: '1000', accept: false },
+        { input: '1010', accept: false },
+      ]
+    },
+  ];
+
+  // ── STATE ──────────────────────────────────────────────────────
+  let states = [];        // { id, label, x, y, isStart, isAccept }
+  let transitions = [];   // { id, from, to, symbol }
+  let nextStateId = 0;
+  let nextTransId = 0;
+  let currentChallenge = CHALLENGES[0];
+
+  let currentTool = 'select';
+  let transitionSource = null;   // state id when adding transition
+
+  // Drag state
+  let dragState = null;
+  let dragOffset = { x: 0, y: 0 };
+
+  // Simulation state
+  let simActive = false;
+  let simString = '';
+  let simIndex = -1;
+  let simCurrentState = null;
+  let simActiveTransition = null;
+
+  const STATE_RADIUS = 30;
+  const ACCEPT_RING_OFFSET = 5;
+
+  // ── DOM ────────────────────────────────────────────────────────
+  const svgCanvas = document.getElementById('svgCanvas');
+  const canvasWrapper = document.getElementById('canvasWrapper');
+  const challengeList = document.getElementById('challengeList');
+  const challengeDesc = document.getElementById('challengeDesc');
+  const testResultsArea = document.getElementById('testResultsArea');
+  const testSummary = document.getElementById('testSummary');
+  const emptyHint = document.getElementById('emptyHint');
+  const toolbarInfo = document.getElementById('toolbarInfo');
+  const contextMenu = document.getElementById('contextMenu');
+  const transitionModal = document.getElementById('transitionModal');
+  const renameModal = document.getElementById('renameModal');
+  const tapeBar = document.getElementById('tapeBar');
+  const tapeContainer = document.getElementById('tapeContainer');
+  const tapeInput = document.getElementById('tapeInput');
+  const simStatus = document.getElementById('simStatus');
+
+  // ── INIT CHALLENGES ────────────────────────────────────────────
+  function initChallenges() {
+    challengeList.innerHTML = '';
+    CHALLENGES.forEach((ch, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'challenge-item' + (i === 0 ? ' active' : '');
+      btn.textContent = ch.name;
+      btn.addEventListener('click', () => selectChallenge(ch));
+      challengeList.appendChild(btn);
+    });
+    selectChallenge(CHALLENGES[0]);
+  }
+
+  function selectChallenge(ch) {
+    currentChallenge = ch;
+    challengeList.querySelectorAll('.challenge-item').forEach((el, i) => {
+      el.classList.toggle('active', CHALLENGES[i].id === ch.id);
+    });
+    challengeDesc.innerHTML = ch.description;
+    renderTestResults(null);
+  }
+
+  // ── RENDER TEST RESULTS ────────────────────────────────────────
+  function renderTestResults(results) {
+    testResultsArea.innerHTML = '';
+    testSummary.innerHTML = '';
+
+    if (results) {
+      const passed = results.filter(r => r.pass).length;
+      const total = results.length;
+      const allPass = passed === total;
+      testSummary.innerHTML = `<div class="test-summary ${allPass ? 'all-pass' : 'some-fail'}">${passed}/${total} tests passed${allPass ? ' — Correct!' : ''}</div>`;
+    }
+
+    currentChallenge.tests.forEach((t, i) => {
+      const row = document.createElement('div');
+      row.className = 'test-row';
+
+      const strSpan = document.createElement('span');
+      strSpan.className = 'test-string';
+      strSpan.textContent = t.input === '' ? 'ε (empty)' : t.input;
+      strSpan.title = t.input === '' ? 'empty string' : t.input;
+
+      const expSpan = document.createElement('span');
+      expSpan.className = `test-expected ${t.accept ? 'accept' : 'reject'}`;
+      expSpan.textContent = t.accept ? 'accept' : 'reject';
+
+      const iconSpan = document.createElement('span');
+      if (results) {
+        const r = results[i];
+        iconSpan.className = `test-result-icon ${r.pass ? 'pass' : 'fail'}`;
+        iconSpan.textContent = r.pass ? '\u2713' : '\u2717';
+        iconSpan.title = r.pass ? 'Pass' : `Fail: your DFA ${r.actual ? 'accepted' : 'rejected'}`;
+      } else {
+        iconSpan.className = 'test-result-icon pending';
+        iconSpan.textContent = '\u2022';
+      }
+
+      row.appendChild(strSpan);
+      row.appendChild(expSpan);
+      row.appendChild(iconSpan);
+
+      // Click to load in simulator
+      row.style.cursor = 'pointer';
+      row.title = 'Click to simulate this string';
+      row.addEventListener('click', () => {
+        openSimulator();
+        tapeInput.value = t.input;
+        loadTape();
+      });
+
+      testResultsArea.appendChild(row);
+    });
+  }
+
+  // ── DFA EXECUTION ──────────────────────────────────────────────
+  function runDFA(inputStr) {
+    const startState = states.find(s => s.isStart);
+    if (!startState) return { accepted: false, error: 'No start state defined' };
+
+    let current = startState.id;
+
+    for (let i = 0; i < inputStr.length; i++) {
+      const ch = inputStr[i];
+      const trans = transitions.find(t => t.from === current && t.symbol === ch);
+      if (!trans) {
+        return { accepted: false, stuckAt: i, stuckChar: ch };
+      }
+      current = trans.to;
+    }
+
+    const finalState = states.find(s => s.id === current);
+    return { accepted: finalState ? finalState.isAccept : false };
+  }
+
+  function testMachine() {
+    const results = currentChallenge.tests.map(t => {
+      const result = runDFA(t.input);
+      return {
+        input: t.input,
+        expected: t.accept,
+        actual: result.accepted,
+        pass: result.accepted === t.accept,
+        error: result.error,
+      };
+    });
+    renderTestResults(results);
+  }
+
+  // ── SVG RENDERING ──────────────────────────────────────────────
+  function render() {
+    // Clear all dynamic elements (keep defs)
+    while (svgCanvas.children.length > 1) {
+      svgCanvas.removeChild(svgCanvas.lastChild);
+    }
+
+    // Show/hide empty hint
+    emptyHint.style.display = states.length === 0 ? 'flex' : 'none';
+
+    // Draw transitions first (behind states)
+    renderTransitions();
+
+    // Draw states
+    renderStates();
+  }
+
+  function renderTransitions() {
+    // Group transitions by from-to pair to handle multiple symbols
+    const grouped = {};
+    transitions.forEach(t => {
+      const key = `${t.from}->${t.to}`;
+      if (!grouped[key]) grouped[key] = { from: t.from, to: t.to, symbols: [], ids: [] };
+      grouped[key].symbols.push(t.symbol);
+      grouped[key].ids.push(t.id);
+    });
+
+    // Check for bidirectional transitions
+    const bidir = new Set();
+    Object.keys(grouped).forEach(key => {
+      const { from, to } = grouped[key];
+      const reverseKey = `${to}->${from}`;
+      if (grouped[reverseKey] && from !== to) {
+        bidir.add(key);
+        bidir.add(reverseKey);
+      }
+    });
+
+    Object.values(grouped).forEach(group => {
+      const fromState = states.find(s => s.id === group.from);
+      const toState = states.find(s => s.id === group.to);
+      if (!fromState || !toState) return;
+
+      const label = group.symbols.sort().join(',');
+      const isActive = simActiveTransition && group.ids.includes(simActiveTransition);
+      const isSelfLoop = group.from === group.to;
+      const isBidir = bidir.has(`${group.from}->${group.to}`);
+
+      if (isSelfLoop) {
+        renderSelfLoop(fromState, label, isActive, group.ids);
+      } else {
+        renderArc(fromState, toState, label, isActive, group.ids, isBidir);
+      }
+    });
+  }
+
+  function renderArc(from, to, label, isActive, ids, curved) {
+    const g = createSVG('g');
+
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 1) return;
+
+    const nx = dx / dist;
+    const ny = dy / dist;
+
+    // Start/end at circle edge
+    const startX = from.x + nx * STATE_RADIUS;
+    const startY = from.y + ny * STATE_RADIUS;
+    const endDist = to.isAccept ? STATE_RADIUS + ACCEPT_RING_OFFSET + 2 : STATE_RADIUS;
+    const endX = to.x - nx * (endDist + 4);
+    const endY = to.y - ny * (endDist + 4);
+
+    let pathD;
+    let labelX, labelY;
+
+    if (curved) {
+      // Curved arc for bidirectional
+      const midX = (startX + endX) / 2;
+      const midY = (startY + endY) / 2;
+      const perpX = -ny;
+      const perpY = nx;
+      const bulge = 30;
+      const cpX = midX + perpX * bulge;
+      const cpY = midY + perpY * bulge;
+
+      pathD = `M ${startX} ${startY} Q ${cpX} ${cpY} ${endX} ${endY}`;
+      labelX = midX + perpX * bulge * 0.65;
+      labelY = midY + perpY * bulge * 0.65;
+    } else {
+      pathD = `M ${startX} ${startY} L ${endX} ${endY}`;
+      const perpX = -ny;
+      const perpY = nx;
+      labelX = (startX + endX) / 2 + perpX * 16;
+      labelY = (startY + endY) / 2 + perpY * 16;
+    }
+
+    // Hit area
+    const hitPath = createSVG('path', {
+      d: pathD,
+      class: 'transition-hitarea',
+    });
+    hitPath.dataset.transIds = ids.join(',');
+
+    // Visible path
+    const visPath = createSVG('path', {
+      d: pathD,
+      class: 'transition-path' + (isActive ? ' active-transition' : ''),
+    });
+    visPath.dataset.transIds = ids.join(',');
+
+    // Label background
+    const textEl = createSVG('text', {
+      x: labelX,
+      y: labelY,
+      class: 'transition-label',
+    });
+    textEl.textContent = label;
+
+    const bbox = { width: label.length * 9 + 8, height: 18 };
+    const bgRect = createSVG('rect', {
+      x: labelX - bbox.width / 2,
+      y: labelY - bbox.height / 2,
+      width: bbox.width,
+      height: bbox.height,
+      class: 'transition-label-bg',
+    });
+
+    g.appendChild(hitPath);
+    g.appendChild(visPath);
+    g.appendChild(bgRect);
+    g.appendChild(textEl);
+
+    // Click handlers for deletion
+    [hitPath, visPath].forEach(el => {
+      el.addEventListener('click', (e) => {
+        if (currentTool === 'delete') {
+          e.stopPropagation();
+          ids.forEach(id => {
+            transitions = transitions.filter(t => t.id !== id);
+          });
+          render();
+        }
+      });
+    });
+
+    svgCanvas.appendChild(g);
+  }
+
+  function renderSelfLoop(state, label, isActive, ids) {
+    const g = createSVG('g');
+
+    const loopRadius = 22;
+    const cx = state.x;
+    const cy = state.y - STATE_RADIUS - loopRadius + 2;
+
+    const pathD = `M ${cx - 12} ${state.y - STATE_RADIUS + 4}
+      A ${loopRadius} ${loopRadius} 0 1 1 ${cx + 12} ${state.y - STATE_RADIUS + 4}`;
+
+    const hitPath = createSVG('path', {
+      d: pathD,
+      class: 'transition-hitarea',
+    });
+    hitPath.dataset.transIds = ids.join(',');
+
+    const visPath = createSVG('path', {
+      d: pathD,
+      class: 'transition-path' + (isActive ? ' active-transition' : ''),
+    });
+    visPath.dataset.transIds = ids.join(',');
+
+    const labelX = cx;
+    const labelY = cy - loopRadius + 2;
+
+    const bbox = { width: label.length * 9 + 8, height: 18 };
+    const bgRect = createSVG('rect', {
+      x: labelX - bbox.width / 2,
+      y: labelY - bbox.height / 2,
+      width: bbox.width,
+      height: bbox.height,
+      class: 'transition-label-bg',
+    });
+
+    const textEl = createSVG('text', {
+      x: labelX,
+      y: labelY,
+      class: 'transition-label',
+    });
+    textEl.textContent = label;
+
+    g.appendChild(hitPath);
+    g.appendChild(visPath);
+    g.appendChild(bgRect);
+    g.appendChild(textEl);
+
+    [hitPath, visPath].forEach(el => {
+      el.addEventListener('click', (e) => {
+        if (currentTool === 'delete') {
+          e.stopPropagation();
+          ids.forEach(id => {
+            transitions = transitions.filter(t => t.id !== id);
+          });
+          render();
+        }
+      });
+    });
+
+    svgCanvas.appendChild(g);
+  }
+
+  function renderStates() {
+    states.forEach(s => {
+      const g = createSVG('g');
+      g.dataset.stateId = s.id;
+
+      const isActive = simCurrentState === s.id;
+
+      // Start arrow
+      if (s.isStart) {
+        const arrowLen = 40;
+        const arrowLine = createSVG('line', {
+          x1: s.x - STATE_RADIUS - arrowLen,
+          y1: s.y,
+          x2: s.x - STATE_RADIUS - 4,
+          y2: s.y,
+          class: 'start-arrow',
+        });
+        g.appendChild(arrowLine);
+      }
+
+      // State circle
+      let circleClass = 'state-circle';
+      if (isActive) circleClass += ' active-state';
+      else if (s.isStart && s.isAccept) circleClass += ' start-accept-state';
+      else if (s.isStart) circleClass += ' start-state';
+      else if (s.isAccept) circleClass += ' accept-state';
+
+      const circle = createSVG('circle', {
+        cx: s.x,
+        cy: s.y,
+        r: STATE_RADIUS,
+        class: circleClass,
+      });
+      g.appendChild(circle);
+
+      // Accepting state double ring
+      if (s.isAccept) {
+        const ring = createSVG('circle', {
+          cx: s.x,
+          cy: s.y,
+          r: STATE_RADIUS + ACCEPT_RING_OFFSET,
+          class: 'accept-ring' + (isActive ? ' active-state' : ''),
+        });
+        g.appendChild(ring);
+      }
+
+      // Label
+      const label = createSVG('text', {
+        x: s.x,
+        y: s.y,
+        class: 'state-label',
+      });
+      label.textContent = s.label;
+      g.appendChild(label);
+
+      // Events
+      circle.addEventListener('mousedown', (e) => handleStateMouseDown(e, s));
+      circle.addEventListener('contextmenu', (e) => handleStateContextMenu(e, s));
+      circle.addEventListener('click', (e) => handleStateClick(e, s));
+
+      svgCanvas.appendChild(g);
+    });
+  }
+
+  function createSVG(tag, attrs) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    if (attrs) {
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+    return el;
+  }
+
+  // ── STATE INTERACTIONS ─────────────────────────────────────────
+  function handleStateMouseDown(e, state) {
+    if (e.button !== 0) return;
+    if (currentTool !== 'select') return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const pt = svgPoint(e);
+    dragState = state;
+    dragOffset.x = state.x - pt.x;
+    dragOffset.y = state.y - pt.y;
+  }
+
+  function handleStateClick(e, state) {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+
+    switch (currentTool) {
+      case 'addTransition':
+        handleTransitionClick(state);
+        break;
+      case 'setStart':
+        states.forEach(s => s.isStart = false);
+        state.isStart = true;
+        render();
+        setTool('select');
+        break;
+      case 'toggleAccept':
+        state.isAccept = !state.isAccept;
+        render();
+        break;
+      case 'delete':
+        deleteState(state.id);
+        break;
+    }
+  }
+
+  function handleTransitionClick(state) {
+    if (transitionSource === null) {
+      transitionSource = state.id;
+      toolbarInfo.textContent = `From ${state.label} → click target state`;
+      highlightState(state.id);
+    } else {
+      const fromId = transitionSource;
+      transitionSource = null;
+      openTransitionModal(fromId, state.id);
+      toolbarInfo.textContent = 'Right-click states for options';
+      render();
+    }
+  }
+
+  function highlightState(stateId) {
+    // Temporarily highlight source state
+    const circle = svgCanvas.querySelector(`g[data-state-id="${stateId}"] .state-circle`);
+    if (circle) {
+      circle.style.stroke = 'var(--amber)';
+      circle.style.strokeWidth = '3.5';
+      circle.style.filter = 'drop-shadow(0 0 8px var(--amber-glow))';
+    }
+  }
+
+  function handleStateContextMenu(e, state) {
+    e.preventDefault();
+    e.stopPropagation();
+    showContextMenu(e.clientX, e.clientY, state);
+  }
+
+  function showContextMenu(x, y, state) {
+    contextMenu.style.left = x + 'px';
+    contextMenu.style.top = y + 'px';
+    contextMenu.classList.add('visible');
+    contextMenu.dataset.stateId = state.id;
+  }
+
+  function hideContextMenu() {
+    contextMenu.classList.remove('visible');
+  }
+
+  function deleteState(stateId) {
+    states = states.filter(s => s.id !== stateId);
+    transitions = transitions.filter(t => t.from !== stateId && t.to !== stateId);
+    render();
+  }
+
+  // ── CANVAS INTERACTIONS ────────────────────────────────────────
+  svgCanvas.addEventListener('click', (e) => {
+    if (currentTool === 'addState') {
+      const pt = svgPoint(e);
+      addState(pt.x, pt.y);
+    } else if (currentTool === 'addTransition' && transitionSource !== null) {
+      // Clicked empty canvas — cancel
+      transitionSource = null;
+      toolbarInfo.textContent = 'Right-click states for options';
+      render();
+    }
+  });
+
+  svgCanvas.addEventListener('mousemove', (e) => {
+    if (dragState) {
+      const pt = svgPoint(e);
+      dragState.x = Math.max(STATE_RADIUS + 50, Math.min(pt.x + dragOffset.x, svgCanvas.clientWidth - STATE_RADIUS));
+      dragState.y = Math.max(STATE_RADIUS + 30, Math.min(pt.y + dragOffset.y, svgCanvas.clientHeight - STATE_RADIUS));
+      render();
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    dragState = null;
+  });
+
+  function svgPoint(e) {
+    const rect = svgCanvas.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+  }
+
+  function addState(x, y) {
+    const id = nextStateId++;
+    const label = 'q' + id;
+    const isFirst = states.length === 0;
+    states.push({ id, label, x, y, isStart: isFirst, isAccept: false });
+    render();
+  }
+
+  // ── TOOLBAR ────────────────────────────────────────────────────
+  document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+    btn.addEventListener('click', () => setTool(btn.dataset.tool));
+  });
+
+  function setTool(tool) {
+    currentTool = tool;
+    transitionSource = null;
+    document.querySelectorAll('.tool-btn[data-tool]').forEach(b => {
+      b.classList.toggle('active', b.dataset.tool === tool);
+    });
+    toolbarInfo.textContent = {
+      select: 'Right-click states for options',
+      addState: 'Click on the canvas to place a state',
+      addTransition: 'Click a source state, then a target state',
+      setStart: 'Click a state to make it the start state',
+      toggleAccept: 'Click a state to toggle its accepting status',
+      delete: 'Click a state or transition to delete it',
+    }[tool] || '';
+  }
+
+  // ── CONTEXT MENU ACTIONS ───────────────────────────────────────
+  contextMenu.querySelectorAll('.ctx-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const stateId = parseInt(contextMenu.dataset.stateId);
+      const state = states.find(s => s.id === stateId);
+      if (!state) { hideContextMenu(); return; }
+
+      switch (item.dataset.action) {
+        case 'setStart':
+          states.forEach(s => s.isStart = false);
+          state.isStart = true;
+          render();
+          break;
+        case 'toggleAccept':
+          state.isAccept = !state.isAccept;
+          render();
+          break;
+        case 'rename':
+          openRenameModal(state);
+          break;
+        case 'deleteState':
+          deleteState(stateId);
+          break;
+      }
+      hideContextMenu();
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!contextMenu.contains(e.target)) hideContextMenu();
+  });
+  document.addEventListener('contextmenu', (e) => {
+    if (!svgCanvas.contains(e.target)) hideContextMenu();
+  });
+
+  // ── TRANSITION MODAL ───────────────────────────────────────────
+  let pendingTransition = null;
+
+  function openTransitionModal(fromId, toId) {
+    pendingTransition = { from: fromId, to: toId };
+    document.getElementById('transSymbol').value = '';
+    transitionModal.classList.add('visible');
+    setTimeout(() => document.getElementById('transSymbol').focus(), 100);
+  }
+
+  document.getElementById('transOk').addEventListener('click', addTransitionFromModal);
+  document.getElementById('transCancel').addEventListener('click', () => {
+    transitionModal.classList.remove('visible');
+    pendingTransition = null;
+  });
+  document.getElementById('transSymbol').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addTransitionFromModal();
+    if (e.key === 'Escape') {
+      transitionModal.classList.remove('visible');
+      pendingTransition = null;
+    }
+  });
+
+  function addTransitionFromModal() {
+    if (!pendingTransition) return;
+    const raw = document.getElementById('transSymbol').value.trim();
+    const symbols = raw.split(',').map(s => s.trim()).filter(s => s === '0' || s === '1');
+    if (symbols.length === 0) {
+      document.getElementById('transSymbol').style.borderColor = 'var(--coral)';
+      return;
+    }
+
+    symbols.forEach(sym => {
+      // Check for existing transition from same state with same symbol
+      const existing = transitions.find(t => t.from === pendingTransition.from && t.symbol === sym);
+      if (existing) {
+        // DFA: replace existing transition
+        existing.to = pendingTransition.to;
+      } else {
+        transitions.push({
+          id: nextTransId++,
+          from: pendingTransition.from,
+          to: pendingTransition.to,
+          symbol: sym,
+        });
+      }
+    });
+
+    transitionModal.classList.remove('visible');
+    pendingTransition = null;
+    render();
+    setTool('select');
+  }
+
+  // ── RENAME MODAL ───────────────────────────────────────────────
+  let renamingState = null;
+
+  function openRenameModal(state) {
+    renamingState = state;
+    document.getElementById('renameInput').value = state.label;
+    renameModal.classList.add('visible');
+    setTimeout(() => {
+      document.getElementById('renameInput').focus();
+      document.getElementById('renameInput').select();
+    }, 100);
+  }
+
+  document.getElementById('renameOk').addEventListener('click', applyRename);
+  document.getElementById('renameCancel').addEventListener('click', () => {
+    renameModal.classList.remove('visible');
+    renamingState = null;
+  });
+  document.getElementById('renameInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') applyRename();
+    if (e.key === 'Escape') {
+      renameModal.classList.remove('visible');
+      renamingState = null;
+    }
+  });
+
+  function applyRename() {
+    if (!renamingState) return;
+    const val = document.getElementById('renameInput').value.trim();
+    if (val) renamingState.label = val;
+    renameModal.classList.remove('visible');
+    renamingState = null;
+    render();
+  }
+
+  // ── HEADER BUTTONS ─────────────────────────────────────────────
+  document.getElementById('btnTest').addEventListener('click', testMachine);
+  document.getElementById('btnSim').addEventListener('click', openSimulator);
+  document.getElementById('btnClear').addEventListener('click', () => {
+    if (states.length === 0 && transitions.length === 0) return;
+    if (confirm('Clear all states and transitions?')) {
+      states = [];
+      transitions = [];
+      nextStateId = 0;
+      nextTransId = 0;
+      closeSimulator();
+      render();
+      renderTestResults(null);
+    }
+  });
+
+  // ── SIMULATION ─────────────────────────────────────────────────
+  function openSimulator() {
+    simActive = false;
+    simString = '';
+    simIndex = -1;
+    simCurrentState = null;
+    simActiveTransition = null;
+    tapeBar.classList.add('visible');
+    tapeContainer.innerHTML = '';
+    simStatus.textContent = '';
+    simStatus.className = 'sim-status';
+    render();
+  }
+
+  function closeSimulator() {
+    tapeBar.classList.remove('visible');
+    simActive = false;
+    simCurrentState = null;
+    simActiveTransition = null;
+    render();
+  }
+
+  function loadTape() {
+    const val = tapeInput.value.replace(/[^01]/g, '');
+    tapeInput.value = val;
+    simString = val;
+    simIndex = -1;
+    simActiveTransition = null;
+
+    const startState = states.find(s => s.isStart);
+    if (!startState) {
+      simStatus.textContent = 'No start state!';
+      simStatus.className = 'sim-status rejected';
+      simCurrentState = null;
+      renderTape();
+      render();
+      return;
+    }
+
+    simCurrentState = startState.id;
+    simActive = true;
+    simStatus.textContent = 'Ready';
+    simStatus.className = 'sim-status running';
+    renderTape();
+    render();
+  }
+
+  function renderTape() {
+    tapeContainer.innerHTML = '';
+
+    // Add a blank cell before
+    const blankBefore = document.createElement('div');
+    blankBefore.className = 'tape-cell blank';
+    blankBefore.textContent = '\u25A1';
+    tapeContainer.appendChild(blankBefore);
+
+    if (simString.length === 0) {
+      const emptyCell = document.createElement('div');
+      emptyCell.className = 'tape-cell' + (simIndex === -1 && simActive ? '' : '');
+      emptyCell.textContent = '\u03B5';
+      tapeContainer.appendChild(emptyCell);
+    } else {
+      for (let i = 0; i < simString.length; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'tape-cell';
+        if (i === simIndex) cell.classList.add('read');
+        else if (i < simIndex) cell.classList.add('consumed');
+        cell.textContent = simString[i];
+        tapeContainer.appendChild(cell);
+      }
+    }
+
+    // Add a blank cell after
+    const blankAfter = document.createElement('div');
+    blankAfter.className = 'tape-cell blank';
+    blankAfter.textContent = '\u25A1';
+    tapeContainer.appendChild(blankAfter);
+  }
+
+  function simStep() {
+    if (!simActive) return;
+
+    const nextIdx = simIndex + 1;
+
+    if (nextIdx >= simString.length) {
+      // Finished reading — check accept
+      simActive = false;
+      simActiveTransition = null;
+      simIndex = simString.length; // past end
+      const finalState = states.find(s => s.id === simCurrentState);
+      const accepted = finalState ? finalState.isAccept : false;
+      simStatus.textContent = accepted ? 'ACCEPTED' : 'REJECTED';
+      simStatus.className = `sim-status ${accepted ? 'accepted' : 'rejected'}`;
+      renderTape();
+      render();
+      return;
+    }
+
+    const ch = simString[nextIdx];
+    const trans = transitions.find(t => t.from === simCurrentState && t.symbol === ch);
+
+    if (!trans) {
+      simActive = false;
+      simActiveTransition = null;
+      simIndex = nextIdx;
+      simStatus.textContent = 'STUCK — no transition for ' + ch;
+      simStatus.className = 'sim-status rejected';
+      renderTape();
+      render();
+      return;
+    }
+
+    simIndex = nextIdx;
+    simActiveTransition = trans.id;
+    simCurrentState = trans.to;
+
+    const stateLabel = states.find(s => s.id === simCurrentState)?.label || '?';
+    simStatus.textContent = `Read '${ch}' → ${stateLabel}`;
+    simStatus.className = 'sim-status running';
+
+    renderTape();
+    render();
+  }
+
+  function simRunAll() {
+    if (!simActive) return;
+
+    const runStep = () => {
+      if (!simActive) return;
+      simStep();
+      if (simActive) {
+        setTimeout(runStep, 400);
+      }
+    };
+    runStep();
+  }
+
+  function simReset() {
+    if (simString || tapeInput.value) {
+      loadTape();
+    }
+  }
+
+  document.getElementById('btnSimLoad').addEventListener('click', loadTape);
+  document.getElementById('btnSimStep').addEventListener('click', simStep);
+  document.getElementById('btnSimRun').addEventListener('click', simRunAll);
+  document.getElementById('btnSimReset').addEventListener('click', simReset);
+  document.getElementById('btnSimClose').addEventListener('click', closeSimulator);
+
+  tapeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loadTape();
+  });
+
+  // ── KEYBOARD SHORTCUTS ─────────────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    // Don't capture if modal is open or input is focused
+    if (transitionModal.classList.contains('visible') || renameModal.classList.contains('visible')) return;
+    if (document.activeElement.tagName === 'INPUT') return;
+
+    switch(e.key) {
+      case 's': setTool('select'); break;
+      case 'a': setTool('addState'); break;
+      case 't': setTool('addTransition'); break;
+      case 'd': setTool('delete'); break;
+      case 'Escape':
+        setTool('select');
+        hideContextMenu();
+        break;
+      case ' ':
+        if (simActive) { e.preventDefault(); simStep(); }
+        break;
+    }
+  });
+
+  // ── INIT ───────────────────────────────────────────────────────
+  initChallenges();
+  render();
+
+})();
+</script>
+</body>
+</html>

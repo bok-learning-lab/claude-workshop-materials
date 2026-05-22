@@ -1,0 +1,17 @@
+<!--
+  Embed shape: a single self-contained <div class="logic-equiv-quantified-widget">
+  per problem. Edit the JSON inside data-problem to author a new problem.
+  Multiple <div class="logic-equiv-quantified-widget"> blocks can coexist on one page.
+
+  data-problem JSON keys:
+    start    (string, required) — starting formula.
+    target   (string, required) — target formula.
+
+  Formula syntax:
+    Propositional: ¬, ∧, ∨, →, ( )    (or !, &&, ||, ->)
+    Quantifiers:   ∀x. body  /  ∃x. body  (or forall x. body / exists x. body)
+                   The dot is optional. Use parens to limit scope: (∀x.P(x)) ∧ Q.
+    Predicates:    P, Q, R   (zero-arg)   or   P(x), L(x,y)   (with args)
+-->
+<div class="logic-equiv-quantified-widget"
+     data-problem='{"start": "¬∀x. Glitters(x) → Gold(x)", "target": "∃x. Glitters(x) ∧ ¬Gold(x)"}'></div>

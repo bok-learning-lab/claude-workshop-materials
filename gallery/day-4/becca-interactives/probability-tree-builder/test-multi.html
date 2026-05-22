@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Probability Tree Builder — multi-instance test</title>
+  <link rel="stylesheet" href="probability-tree-builder.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1300px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Probability Tree Builder — multi-instance test (segment 7.2 Activity 19)</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own preset,
+    tree structure, branch probabilities, and event-leaf markings. Editing
+    a branch in one widget must not change another. Mark different events
+    in different widgets to confirm.
+  </p>
+
+  <!-- Widget 1: Two coins (default uniform) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 1 — Two coin flips (try P(exactly one H) = 0.5)",
+    "defaultPreset": "twoCoins"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: Dice A vs C (the wager) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 2 — Dice A vs C (mark C > A leaves; expect 5/9)",
+    "defaultPreset": "dice"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: Three biased coins -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 3 — Three biased coins, P(H) = 0.6 (count exactly-2 H)",
+    "defaultPreset": "threeBiasedCoins"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 4: Mammogram (Module 8 conditional preset) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 4 — Mammogram (mark + leaves; expect P(+) = 0.0585; P(cancer | +) ≈ 0.154)",
+    "defaultPreset": "mammogram"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 5: COVID test (Module 8 conditional preset) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 5 — COVID test (mark + leaves; expect P(+) ≈ 0.0394; P(COVID | +) ≈ 0.754)",
+    "defaultPreset": "covidTest"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 6: Nathaniel siblings (boy-girl paradox, asymmetric tree) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 6 — Nathaniel siblings (mark brother leaves; expect P(brother) = 0.5)",
+    "defaultPreset": "nathaniel"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 7: Montana Hill (Module 9 expectation preset) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 7 — Montana Hill 6-door (expect E = $275)",
+    "intro": "<p>Module 9 expectation overlay. Each leaf carries a numeric value (the dollar payoff). Verify E = 275 in the sidebar; toggle <em>show value × prob</em> to see per-leaf contributions; vary a probability or value to watch E shift.</p>",
+    "defaultPreset": "montanaHill"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 8: ColdX call option (Module 9 expectation preset) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 8 — ColdX call option (expect E = $7.50)",
+    "intro": "<p>Two-leaf tree. Verify E = 7.5. Try changing the FDA-Yes payoff from 30 to 50 and watch E rise.</p>",
+    "defaultPreset": "coldX"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 9: Laundry busy student (Module 9 expectation preset, 8 leaves) -->
+  <div class="pt-widget" data-problem='{
+    "title": "Widget 9 — Laundry busy student (expect E[B] = 4)",
+    "intro": "<p>Three independent psets, each 1 day with probability 2/3, 2 days with 1/3. Eight leaves; leaf value = total pset days. Verify E[B] = 4.</p>",
+    "defaultPreset": "laundryBusy"
+  }'></div>
+
+  <script src="probability-tree-builder.js"></script>
+
+</body>
+</html>

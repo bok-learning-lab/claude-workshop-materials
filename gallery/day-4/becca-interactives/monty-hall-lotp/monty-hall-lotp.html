@@ -1,0 +1,25 @@
+<!--
+  Monty Hall LoTP Partition Visualizer — embeddable widget.
+
+  Each <div class="mhl-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: visualize the LoTP decomposition of P(win | switch) for a
+  generalized Monty Hall game with G goats and P prizes. The widget
+  partitions on the contestant's initial choice (prize? goat?), renders
+  the door schematic for each branch (your pick crossed off, Monty's
+  revealed goat X'd out), and reads off the conditional probability of
+  winning by switching in each branch — then combines via LoTP.
+
+  data-problem JSON keys (all optional):
+    title    (string) — bold heading.
+    intro    (HTML)   — short intro card above the controls.
+    defaultG (int 2..9) — initial number of goats; default 2.
+    defaultP (int 1..5) — initial number of prizes; default 1.
+-->
+<div class="mhl-widget" data-problem='{
+  "title": "Monty Hall — LoTP partition",
+  "intro": "<p>Generalize Monty Hall to <em>G</em> goats and <em>P</em> prizes. You pick a door; Monty reveals one goat from the remaining doors; you choose whether to switch. The widget partitions the sample space on <em>your initial choice</em> (prize or goat) and computes <em>P</em>(win | switch) via the law of total probability.</p>",
+  "defaultG": 2,
+  "defaultP": 1
+}'></div>

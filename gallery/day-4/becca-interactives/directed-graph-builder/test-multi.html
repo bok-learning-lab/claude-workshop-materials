@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directed Graph Builder — multi-instance test</title>
+  <link rel="stylesheet" href="directed-graph-builder.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1200px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Directed Graph Builder — multi-instance test (segment 5.1 Activity 10)</h1>
+  <p class="hint">
+    Two independent widgets on one page. Each must keep its own canvas,
+    state, mode, SCC-coloring toggle, and reset behaviour. Keyboard
+    shortcuts (V / E / L / D / S / Esc) work only when the widget has
+    focus — click into one to activate.
+  </p>
+
+  <!-- Widget 1: empty graph, full sidebar -->
+  <div class="dgb-widget" data-problem='{
+    "title": "Widget 1 — default (empty)",
+    "viz": {}
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: pre-loaded with a simple DAG (a → b → c, a → c). All sections
+       visible; expected: |V|=3, |E|=3, strongly connected = no, 3 SCCs (each
+       singleton), weakly connected = yes, no cycles, is a DAG, topo order
+       a → b → c, source = {a}, sink = {c}. -->
+  <div class="dgb-widget" data-problem='{
+    "title": "Widget 2 — pre-loaded DAG",
+    "viz": {
+      "initialGraph": {
+        "vertices": [
+          { "id": 1, "x": 150, "y": 200, "label": "a" },
+          { "id": 2, "x": 320, "y": 130, "label": "b" },
+          { "id": 3, "x": 320, "y": 280, "label": "c" }
+        ],
+        "edges": [
+          { "from": 1, "to": 2 },
+          { "from": 2, "to": 3 },
+          { "from": 1, "to": 3 }
+        ]
+      }
+    }
+  }'></div>
+
+  <script src="directed-graph-builder.js"></script>
+
+</body>
+</html>

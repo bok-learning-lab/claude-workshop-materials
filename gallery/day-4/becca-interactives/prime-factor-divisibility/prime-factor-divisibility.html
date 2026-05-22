@@ -1,0 +1,44 @@
+<!--
+  Prime Factor Divisibility Checker — embeddable widget.
+
+  Embed shape: a single self-contained <div class="pfd-widget"> per problem
+  set. Edit the JSON inside the data-problem attribute to author a new set
+  of rounds. Multiple <div class="pfd-widget"> blocks can coexist on the
+  same page; each is mounted as an independent instance.
+
+  Pedagogy: each round shows two positive integers n and m, both as
+  numerals and as colored block-stack visualizations of their prime
+  factorizations. The student decides whether n divides m. After answering,
+  the widget shows the correct/incorrect verdict and highlights either
+  (a) all of n's blocks if n | m, or (b) the single prime column where n
+  has a higher exponent than m if n does not divide m. The same
+  highlighting is shown when the student is wrong, so they can see WHY.
+
+  data-problem JSON keys:
+    title    (string, optional) — bold heading shown above the widget.
+    intro    (HTML string, optional) — short introduction shown below the
+             title and above the first round.
+    rounds   (Array<Round>, required) — at least one round. Each Round:
+      n      (integer, required) — first number, 1 ≤ n ≤ ~10000.
+      m      (integer, required) — second number, 1 ≤ m ≤ ~10000.
+
+  The widget computes prime factorizations via trial division and decides
+  the correct answer (does n divide m?) automatically. Authors do NOT
+  specify the answer.
+
+  Color palette for primes (deterministic):
+    2=blue, 3=green, 5=orange, 7=purple, 11=crimson, 13=teal,
+    17=ochre, 19=pink, 23=indigo, 29=olive. Primes outside this list
+    fall back to gray.
+-->
+<div class="pfd-widget" data-problem='{
+  "title": "Prime Factor Divisibility Checker",
+  "intro": "For each pair below, decide whether <em>n</em> divides <em>m</em>. The colored blocks show the prime factorization of each number — one color per prime, stacked from the bottom up. Compare the two stacks column-by-column to see whether every prime in <em>n</em> appears at least as many times in <em>m</em>.",
+  "rounds": [
+    { "n": 12, "m": 180 },
+    { "n": 12, "m": 18 },
+    { "n": 18, "m": 180 },
+    { "n": 14, "m": 196 },
+    { "n": 100, "m": 30000 }
+  ]
+}'></div>

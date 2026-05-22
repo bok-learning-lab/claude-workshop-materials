@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Euclidean Algorithm Stepper — multi-instance test</title>
+  <link rel="stylesheet" href="euclidean-algorithm-stepper.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 900px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Euclidean Algorithm Stepper — multi-instance test</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own state:
+    submitting an answer in one widget must not affect the others, the
+    Next-round and Show-answer buttons must scope to their own table, and
+    the round counters must advance independently. Verify the gcd values
+    in each summary panel match the expected answers below.
+  </p>
+
+  <!-- Widget 1: canonical four-round problem from segment 2.2.
+       Expected gcds: gcd(252,198)=18, gcd(1071,462)=21,
+                       gcd(100,17)=1, gcd(84,18)=6 -->
+  <div class="eas-widget" data-problem='{
+    "title": "Widget 1 — Canonical four rounds",
+    "intro": "<p>Step through the Euclidean algorithm one row at a time. Compute <span class=\"eas-math\">r = x mod y</span> at each row.</p>",
+    "rounds": [
+      { "x": 252, "y": 198, "label": "gcd(252, 198)" },
+      { "x": 1071, "y": 462, "label": "gcd(1071, 462)" },
+      { "x": 100, "y": 17, "label": "Relatively prime" },
+      { "x": 84, "y": 18, "label": "Quick finish" }
+    ]
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: single round, no title, no intro — exercises the "all optional"
+       fields. Expected: gcd(48, 36) = 12. Sequence: 48,36 -> 36,12 -> 12,0. -->
+  <div class="eas-widget" data-problem='{
+    "rounds": [
+      { "x": 48, "y": 36 }
+    ]
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: two rounds, different ordering of x and y to verify the
+       algorithm self-corrects when y > x on the first row.
+       Expected gcds: gcd(15, 39) = 3, gcd(7, 11) = 1 (both relatively prime). -->
+  <div class="eas-widget" data-problem='{
+    "title": "Widget 3 — y greater than x; both relatively prime",
+    "intro": "<p>These rounds start with <span class=\"eas-math\">y &gt; x</span>. The first remainder will simply be the original <span class=\"eas-math\">x</span>, and the algorithm carries on from there.</p>",
+    "rounds": [
+      { "x": 15, "y": 39, "label": "y &gt; x: 15 mod 39 = 15" },
+      { "x": 7, "y": 11, "label": "Small relatively prime pair" }
+    ]
+  }'></div>
+
+  <script src="euclidean-algorithm-stepper.js"></script>
+
+</body>
+</html>

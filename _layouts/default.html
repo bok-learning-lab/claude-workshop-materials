@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a class="site-title" href="{{ site.baseurl }}/">Claude <span>Workshop</span></a>
+  <nav>
+    <ul class="top-nav">
+      <li><a href="{{ site.baseurl }}/encyclopedia/"
+             {% if page.section == 'encyclopedia' %}class="active"{% endif %}>Encyclopedia</a></li>
+      <li><a href="{{ site.baseurl }}/activities/"
+             {% if page.section == 'activities' %}class="active"{% endif %}>Activities</a></li>
+      <li><a href="{{ site.baseurl }}/gallery/"
+             {% if page.section == 'gallery' %}class="active"{% endif %}>Gallery</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="layout">
+
+  {% if page.section %}
+  <aside class="sidebar">
+    {% assign nav_items = site.data.nav[page.section] %}
+    {% if nav_items %}
+      <ul class="sidebar-nav">
+        {% for item in nav_items %}
+          <li>
+            <a href="{{ site.baseurl }}{{ item.url }}"
+               {% if page.url == item.url or page.url == item.url | append: 'index.html' %}class="active"{% endif %}>
+              {{ item.title }}
+            </a>
+            {% if item.children %}
+              <ul class="sidebar-children">
+                {% for child in item.children %}
+                  <li>
+                    <a href="{{ site.baseurl }}{{ child.url }}"
+                       {% if page.url contains child.url %}class="active"{% endif %}>
+                      {{ child.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </aside>
+  {% endif %}
+
+  <main class="content">
+    {{ content }}
+  </main>
+
+</div>
+</body>
+</html>

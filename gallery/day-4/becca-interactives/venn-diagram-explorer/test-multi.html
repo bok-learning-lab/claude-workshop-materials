@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venn Diagram Explorer — multi-instance test</title>
+  <link rel="stylesheet" href="venn-diagram-explorer.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 980px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Venn Diagram Explorer — multi-instance test</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own state:
+    selecting an expression in widget 1 must not change the highlight in
+    widgets 2 or 3, the mode toggle must scope to its own diagram, the
+    "Clear highlight" button only affects the widget it belongs to,
+    and the SVG region paths must render correctly on every diagram
+    (verifying that the geometry computations don't depend on shared
+    state). Widget 2 starts in three-set mode and only allows three-set
+    mode (no toggle). Widget 3 omits the title and uses a custom
+    expression list.
+  </p>
+
+  <!-- Widget 1: defaults — both modes, full expression list -->
+  <div class="ven-widget" data-problem='{
+    "title": "Widget 1 — Full default explorer",
+    "intro": "<p>Click any expression on the right to highlight the corresponding region(s). The yellow note will tell you when two expressions pick out the same region (De Morgan).</p>",
+    "modes": ["two", "three"],
+    "defaultMode": "two"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: three-set only, focused on De Morgan in 3 sets -->
+  <div class="ven-widget" data-problem='{
+    "title": "Widget 2 — Three-set De Morgan",
+    "intro": "<p>De Morgan generalizes to three sets: <em>(A ∪ B ∪ C)̄ = Ā ∩ B̄ ∩ C̄</em>. Click both and confirm they pick the same (single) region.</p>",
+    "modes": ["three"],
+    "defaultMode": "three",
+    "expressionsThreeSet": [
+      { "expr": "A ∪ B ∪ C",      "regions": ["A_only","B_only","C_only","AB","AC","BC","ABC"], "description": "x is in at least one of A, B, C" },
+      { "expr": "(A ∪ B ∪ C)̄",    "regions": ["complement"],                                    "description": "x is in none of A, B, C" },
+      { "expr": "Ā ∩ B̄ ∩ C̄",     "regions": ["complement"],                                    "description": "x ∉ A and x ∉ B and x ∉ C" },
+      { "expr": "A ∩ B ∩ C",      "regions": ["ABC"],                                            "description": "x is in all three" },
+      { "expr": "(A ∩ B ∩ C)̄",    "regions": ["A_only","B_only","C_only","AB","AC","BC","complement"], "description": "x is missing from at least one of A, B, C" },
+      { "expr": "Ā ∪ B̄ ∪ C̄",     "regions": ["A_only","B_only","C_only","AB","AC","BC","complement"], "description": "x ∉ A or x ∉ B or x ∉ C" }
+    ]
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: no title, two-set only, just symmetric difference focus -->
+  <div class="ven-widget" data-problem='{
+    "modes": ["two"],
+    "defaultMode": "two",
+    "intro": "<p>The <em>symmetric difference</em> A △ B is the set of elements in exactly one of A, B. Equivalently, (A \\ B) ∪ (B \\ A), or (A ∪ B) \\ (A ∩ B).</p>",
+    "expressionsTwoSet": [
+      { "expr": "A \\ B",                "regions": ["A_only"],                  "description": "x ∈ A and x ∉ B" },
+      { "expr": "B \\ A",                "regions": ["B_only"],                  "description": "x ∈ B and x ∉ A" },
+      { "expr": "(A \\ B) ∪ (B \\ A)",   "regions": ["A_only","B_only"],         "description": "in exactly one of A, B" },
+      { "expr": "(A ∪ B) \\ (A ∩ B)",    "regions": ["A_only","B_only"],         "description": "in A or B, but not both" },
+      { "expr": "A △ B",                 "regions": ["A_only","B_only"],         "description": "symmetric difference" },
+      { "expr": "A ∩ B",                 "regions": ["AB"],                       "description": "x ∈ A and x ∈ B" },
+      { "expr": "(A △ B)̄",               "regions": ["AB", "complement"],        "description": "in both A and B, or in neither" }
+    ]
+  }'></div>
+
+  <script src="venn-diagram-explorer.js"></script>
+
+</body>
+</html>

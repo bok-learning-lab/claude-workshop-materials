@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Physics interactives with Claude Code: PhET-style simulations a faculty member can author themselves — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>Physics interactives with Claude Code: PhET-style simulations a faculty member can author themselves</h1>
+      <p class="subtitle">One of three day-4 projects in the Bok Center workshop. ← <a href="../index.md">Project landing page</a>. Companion docs: <a href="tradition.md">Tradition</a> · <a href="affordance.md">Affordance</a>.</p>
+
+      <p>This project is a working demonstration that the kind of interactive teaching simulation pioneered by Carl Wieman's PhET project at Colorado — small, manipulable, conceptually disciplined worlds in which a learning idea becomes visible — is now within reach of an individual faculty member with an afternoon. The skills in this folder do not try to replace PhET. They try to make the PhET <em>design grammar</em> available to faculty in disciplines PhET never served, and to the topics PhET never covered.</p>
+
+      <h2>What the project ships</h2>
+
+      <p>Three Claude Code skills live in the project's own <code>.claude/skills/</code> directory, so they travel with the folder rather than living globally on a researcher's machine.</p>
+
+      <ul>
+        <li><strong><code>/phet-sim</code></strong> runs a structured pedagogical interview <em>before</em> writing any code: learning goal, target learner, the misconception the simulation should make visible, the variables that should be manipulable, the variables that should be deliberately hidden, the linked representations, the reflection prompts, the model's limitations, the classroom use. Only then does it generate a single-file HTML simulation that opens by double-click in Chrome with no build step. The interview is the skill's main contribution; without it, the skill would be just another "make a slider thing" prompt.</li>
+        <li><strong><code>/phet-activity</code></strong> takes an existing simulation (or its design record) and a few classroom context inputs and produces a Wieman-style lesson plan organized around the four-phase Predict → Observe → Explain → Synthesize structure. It refuses to ship a plan that does not name at least two expected wrong predictions — the highest-leverage piece of an interactive-engagement lesson, and the move most often skipped.</li>
+        <li><strong><code>/phet-accessibility-audit</code></strong> audits a generated simulation against an accessibility floor (keyboard operability, label coverage, contrast, color-only information, live-region density, motion handling) and produces a markdown report categorizing findings as Blockers, Warnings, or Notes. A simulation with Blockers is not declared ready to share with students.</li>
+      </ul>
+
+      <p>The project also ships three single-file HTML templates (SVG, Canvas, and a linked-graph layout), a quality-scoring rubric used by <code>/phet-sim</code>'s final QC pass, an accessibility checklist, and a paper-friendly version of the pedagogical interview for faculty who prefer to think through the design before any code is written. Two project-level essays — <a href="../../projects/physics-interactives/essay-phet-tradition.md">essay-phet-tradition.md</a> and <a href="../../projects/physics-interactives/essay-manipulable-artifact.md">essay-manipulable-artifact.md</a> — give the historical and learning-sciences context, and a <a href="../../projects/physics-interactives/research-basis.md">research-basis.md</a> note collects the empirical literature the skills lean on.</p>
+
+      <h2>What attendees see in the session</h2>
+
+      <p>The session opens with the design discipline, not the code. A faculty member states a learning goal in their own discipline — the demo target is the damped-harmonic-oscillator and the misconception that <em>more damping makes a system settle faster</em> — and <code>/phet-sim</code> interviews them through the eight remaining questions. Only after the design is captured does the skill generate the HTML file, which opens locally with no server and no build step.</p>
+
+      <p>The session then runs <code>/phet-activity</code> against that simulation to produce a 45-minute in-class lesson plan, with a predicted-wrong-predictions section that the instructor can recognize on the day. Finally <code>/phet-accessibility-audit</code> produces a categorized report against the artifact, demonstrating that the audit gates "ready to share with students" against a real floor, not a vibe.</p>
+
+      <p>The three skills are deliberate. They line up with the three structural problems the PhET tradition surfaced over twenty years: that pedagogical design must precede code, that an interactive artifact teaches only when wrapped in an active-learning activity, and that accessibility is part of pedagogy rather than a polish item.</p>
+
+      <h2>A note on framing</h2>
+
+      <p>The project is conservative about what it claims. The skills do not author the design; they elicit it. They do not validate against students; they enforce a floor that classroom validation would still extend. They do not replace the PhET corpus; they make the PhET <em>form</em> available to the topics no funded team would ever have built. The deeper argument is in two companion documents: <a href="tradition.md">tradition.md</a> places PhET in the longer history of pedagogical artifacts, and <a href="affordance.md">affordance.md</a> walks through what LLM-built simulations change about that tradition and what they do not.</p>
+
+      <hr>
+
+      <p><em>Physics interactives overview: <a href="summary.md">Summary</a> · <a href="tradition.md">Tradition</a> · <a href="affordance.md">Affordance</a>. Back to the <a href="../index.md">project landing page</a>.</em></p>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># Physics interactives with Claude Code: PhET-style simulations a faculty member can author themselves
+
+*One of three day-4 projects in the Bok Center workshop. ← [Project landing page](../index.md). Companion docs: [Tradition](tradition.md) · [Affordance](affordance.md).*
+
+This project is a working demonstration that the kind of interactive teaching simulation pioneered by Carl Wieman's PhET project at Colorado — small, manipulable, conceptually disciplined worlds in which a learning idea becomes visible — is now within reach of an individual faculty member with an afternoon. The skills in this folder do not try to replace PhET. They try to make the PhET *design grammar* available to faculty in disciplines PhET never served, and to the topics PhET never covered.
+
+## What the project ships
+
+Three Claude Code skills live in the project's own `.claude/skills/` directory, so they travel with the folder rather than living globally on a researcher's machine.
+
+- **`/phet-sim`** runs a structured pedagogical interview *before* writing any code: learning goal, target learner, the misconception the simulation should make visible, the variables that should be manipulable, the variables that should be deliberately hidden, the linked representations, the reflection prompts, the model's limitations, the classroom use. Only then does it generate a single-file HTML simulation that opens by double-click in Chrome with no build step. The interview is the skill's main contribution; without it, the skill would be just another "make a slider thing" prompt.
+- **`/phet-activity`** takes an existing simulation (or its design record) and a few classroom context inputs and produces a Wieman-style lesson plan organized around the four-phase Predict → Observe → Explain → Synthesize structure. It refuses to ship a plan that does not name at least two expected wrong predictions — the highest-leverage piece of an interactive-engagement lesson, and the move most often skipped.
+- **`/phet-accessibility-audit`** audits a generated simulation against an accessibility floor (keyboard operability, label coverage, contrast, color-only information, live-region density, motion handling) and produces a markdown report categorizing findings as Blockers, Warnings, or Notes. A simulation with Blockers is not declared ready to share with students.
+
+The project also ships three single-file HTML templates (SVG, Canvas, and a linked-graph layout), a quality-scoring rubric used by `/phet-sim`'s final QC pass, an accessibility checklist, and a paper-friendly version of the pedagogical interview for faculty who prefer to think through the design before any code is written. Two project-level essays — [essay-phet-tradition.md](../../projects/physics-interactives/essay-phet-tradition.md) and [essay-manipulable-artifact.md](../../projects/physics-interactives/essay-manipulable-artifact.md) — give the historical and learning-sciences context, and a [research-basis.md](../../projects/physics-interactives/research-basis.md) note collects the empirical literature the skills lean on.
+
+## What attendees see in the session
+
+The session opens with the design discipline, not the code. A faculty member states a learning goal in their own discipline — the demo target is the damped-harmonic-oscillator and the misconception that *more damping makes a system settle faster* — and `/phet-sim` interviews them through the eight remaining questions. Only after the design is captured does the skill generate the HTML file, which opens locally with no server and no build step.
+
+The session then runs `/phet-activity` against that simulation to produce a 45-minute in-class lesson plan, with a predicted-wrong-predictions section that the instructor can recognize on the day. Finally `/phet-accessibility-audit` produces a categorized report against the artifact, demonstrating that the audit gates "ready to share with students" against a real floor, not a vibe.
+
+The three skills are deliberate. They line up with the three structural problems the PhET tradition surfaced over twenty years: that pedagogical design must precede code, that an interactive artifact teaches only when wrapped in an active-learning activity, and that accessibility is part of pedagogy rather than a polish item.
+
+## A note on framing
+
+The project is conservative about what it claims. The skills do not author the design; they elicit it. They do not validate against students; they enforce a floor that classroom validation would still extend. They do not replace the PhET corpus; they make the PhET *form* available to the topics no funded team would ever have built. The deeper argument is in two companion documents: [tradition.md](tradition.md) places PhET in the longer history of pedagogical artifacts, and [affordance.md](affordance.md) walks through what LLM-built simulations change about that tradition and what they do not.
+
+---
+
+*Physics interactives overview: [Summary](summary.md) · [Tradition](tradition.md) · [Affordance](affordance.md). Back to the [project landing page](../index.md).*
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

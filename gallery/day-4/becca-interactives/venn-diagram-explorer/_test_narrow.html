@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Venn Diagram Explorer — Narrow Column Test</title>
+  <link rel="stylesheet" href="venn-diagram-explorer.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fafafa;
+    }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    .scenario {
+      margin: 0 0 36px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .scenario h2 {
+      font-size: 14px;
+      margin: 0 0 12px;
+      color: #555;
+    }
+    .col-800 { max-width: 800px; }
+    .col-600 { max-width: 600px; }
+    .col-480 { max-width: 480px; }
+    .col-360 { max-width: 360px; }
+  </style>
+</head>
+<body>
+  <h1>Venn Diagram Explorer — Narrow-Column Responsive Test</h1>
+  <p>The widget should adapt to its container width (not the viewport width). At widths below 700px the expression panel should stack below the diagram instead of sitting in a side column.</p>
+
+  <div class="scenario col-800">
+    <h2>800px column — side-by-side layout expected (diagram | expressions)</h2>
+    <div class="ven-widget" data-problem='{
+      "title": "Venn Diagram (800px)",
+      "modes": ["two", "three"],
+      "defaultMode": "two",
+      "expressionsTwoSet": [
+        { "expr": "A",         "regions": ["A_only", "AB"],           "description": "x ∈ A" },
+        { "expr": "B",         "regions": ["B_only", "AB"],           "description": "x ∈ B" },
+        { "expr": "A ∪ B",     "regions": ["A_only", "B_only", "AB"], "description": "x ∈ A or x ∈ B" },
+        { "expr": "A ∩ B",     "regions": ["AB"],                      "description": "x ∈ A and x ∈ B" },
+        { "expr": "(A ∪ B)̄",   "regions": ["complement"],              "description": "x ∉ A and x ∉ B" },
+        { "expr": "Ā ∩ B̄",     "regions": ["complement"],              "description": "x ∉ A and x ∉ B  (De Morgan)" }
+      ]
+    }'></div>
+  </div>
+
+  <div class="scenario col-600">
+    <h2>600px column — should stack (expression panel below diagram)</h2>
+    <div class="ven-widget" data-problem='{
+      "title": "Venn Diagram (600px)",
+      "modes": ["two", "three"],
+      "defaultMode": "two",
+      "expressionsTwoSet": [
+        { "expr": "A",         "regions": ["A_only", "AB"],           "description": "x ∈ A" },
+        { "expr": "B",         "regions": ["B_only", "AB"],           "description": "x ∈ B" },
+        { "expr": "A ∪ B",     "regions": ["A_only", "B_only", "AB"], "description": "x ∈ A or x ∈ B" },
+        { "expr": "A ∩ B",     "regions": ["AB"],                      "description": "x ∈ A and x ∈ B" },
+        { "expr": "(A ∪ B)̄",   "regions": ["complement"],              "description": "x ∉ A and x ∉ B" },
+        { "expr": "Ā ∩ B̄",     "regions": ["complement"],              "description": "x ∉ A and x ∉ B  (De Morgan)" }
+      ]
+    }'></div>
+  </div>
+
+  <div class="scenario col-480">
+    <h2>480px column — stacked layout expected</h2>
+    <div class="ven-widget" data-problem='{
+      "title": "Venn Diagram (480px)",
+      "modes": ["two"],
+      "defaultMode": "two",
+      "expressionsTwoSet": [
+        { "expr": "A ∪ B",     "regions": ["A_only", "B_only", "AB"], "description": "x ∈ A or x ∈ B" },
+        { "expr": "A ∩ B",     "regions": ["AB"],                      "description": "x ∈ A and x ∈ B" },
+        { "expr": "Ā ∩ B̄",     "regions": ["complement"],              "description": "x ∉ A and x ∉ B" }
+      ]
+    }'></div>
+  </div>
+
+  <div class="scenario col-360">
+    <h2>360px column — fully stacked</h2>
+    <div class="ven-widget" data-problem='{
+      "title": "Venn Diagram (360px)",
+      "modes": ["two"],
+      "defaultMode": "two",
+      "expressionsTwoSet": [
+        { "expr": "A ∪ B",     "regions": ["A_only", "B_only", "AB"], "description": "x ∈ A or x ∈ B" },
+        { "expr": "A ∩ B",     "regions": ["AB"],                      "description": "x ∈ A and x ∈ B" }
+      ]
+    }'></div>
+  </div>
+
+  <script src="venn-diagram-explorer.js"></script>
+</body>
+</html>

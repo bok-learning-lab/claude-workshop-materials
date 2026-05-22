@@ -1,0 +1,41 @@
+<!--
+  Relation Explorer (W8) — embeddable widget.
+
+  Refactored from the single-file Interactives/general-directed-graph-builder.html.
+  Each <div class="re-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs and no
+  shared globals.
+
+  Pedagogy: a directed-graph builder that allows self-loops and reports
+  the six standard relation properties (reflexive, irreflexive, symmetric,
+  asymmetric, antisymmetric, transitive) plus the four combined types
+  (equivalence relation, partial order, strict partial order, total/linear
+  order) live as the student edits the graph. Used in segment 5.2
+  Activity 7 (The Relation Property Classifier).
+
+  Relative to W7 (directed-graph-builder), this widget adds:
+   · Self-loops: clicking the same vertex twice in Edge mode creates a
+     self-loop (drawn as a small circle above the vertex with an arrowhead).
+     Self-loops contribute to both in- and out-degree.
+   · Relation Properties sidebar section (6 booleans) and Combined Types
+     sub-section (4 combined properties).
+   · Self-loop count surfaced in the Summary section.
+
+  data-problem JSON keys (all optional):
+    title       (string)  — bold heading; defaults to "Relation Explorer."
+    intro       (HTML)    — short intro card above the widget.
+    viz         (object)  — visualization parameters.
+      sections  (object) — toggle visibility of property panels. Default
+                true. Keys: summary, relations, strong, weak, dag, topo,
+                sourcesSinks, degrees.
+      tools     (object) — toggle toolbar buttons. Keys: label, sccColor.
+      initialGraph (object) — pre-load { vertices, edges } where edges
+                may include self-loops (from === to).
+
+  Keyboard shortcuts (V / E / L / D / S / Esc) work when the widget has
+  focus — click into the widget first to activate.
+-->
+<div class="re-widget" data-problem='{
+  "title": "Relation Explorer",
+  "intro": "<p>Build a directed graph (self-loops allowed). The widget reports the six relation properties — reflexive, irreflexive, symmetric, asymmetric, antisymmetric, transitive — and the four combined types (equivalence, partial order, strict partial order, total order) live as you edit.</p><p>Tip: in Edge mode, click the same vertex twice to add a self-loop. Self-loops are what make a relation reflexive.</p>"
+}'></div>

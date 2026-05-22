@@ -1,0 +1,38 @@
+<!--
+  Probability Tree Builder (W29) — embeddable widget.
+
+  Each <div class="pt-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students build a probability tree for a multi-stage experiment.
+  Click any branch label to edit its probability — the widget auto-normalizes
+  siblings so they always sum to 1. Click any leaf circle to mark it as part
+  of the event of interest. The sidebar shows the running event probability
+  (sum of joints across marked leaves) and a sample-space sanity check.
+
+  Used in segments 7.2 Activity 19 (Module 7), and forward into 8.0 / 9.1
+  via the conditional-mode extension (currently dormant).
+
+  Tree structure:
+    levels        — 1 to 3 stages.
+    branches[i]   — 2 to 5 outcomes at level i.
+    presets       — blank, twoCoins, threeBiasedCoins, dice (A-vs-C wager).
+
+  Modes (probMode):
+    fixed         — branch probabilities at level i are shared across all
+                    sibling-sets at that level; the second event is
+                    independent of the first. Module 7.
+    conditional   — each parent has its own children-probability set.
+                    Toggle visible but DORMANT for now (Module 8).
+
+  data-problem JSON keys (all optional):
+    title         (string) — bold heading.
+    intro         (HTML)   — short intro card above the controls.
+    defaultPreset ("blank" | "twoCoins" | "threeBiasedCoins" | "dice") —
+                  initial preset; default "blank".
+-->
+<div class="pt-widget" data-problem='{
+  "title": "Probability Tree Builder",
+  "intro": "<p>Build a probability tree for a multi-stage experiment. Click any branch probability to edit it (siblings auto-normalize). Click any leaf to mark it as part of your event of interest — the sidebar tallies the total event probability live.</p>",
+  "defaultPreset": "blank"
+}'></div>

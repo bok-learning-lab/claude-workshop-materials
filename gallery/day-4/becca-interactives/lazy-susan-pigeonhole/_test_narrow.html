@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lazy Susan Pigeonhole — Narrow Column Test</title>
+  <link rel="stylesheet" href="lazy-susan-pigeonhole.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fafafa;
+    }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    .scenario {
+      margin: 0 0 36px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .scenario h2 {
+      font-size: 14px;
+      margin: 0 0 12px;
+      color: #555;
+    }
+    .col-800 { max-width: 800px; }
+    .col-600 { max-width: 600px; }
+    .col-480 { max-width: 480px; }
+    .col-360 { max-width: 360px; }
+  </style>
+</head>
+<body>
+  <h1>Lazy Susan Pigeonhole — Narrow-Column Responsive Test</h1>
+  <p>The widget should adapt to its container width (not the viewport width). Above 760px container width the viz panel and mapper panel sit side-by-side; below 760px the mapper panel stacks below the viz.</p>
+
+  <div class="scenario col-800">
+    <h2>800px column — desktop side-by-side layout expected</h2>
+    <div class="lzs-widget" data-problem='{
+      "title": "Problem 6 — The Lazy Susan (800px)",
+      "statement": "<p>Eleven people sit evenly spaced around a circular table with a lazy Susan in the center. Each person ordered a different dish. The dishes are placed on the Susan, but every dish is mismatched — no person has their own dish in front of them. Prove there is a rotation of the Susan after which at least two people have their correct dish in front of them.</p>",
+      "hint": "<p>For each person, ask: how many positions clockwise does the Susan have to spin to bring me my dish? Then count how many distinct values that question can produce.</p>",
+      "viz": { "people": 11 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "people", "text": "The 11 people.", "correct": true },
+            { "id": "dishes", "text": "The 11 dishes." },
+            { "id": "rotations", "text": "The 10 non-zero rotation distances." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "rot-1-10", "text": "The 10 non-zero rotation distances {1, …, 10}.", "correct": true },
+            { "id": "rot-0-10", "text": "The 11 rotation distances {0, 1, …, 10}." },
+            { "id": "dishes", "text": "The 11 dishes." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "p-to-r", "text": "Each person → their needed rotation.", "correct": true },
+            { "id": "p-to-current", "text": "Each person → their current dish." },
+            { "id": "r-to-matches", "text": "Each rotation → number of matches." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-r", "text": "Two people share a needed rotation, so that rotation produces ≥ 2 matches.", "correct": true },
+            { "id": "all-eleven", "text": "Some rotation matches all 11 people." },
+            { "id": "zero-matches", "text": "Some rotation produces zero matches." }
+          ]
+        }
+      }
+    }'></div>
+  </div>
+
+  <div class="scenario col-600">
+    <h2>600px column — should stack (mapper below viz)</h2>
+    <div class="lzs-widget" data-problem='{
+      "title": "Problem 6 — The Lazy Susan (600px)",
+      "statement": "<p>Eleven people sit evenly spaced around a circular table with a lazy Susan in the center. Each person ordered a different dish. The dishes are placed on the Susan, but every dish is mismatched. Prove there is a rotation after which at least two people have their correct dish.</p>",
+      "viz": { "people": 11 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "people", "text": "The 11 people.", "correct": true },
+            { "id": "dishes", "text": "The 11 dishes." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "rot-1-10", "text": "The 10 non-zero rotation distances.", "correct": true },
+            { "id": "rot-0-10", "text": "The 11 rotation distances {0, …, 10}." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "p-to-r", "text": "Each person → their needed rotation.", "correct": true },
+            { "id": "p-to-current", "text": "Each person → their current dish." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-r", "text": "Two people share a needed rotation.", "correct": true },
+            { "id": "all-eleven", "text": "Some rotation matches all 11 people." }
+          ]
+        }
+      }
+    }'></div>
+  </div>
+
+  <div class="scenario col-480">
+    <h2>480px column — stacked layout</h2>
+    <div class="lzs-widget" data-problem='{
+      "title": "Problem 6 (480px)",
+      "statement": "<p>Eleven people sit evenly around a table with a lazy Susan. No person has their own dish. Prove some rotation gives ≥ 2 simultaneous matches.</p>",
+      "viz": { "people": 11 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "people", "text": "The 11 people.", "correct": true },
+            { "id": "dishes", "text": "The 11 dishes." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "rot-1-10", "text": "The 10 non-zero rotation distances.", "correct": true },
+            { "id": "rot-0-10", "text": "The 11 rotation distances." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "p-to-r", "text": "Each person → their needed rotation.", "correct": true },
+            { "id": "p-to-current", "text": "Each person → their current dish." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-r", "text": "Two people share a needed rotation.", "correct": true },
+            { "id": "all-eleven", "text": "Some rotation matches all 11 people." }
+          ]
+        }
+      }
+    }'></div>
+  </div>
+
+  <div class="scenario col-360">
+    <h2>360px column — fully compact, stacked</h2>
+    <div class="lzs-widget" data-problem='{
+      "title": "Problem 6 (360px)",
+      "statement": "<p>Eleven people, lazy Susan, all dishes mismatched. Show some rotation gives ≥ 2 matches.</p>",
+      "viz": { "people": 11 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "people", "text": "The 11 people.", "correct": true },
+            { "id": "dishes", "text": "The 11 dishes." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "rot-1-10", "text": "10 non-zero rotation distances.", "correct": true },
+            { "id": "rot-0-10", "text": "11 rotation distances." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "p-to-r", "text": "Each person → needed rotation.", "correct": true },
+            { "id": "p-to-current", "text": "Each person → current dish." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-r", "text": "Two people share a needed rotation.", "correct": true },
+            { "id": "all-eleven", "text": "Some rotation matches all 11." }
+          ]
+        }
+      }
+    }'></div>
+  </div>
+
+  <script src="lazy-susan-pigeonhole.js"></script>
+</body>
+</html>

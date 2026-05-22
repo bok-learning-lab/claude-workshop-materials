@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The trouble qualitative interview coding got into — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>The trouble qualitative interview coding got into</h1>
+      <p class="subtitle">One of three day-4 projects in the Bok Center workshop. &larr; <a href="../index.html">Project landing page</a>. Companion docs: <a href="summary.html">Summary</a> &middot; <a href="affordance.html">Affordance</a>.</p>
+
+      <h2>A response to mid-century positivism</h2>
+
+      <p>Glaser and Strauss published <em>The Discovery of Grounded Theory</em> in 1967 as a programmatic response to mid-century social science's dismissal of qualitative work as &ldquo;biased, impressionistic, and anecdotal.&rdquo;<sup><a href="#fn-discovery" id="fnref-discovery">1</a></sup> Their book proposed a method, not just an attitude &mdash; a disciplined sequence of close reading, comparison, and conceptual elaboration through which a researcher could derive theory from data rather than impose pre-existing categories. The method became enormously influential. It has structured graduate qualitative-methods training in sociology, education, nursing, and adjacent disciplines for nearly sixty years.</p>
+
+      <p>The procedural core that emerged &mdash; taught in essentially the same form today &mdash; is the <em>open&ndash;axial&ndash;selective</em> coding pipeline. A researcher reads transcripts line by line, attaching short interpretive labels (open codes) to small chunks of text. Open codes cluster into broader conceptual categories (axial codes). The analyst then identifies the one or two categories that organize the rest into a coherent argument (selective codes). Memos trace the reasoning. The constant comparative method &mdash; comparing each new instance to the codes already developed, refining as one goes &mdash; is the engine running through all three stages. The work is slow on purpose; it is also bounded by what one researcher can hold in mind across a corpus.</p>
+
+      <p>Grounded theory was never a single thing. By the early 1990s its founders had publicly split. Strauss and Corbin's <em>Basics of Qualitative Research</em> (1990) introduced elaborate procedural scaffolds &mdash; coding paradigms, conditional/consequential matrices &mdash; that Glaser (1992) attacked as a betrayal of pure induction.<sup><a href="#fn-strauss-corbin" id="fnref-strauss-corbin">2</a></sup><sup><a href="#fn-glaser-pure" id="fnref-glaser-pure">3</a></sup> Kathy Charmaz (2000, 2006) then carved out a third position: <em>constructivist</em> grounded theory, which preserves the procedural rigor but rejects the realist epistemology, treating codes as researcher constructions rather than as discoveries lying in the data.<sup><a href="#fn-charmaz" id="fnref-charmaz">4</a></sup> Charmaz's variant is the most widely taught form of grounded theory in North American graduate programs today, and any honest discussion has to credit it as a vital, ongoing tradition rather than a relic.</p>
+
+      <h2>What got locked in with the workflow</h2>
+
+      <p>What unites all three branches is a particular relationship between method and <em>technology</em>. The line-by-line workflow was designed for paper. Glaser and Strauss imagined the analyst with coloured pens, scissors, and index cards spread across a dining-room table, physically grouping snippets of transcript into stacks. When word processing arrived in the 1980s, and qualitative data analysis software &mdash; NVivo, ATLAS.ti, MAXQDA, Dedoose &mdash; in the 1990s and 2000s, designers faced a path-dependent choice: rebuild qualitative analysis around the affordances of databases and full-text search, or replicate the dining-room table in electronic form. They chose the latter. The &ldquo;code&rdquo; in NVivo is a digital index card. The interface privileges line-by-line tagging because that is what graduate seminars taught researchers to expect.</p>
+
+      <p>There is a second, deeper inheritance issue: what Lo&iuml;c Wacquant called the &ldquo;epistemological fairytale&rdquo; of grounded theory.<sup><a href="#fn-wacquant" id="fnref-wacquant">5</a></sup> The fairytale is that researchers can enter the field as theoretical blank slates and let categories emerge purely from the data. Practically every working qualitative researcher knows this is not how research happens. Interview protocols are designed with prior theoretical commitments; recruitment criteria reflect what the researcher already thinks matters. The rhetorical convention has been to describe analysis as &ldquo;inductive&rdquo; or &ldquo;emergent&rdquo; and leave the scaffolding implicit. Deterding and Waters document this gap quantitatively: in their content analysis of 98 ASA-sponsored interview articles, 55% used the language of induction or emergence; only a small minority specified what their actual coding procedure had been.<sup><a href="#fn-dw-table2" id="fnref-dw-table2">6</a></sup> The fairytale is not just an epistemological problem; it is a transparency problem.</p>
+
+      <h2>The other traditions</h2>
+
+      <p>The methodological literature outside grounded theory had not stood still. Two adjacent traditions matter especially because they anticipate Deterding and Waters' proposal more closely than the grounded-theory mainstream did.</p>
+
+      <p>Framework analysis, developed by Jane Ritchie and Liz Spencer at Britain's National Centre for Social Research in the late 1980s and published in 1994, was designed for <em>applied policy research</em> &mdash; large, team-based projects with deadlines.<sup><a href="#fn-framework" id="fnref-framework">7</a></sup> Its five-stage workflow places <em>indexing</em> before analytic charting. The thematic framework is allowed to be informed by prior research questions; indexing applies broad topical labels to whole transcripts; analytic charting and interpretation come later. The method is now widely used in UK health services research.<sup><a href="#fn-gale" id="fnref-gale">8</a></sup> Deterding and Waters are, in a real sense, importing into mainstream US sociology a workflow adjacent communities had routinized thirty years earlier.</p>
+
+      <p>Thematic analysis as codified by Braun and Clarke (2006) is the other workhorse to know.<sup><a href="#fn-braun-clarke" id="fnref-braun-clarke">9</a></sup> Less prescriptive than grounded theory, it has become the default coding method in psychology, health research, and education; it distinguishes <em>theme</em> from <em>code</em> and demands transparency about whether themes are inductively or theoretically generated. Around these sit abductive analysis (Timmermans and Tavory 2012), interpretive phenomenological analysis (Smith 1996), narrative analysis (Riessman 2008), and Miles and Huberman's (1994) display-matrix approach.<sup><a href="#fn-abductive" id="fnref-abductive">10</a></sup><sup><a href="#fn-smith" id="fnref-smith">11</a></sup><sup><a href="#fn-riessman" id="fnref-riessman">12</a></sup><sup><a href="#fn-miles-huberman" id="fnref-miles-huberman">13</a></sup> Each does something different on a transcript. The field is more pluralist in practice than the grounded-theory citations suggest.</p>
+
+      <h2>What Deterding and Waters propose</h2>
+
+      <p>The diagnosis Deterding and Waters bring to this landscape is empirical. Contemporary interview practice has drifted decisively from the grounded-theory template. Sample sizes have grown &mdash; their journal sample had a median <em>N</em> of 55 and a maximum of 208 &mdash; well past the point at which line-by-line open coding by a single researcher remains tractable.<sup><a href="#fn-dw-table1" id="fnref-dw-table1">14</a></sup> Coding is increasingly done by teams. Interview studies are increasingly nested inside mixed-methods designs where interview data must be made commensurable with quantitative data. None of these conditions was foreseen in 1967.</p>
+
+      <p>Their redesign has three stages. <strong>Indexing</strong> applies broad, mostly topical codes anchored to the sections of the interview protocol itself. Indexing is fast, systematic, and high-reliability across coders because the categories are coarse and protocol-anchored rather than interpretively delicate. <strong>Analytic coding</strong> then applies interpretive codes that bear on the eventual argument, <em>within</em> indexed sections rather than across the entire corpus. This is where researcher judgment lives. <strong>Validation</strong> refines the analytic typology by checking it against the indexed corpus, with particular attention to negative cases. The typology is treated as provisional until it can account for every relevant instance or has principled grounds for excluding outliers. Deterding and Waters endorse the Blee (2009) standard &mdash; that divergent data should not be discounted without a clear rationale &mdash; and ground their validity machinery in the older qualitative tradition of Katz (1982) and Luker (2008) on negative-case analysis.<sup><a href="#fn-blee" id="fnref-blee">15</a></sup><sup><a href="#fn-katz" id="fnref-katz">16</a></sup><sup><a href="#fn-luker" id="fnref-luker">17</a></sup></p>
+
+      <p>Embedded in the redesign is a careful taxonomy of three <em>kinds</em> of codes that play different roles: attributes (respondent-level demographic variables), index codes (broad topical anchors), and analytic codes (interpretive concepts that drive argument). The distinction matters because each plays a different role at scale &mdash; and, as the <a href="affordance.html">affordance</a> doc will argue, admits a different level of mechanization.</p>
+
+      <p>Construct validity is established through iterative typology refinement, in the manner of Deterding's (2015) study of instrumental/expressive/mixed orientations toward post-recession education.<sup><a href="#fn-deterding-2015" id="fnref-deterding-2015">18</a></sup> Theoretical validity is established through exhaustive engagement with negative cases. Transparency is established through reportable, replicable indexing decisions.</p>
+
+      <p>The authors are direct about limits. Flexible coding is not appropriate for very small samples (their floor is roughly <em>N</em>=30), nor for purely phenomenological work where the texture of individual accounts is the entire point, nor for projects where interview snippets serve mainly as illustrative supplements to a quantitative argument.<sup><a href="#fn-dw-limits" id="fnref-dw-limits">19</a></sup> Charmaz's constructivist grounded theory remains the right tool for projects of a different shape, and Deterding and Waters do not pretend otherwise. The method is for medium-to-large semi-structured interview studies aimed at producing portable, defensible findings &mdash; a band of practice that describes an enormous share of contemporary social science qualitative work, but not all of it.</p>
+
+      <p>What flexible coding asks of the researcher, in the end, is honest accounting. The interview protocol embodies prior theoretical commitments. The index codes inherit those commitments. The analytic codes refine them. The validity work checks them. None of this is a betrayal of grounded inquiry; it is what grounded inquiry has actually looked like, for most working researchers, for at least a generation. The proposal is to stop performing emergence and start documenting reasoning.</p>
+
+      <hr>
+
+      <p><em>Interview coding overview: <a href="summary.html">Summary</a> &middot; <a href="tradition.html">Tradition</a> &middot; <a href="affordance.html">Affordance</a>. Back to the <a href="../index.html">project landing page</a>.</em></p>
+
+      <ol class="footnotes">
+        <li id="fn-discovery">Glaser, B. G., &amp; Strauss, A. L. (1967). <em>The Discovery of Grounded Theory: Strategies for Qualitative Research</em>. Aldine. <a href="#fnref-discovery">&#8617;</a></li>
+        <li id="fn-strauss-corbin">Strauss, A., &amp; Corbin, J. (1990). <em>Basics of Qualitative Research: Grounded Theory Procedures and Techniques</em>. Sage. <a href="#fnref-strauss-corbin">&#8617;</a></li>
+        <li id="fn-glaser-pure">Glaser, B. G. (1992). <em>Basics of Grounded Theory Analysis: Emergence vs. Forcing</em>. Sociology Press. <a href="#fnref-glaser-pure">&#8617;</a></li>
+        <li id="fn-charmaz">Charmaz, K. (2006). <em>Constructing Grounded Theory: A Practical Guide through Qualitative Analysis</em>. Sage. See also Charmaz (2000), &ldquo;Grounded Theory: Objectivist and Constructivist Methods,&rdquo; in N. K. Denzin &amp; Y. S. Lincoln (eds.), <em>Handbook of Qualitative Research</em> (2nd ed.), Sage, pp. 509&ndash;535. <a href="#fnref-charmaz">&#8617;</a></li>
+        <li id="fn-wacquant">Wacquant, L. (2002). &ldquo;Scrutinizing the Street: Poverty, Morality, and the Pitfalls of Urban Ethnography.&rdquo; <em>American Journal of Sociology</em> 107(6): 1468&ndash;1532. <a href="#fnref-wacquant">&#8617;</a></li>
+        <li id="fn-dw-table2">Deterding, N. M., &amp; Waters, M. C. (2018). &ldquo;Flexible Coding of In-depth Interviews: A Twenty-first-century Approach.&rdquo; <em>Sociological Methods &amp; Research</em> 50(2): 708&ndash;739. Table 2, p. 719. <a href="#fnref-dw-table2">&#8617;</a></li>
+        <li id="fn-framework">Ritchie, J., &amp; Spencer, L. (1994). &ldquo;Qualitative Data Analysis for Applied Policy Research.&rdquo; In A. Bryman &amp; R. G. Burgess (eds.), <em>Analyzing Qualitative Data</em>, Routledge, pp. 173&ndash;194. <a href="#fnref-framework">&#8617;</a></li>
+        <li id="fn-gale">Gale, N. K., Heath, G., Cameron, E., Rashid, S., &amp; Redwood, S. (2013). &ldquo;Using the Framework Method for the Analysis of Qualitative Data in Multi-disciplinary Health Research.&rdquo; <em>BMC Medical Research Methodology</em> 13: 117. <a href="#fnref-gale">&#8617;</a></li>
+        <li id="fn-braun-clarke">Braun, V., &amp; Clarke, V. (2006). &ldquo;Using Thematic Analysis in Psychology.&rdquo; <em>Qualitative Research in Psychology</em> 3(2): 77&ndash;101. <a href="#fnref-braun-clarke">&#8617;</a></li>
+        <li id="fn-abductive">Timmermans, S., &amp; Tavory, I. (2012). &ldquo;Theory Construction in Qualitative Research: From Grounded Theory to Abductive Analysis.&rdquo; <em>Sociological Theory</em> 30(3): 167&ndash;186. <a href="#fnref-abductive">&#8617;</a></li>
+        <li id="fn-smith">Smith, J. A. (1996). &ldquo;Beyond the Divide between Cognition and Discourse: Using Interpretative Phenomenological Analysis in Health Psychology.&rdquo; <em>Psychology &amp; Health</em> 11(2): 261&ndash;271. <a href="#fnref-smith">&#8617;</a></li>
+        <li id="fn-riessman">Riessman, C. K. (2008). <em>Narrative Methods for the Human Sciences</em>. Sage. <a href="#fnref-riessman">&#8617;</a></li>
+        <li id="fn-miles-huberman">Miles, M. B., &amp; Huberman, A. M. (1994). <em>Qualitative Data Analysis: An Expanded Sourcebook</em> (2nd ed.). Sage. <a href="#fnref-miles-huberman">&#8617;</a></li>
+        <li id="fn-dw-table1">Deterding &amp; Waters (2018), Table 1, p. 717. <a href="#fnref-dw-table1">&#8617;</a></li>
+        <li id="fn-blee">Blee, K. M. (2009). &ldquo;Access and Methods in Research on Hidden Communities,&rdquo; in M. Sixsmith &amp; M. Boneham (eds.), <em>Researching Hidden Populations</em>, Routledge. <a href="#fnref-blee">&#8617;</a></li>
+        <li id="fn-katz">Katz, J. (1982). <em>Poor People's Lawyers in Transition</em>. Rutgers University Press. <a href="#fnref-katz">&#8617;</a></li>
+        <li id="fn-luker">Luker, K. (2008). <em>Salsa Dancing into the Social Sciences: Research in an Age of Info-Glut</em>. Harvard University Press. <a href="#fnref-luker">&#8617;</a></li>
+        <li id="fn-deterding-2015">Deterding, N. M. (2015). &ldquo;Instrumental and Expressive Education: College Planning in the Face of Poverty.&rdquo; <em>Sociology of Education</em> 88(4): 284&ndash;301. <a href="#fnref-deterding-2015">&#8617;</a></li>
+        <li id="fn-dw-limits">Deterding &amp; Waters (2018), p. 734. <a href="#fnref-dw-limits">&#8617;</a></li>
+      </ol>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># The trouble qualitative interview coding got into
+
+*One of three day-4 projects in the Bok Center workshop. ← [Project landing page](../index.md). Companion docs: [Summary](summary.md) · [Affordance](affordance.md).*
+
+## A response to mid-century positivism
+
+Glaser and Strauss published *The Discovery of Grounded Theory* in 1967 as a programmatic response to mid-century social science's dismissal of qualitative work as "biased, impressionistic, and anecdotal."[^discovery] Their book proposed a method, not just an attitude — a disciplined sequence of close reading, comparison, and conceptual elaboration through which a researcher could derive theory from data rather than impose pre-existing categories. The method became enormously influential. It has structured graduate qualitative-methods training in sociology, education, nursing, and adjacent disciplines for nearly sixty years.
+
+The procedural core that emerged — taught in essentially the same form today — is the *open–axial–selective* coding pipeline. A researcher reads transcripts line by line, attaching short interpretive labels (open codes) to small chunks of text. Open codes cluster into broader conceptual categories (axial codes). The analyst then identifies the one or two categories that organize the rest into a coherent argument (selective codes). Memos trace the reasoning. The constant comparative method — comparing each new instance to the codes already developed, refining as one goes — is the engine running through all three stages. The work is slow on purpose; it is also bounded by what one researcher can hold in mind across a corpus.
+
+Grounded theory was never a single thing. By the early 1990s its founders had publicly split. Strauss and Corbin's *Basics of Qualitative Research* (1990) introduced elaborate procedural scaffolds — coding paradigms, conditional/consequential matrices — that Glaser (1992) attacked as a betrayal of pure induction.[^strauss-corbin][^glaser-pure] Kathy Charmaz (2000, 2006) then carved out a third position: *constructivist* grounded theory, which preserves the procedural rigor but rejects the realist epistemology, treating codes as researcher constructions rather than as discoveries lying in the data.[^charmaz] Charmaz's variant is the most widely taught form of grounded theory in North American graduate programs today, and any honest discussion has to credit it as a vital, ongoing tradition rather than a relic.
+
+## What got locked in with the workflow
+
+What unites all three branches is a particular relationship between method and *technology*. The line-by-line workflow was designed for paper. Glaser and Strauss imagined the analyst with coloured pens, scissors, and index cards spread across a dining-room table, physically grouping snippets of transcript into stacks. When word processing arrived in the 1980s, and qualitative data analysis software — NVivo, ATLAS.ti, MAXQDA, Dedoose — in the 1990s and 2000s, designers faced a path-dependent choice: rebuild qualitative analysis around the affordances of databases and full-text search, or replicate the dining-room table in electronic form. They chose the latter. The "code" in NVivo is a digital index card. The interface privileges line-by-line tagging because that is what graduate seminars taught researchers to expect.
+
+There is a second, deeper inheritance issue: what Loïc Wacquant called the "epistemological fairytale" of grounded theory.[^wacquant] The fairytale is that researchers can enter the field as theoretical blank slates and let categories emerge purely from the data. Practically every working qualitative researcher knows this is not how research happens. Interview protocols are designed with prior theoretical commitments; recruitment criteria reflect what the researcher already thinks matters. The rhetorical convention has been to describe analysis as "inductive" or "emergent" and leave the scaffolding implicit. Deterding and Waters document this gap quantitatively: in their content analysis of 98 ASA-sponsored interview articles, 55% used the language of induction or emergence; only a small minority specified what their actual coding procedure had been.[^dw-table2] The fairytale is not just an epistemological problem; it is a transparency problem.
+
+## The other traditions
+
+The methodological literature outside grounded theory had not stood still. Two adjacent traditions matter especially because they anticipate Deterding and Waters' proposal more closely than the grounded-theory mainstream did.
+
+Framework analysis, developed by Jane Ritchie and Liz Spencer at Britain's National Centre for Social Research in the late 1980s and published in 1994, was designed for *applied policy research* — large, team-based projects with deadlines.[^framework] Its five-stage workflow places *indexing* before analytic charting. The thematic framework is allowed to be informed by prior research questions; indexing applies broad topical labels to whole transcripts; analytic charting and interpretation come later. The method is now widely used in UK health services research.[^gale] Deterding and Waters are, in a real sense, importing into mainstream US sociology a workflow adjacent communities had routinized thirty years earlier.
+
+Thematic analysis as codified by Braun and Clarke (2006) is the other workhorse to know.[^braun-clarke] Less prescriptive than grounded theory, it has become the default coding method in psychology, health research, and education; it distinguishes *theme* from *code* and demands transparency about whether themes are inductively or theoretically generated. Around these sit abductive analysis (Timmermans and Tavory 2012), interpretive phenomenological analysis (Smith 1996), narrative analysis (Riessman 2008), and Miles and Huberman's (1994) display-matrix approach.[^abductive][^smith][^riessman][^miles-huberman] Each does something different on a transcript. The field is more pluralist in practice than the grounded-theory citations suggest.
+
+## What Deterding and Waters propose
+
+The diagnosis Deterding and Waters bring to this landscape is empirical. Contemporary interview practice has drifted decisively from the grounded-theory template. Sample sizes have grown — their journal sample had a median *N* of 55 and a maximum of 208 — well past the point at which line-by-line open coding by a single researcher remains tractable.[^dw-table1] Coding is increasingly done by teams. Interview studies are increasingly nested inside mixed-methods designs where interview data must be made commensurable with quantitative data. None of these conditions was foreseen in 1967.
+
+Their redesign has three stages. **Indexing** applies broad, mostly topical codes anchored to the sections of the interview protocol itself. Indexing is fast, systematic, and high-reliability across coders because the categories are coarse and protocol-anchored rather than interpretively delicate. **Analytic coding** then applies interpretive codes that bear on the eventual argument, *within* indexed sections rather than across the entire corpus. This is where researcher judgment lives. **Validation** refines the analytic typology by checking it against the indexed corpus, with particular attention to negative cases. The typology is treated as provisional until it can account for every relevant instance or has principled grounds for excluding outliers. Deterding and Waters endorse the Blee (2009) standard — that divergent data should not be discounted without a clear rationale — and ground their validity machinery in the older qualitative tradition of Katz (1982) and Luker (2008) on negative-case analysis.[^blee][^katz][^luker]
+
+Embedded in the redesign is a careful taxonomy of three *kinds* of codes that play different roles: attributes (respondent-level demographic variables), index codes (broad topical anchors), and analytic codes (interpretive concepts that drive argument). The distinction matters because each plays a different role at scale — and, as the [affordance](affordance.md) doc will argue, admits a different level of mechanization.
+
+Construct validity is established through iterative typology refinement, in the manner of Deterding's (2015) study of instrumental/expressive/mixed orientations toward post-recession education.[^deterding-2015] Theoretical validity is established through exhaustive engagement with negative cases. Transparency is established through reportable, replicable indexing decisions.
+
+The authors are direct about limits. Flexible coding is not appropriate for very small samples (their floor is roughly *N*=30), nor for purely phenomenological work where the texture of individual accounts is the entire point, nor for projects where interview snippets serve mainly as illustrative supplements to a quantitative argument.[^dw-limits] Charmaz's constructivist grounded theory remains the right tool for projects of a different shape, and Deterding and Waters do not pretend otherwise. The method is for medium-to-large semi-structured interview studies aimed at producing portable, defensible findings — a band of practice that describes an enormous share of contemporary social science qualitative work, but not all of it.
+
+What flexible coding asks of the researcher, in the end, is honest accounting. The interview protocol embodies prior theoretical commitments. The index codes inherit those commitments. The analytic codes refine them. The validity work checks them. None of this is a betrayal of grounded inquiry; it is what grounded inquiry has actually looked like, for most working researchers, for at least a generation. The proposal is to stop performing emergence and start documenting reasoning.
+
+---
+
+*Interview coding overview: [Summary](summary.md) · [Tradition](tradition.md) · [Affordance](affordance.md). Back to the [project landing page](../index.md).*
+
+[^discovery]: Glaser, B. G., & Strauss, A. L. (1967). *The Discovery of Grounded Theory: Strategies for Qualitative Research*. Aldine.
+[^strauss-corbin]: Strauss, A., & Corbin, J. (1990). *Basics of Qualitative Research: Grounded Theory Procedures and Techniques*. Sage.
+[^glaser-pure]: Glaser, B. G. (1992). *Basics of Grounded Theory Analysis: Emergence vs. Forcing*. Sociology Press.
+[^charmaz]: Charmaz, K. (2006). *Constructing Grounded Theory: A Practical Guide through Qualitative Analysis*. Sage. See also Charmaz (2000), "Grounded Theory: Objectivist and Constructivist Methods," in N. K. Denzin & Y. S. Lincoln (eds.), *Handbook of Qualitative Research* (2nd ed.), Sage, pp. 509–535.
+[^wacquant]: Wacquant, L. (2002). "Scrutinizing the Street: Poverty, Morality, and the Pitfalls of Urban Ethnography." *American Journal of Sociology* 107(6): 1468–1532.
+[^dw-table2]: Deterding, N. M., & Waters, M. C. (2018). "Flexible Coding of In-depth Interviews: A Twenty-first-century Approach." *Sociological Methods & Research* 50(2): 708–739. Table 2, p. 719.
+[^framework]: Ritchie, J., & Spencer, L. (1994). "Qualitative Data Analysis for Applied Policy Research." In A. Bryman & R. G. Burgess (eds.), *Analyzing Qualitative Data*, Routledge, pp. 173–194.
+[^gale]: Gale, N. K., Heath, G., Cameron, E., Rashid, S., & Redwood, S. (2013). "Using the Framework Method for the Analysis of Qualitative Data in Multi-disciplinary Health Research." *BMC Medical Research Methodology* 13: 117.
+[^braun-clarke]: Braun, V., & Clarke, V. (2006). "Using Thematic Analysis in Psychology." *Qualitative Research in Psychology* 3(2): 77–101.
+[^abductive]: Timmermans, S., & Tavory, I. (2012). "Theory Construction in Qualitative Research: From Grounded Theory to Abductive Analysis." *Sociological Theory* 30(3): 167–186.
+[^smith]: Smith, J. A. (1996). "Beyond the Divide between Cognition and Discourse: Using Interpretative Phenomenological Analysis in Health Psychology." *Psychology & Health* 11(2): 261–271.
+[^riessman]: Riessman, C. K. (2008). *Narrative Methods for the Human Sciences*. Sage.
+[^miles-huberman]: Miles, M. B., & Huberman, A. M. (1994). *Qualitative Data Analysis: An Expanded Sourcebook* (2nd ed.). Sage.
+[^dw-table1]: Deterding & Waters (2018), Table 1, p. 717.
+[^blee]: Blee, K. M. (2009). "Access and Methods in Research on Hidden Communities," in M. Sixsmith & M. Boneham (eds.), *Researching Hidden Populations*, Routledge.
+[^katz]: Katz, J. (1982). *Poor People's Lawyers in Transition*. Rutgers University Press.
+[^luker]: Luker, K. (2008). *Salsa Dancing into the Social Sciences: Research in an Age of Info-Glut*. Harvard University Press.
+[^deterding-2015]: Deterding, N. M. (2015). "Instrumental and Expressive Education: College Planning in the Face of Poverty." *Sociology of Education* 88(4): 284–301.
+[^dw-limits]: Deterding & Waters (2018), p. 734.
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

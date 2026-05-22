@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Derivation Tree Builder — multi-instance test</title>
+  <link rel="stylesheet" href="derivation-tree-builder.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1200px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Derivation Tree Builder — multi-instance test (segment 5.4 Activity 6)</h1>
+  <p class="hint">
+    Two independent widgets on one page. Each must keep its own grammar
+    selection, input value, parsed tree, and status message. Switching
+    grammars or pressing Parse on one widget must not affect the other.
+  </p>
+
+  <!-- Widget 1: BP -->
+  <div class="dt-widget" data-problem='{
+    "title": "Widget 1 — Balanced Parentheses",
+    "defaultGrammar": "bp"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: AE -->
+  <div class="dt-widget" data-problem='{
+    "title": "Widget 2 — Arithmetic Expressions",
+    "defaultGrammar": "ae"
+  }'></div>
+
+  <script src="derivation-tree-builder.js"></script>
+
+</body>
+</html>

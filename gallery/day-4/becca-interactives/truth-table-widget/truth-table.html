@@ -1,0 +1,39 @@
+<!--
+  Embed shape: a single self-contained <div class="tt-widget"> per problem.
+  Edit the JSON inside the data-problem attribute to author a new problem.
+  Multiple <div class="tt-widget"> blocks can coexist on the same page.
+
+  data-problem JSON keys:
+    title          (string, optional) — bold heading above the table.
+    instructions   (string, optional) — paragraph below the title.
+    variables      (string[], required) — propositional variables (auto-filled cols).
+    firstColumn    ({label, formula}, optional) — left side of the equivalence claim.
+    middleColumns  (Array<{label, formula}>, optional) — instructor-graded columns
+                   that don't participate in the equivalence comparison.
+    lastColumn     ({label, formula}, optional) — right side of the equivalence claim.
+
+  Equivalence is checked only when both firstColumn and lastColumn are provided.
+  For a plain "fill in the truth table" exercise, use middleColumns and omit
+  firstColumn / lastColumn.
+
+  Formula syntax:
+    NOT     :  !, ~, ¬, NOT
+    AND     :  &, &&, ∧, AND
+    OR      :  |, ||, ∨, OR
+    IMPLIES :  ->, =>, →
+    IFF     :  <->, <=>, ↔, IFF
+    XOR     :  ⊕, XOR
+    NAND    :  ↑, NAND
+    NOR     :  ↓, NOR
+    Parens  :  ( )
+-->
+<div class="tt-widget" data-problem='{
+  "title": "Problem 1a",
+  "instructions": "Show using a truth table that P → Q is equivalent to ¬P ∨ Q.",
+  "variables": ["P", "Q"],
+  "firstColumn":  { "label": "P → Q",  "formula": "P -> Q" },
+  "middleColumns": [
+    { "label": "¬P", "formula": "!P" }
+  ],
+  "lastColumn":   { "label": "¬P ∨ Q", "formula": "!P | Q" }
+}'></div>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Recipe Collection</title>
+<style>
+  body {
+    font-family: Georgia, serif;
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    line-height: 1.55;
+    color: #2b2b2b;
+    background: #faf7f2;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  h1 {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 3.2rem;
+    margin: 0 0 0.4rem;
+  }
+  header p {
+    color: #777;
+    font-style: italic;
+    margin: 0;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  }
+  .thumb {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    background: #eee;
+  }
+  .card-body {
+    padding: 1rem 1.1rem 1.2rem;
+  }
+  .card-body h2 {
+    margin: 0 0 0.3rem;
+    font-size: 1.25rem;
+    border: none;
+    padding: 0;
+  }
+  .card-body p {
+    margin: 0;
+    color: #666;
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Recipe Collection</h1>
+    <p>Eight handwritten recipes, transcribed and annotated</p>
+  </header>
+
+  <div class="grid">
+    <a class="card" href="french-toast-cupcakes.html">
+      <img class="thumb" src="french-toast-cupcakes.jpg" alt="">
+      <div class="card-body">
+        <h2>French Toast Cupcakes</h2>
+        <p>A 2010s food-blog mashup of a Roman-era breakfast dish, with maple-cinnamon cream cheese icing.</p>
+      </div>
+    </a>
+
+    <a class="card" href="peanut-butter-fudge.html">
+      <img class="thumb" src="peanut-butter-fudge.jpg" alt="">
+      <div class="card-body">
+        <h2>Peanut Butter Fudge</h2>
+        <p>Mrs. Bray's mid-century card, using "oleo," evaporated milk, and the pre-thermometer soft-ball test.</p>
+      </div>
+    </a>
+
+    <a class="card" href="three-fruit-marmalade.html">
+      <img class="thumb" src="three-fruit-marmalade.jpg" alt="">
+      <div class="card-body">
+        <h2>Three Fruit Marmalade</h2>
+        <p>An Australian home cook's milder take on the Dundee tradition, from a kitchen in Killara, Sydney.</p>
+      </div>
+    </a>
+
+    <a class="card" href="dumplings.html">
+      <img class="thumb" src="dumplings.jpg" alt="">
+      <div class="card-body">
+        <h2>Dumplings</h2>
+        <p>Four-ingredient Southern "slicks" — rolled and cut flat, dropped into broth, cooked until chewy.</p>
+      </div>
+    </a>
+
+    <a class="card" href="zuppa-pavese.html">
+      <img class="thumb" src="zuppa-pavese.jpg" alt="">
+      <div class="card-body">
+        <h2>Zuppa Pavese</h2>
+        <p>The "soup of a king" from Pavia, Lombardy — legend traces it to a 1525 farmhouse and a captive Francis I.</p>
+      </div>
+    </a>
+
+    <a class="card" href="christmas-fruit-cookies.html">
+      <img class="thumb" src="christmas-fruit-cookies.jpg" alt="">
+      <div class="card-body">
+        <h2>Christmas Fruit Cookies</h2>
+        <p>Doris Laiben's cookie-form fruitcake — dates, cherries, and nuts in a barely-there batter.</p>
+      </div>
+    </a>
+
+    <a class="card" href="rhubarb-cookie-squares.html">
+      <img class="thumb" src="rhubarb-cookie-squares.jpg" alt="">
+      <div class="card-body">
+        <h2>Rhubarb Cookie Squares</h2>
+        <p>A two-layer Midwestern bar cookie on a Higbee's department-store card — Cleveland, Ohio.</p>
+      </div>
+    </a>
+
+    <a class="card" href="eagle-brand-ice-cream.html">
+      <img class="thumb" src="eagle-brand-ice-cream.webp" alt="">
+      <div class="card-body">
+        <h2>Eagle Brand Ice Cream</h2>
+        <p>A Borden marketing recipe engraved on wood — no eggs, no custard, just condensed milk doing the work.</p>
+      </div>
+    </a>
+  </div>
+
+  <footer>
+    Click any card to view the recipe, the original handwritten card, and a note on its history.
+  </footer>
+</body>
+</html>

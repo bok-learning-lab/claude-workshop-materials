@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>France — Demographic Trends</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --accent: #0055a4;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --rule: #e5e5e0;
+    --bg: #fbfaf7;
+    --card: #ffffff;
+    --proj: #c9c2b5;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px; line-height: 1.55;
+  }
+  h1, h2, h3 { font-family: "Iowan Old Style", "Georgia", "Times New Roman", serif; font-weight: 600; letter-spacing: -0.01em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .topnav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 32px; border-bottom: 1px solid var(--rule);
+    background: var(--card); position: sticky; top: 0; z-index: 10;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .nav-home { font-family: "Iowan Old Style", Georgia, serif; font-size: 17px; color: var(--ink); }
+  .nav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+  .nav-item {
+    padding: 6px 12px; font-size: 13.5px; color: var(--muted);
+    border-radius: 3px;
+  }
+  a.nav-item:hover { background: #f1eee7; color: var(--ink); text-decoration: none; }
+  .nav-current { color: var(--accent); font-weight: 600; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 48px 32px 80px; }
+  .kicker { text-transform: uppercase; letter-spacing: 0.14em; font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 14px; }
+  h1.title { font-size: 56px; line-height: 1.05; margin: 0 0 18px; }
+  .deck { font-size: 19px; color: #3a3a3a; max-width: 720px; margin-bottom: 36px; }
+
+  .kpi-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px; background: var(--rule);
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    margin: 40px 0;
+  }
+  .kpi { background: var(--card); padding: 22px 18px; }
+  .kpi-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .kpi-value { font-family: "Iowan Old Style", Georgia, serif; font-size: 30px; margin-top: 6px; }
+  .kpi-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .section { margin: 56px 0 0; }
+  h2.section-title { font-size: 28px; margin: 0 0 6px; }
+  .section-sub { color: var(--muted); font-size: 15px; margin-bottom: 22px; max-width: 700px; }
+
+  .chart-card { background: var(--card); border: 1px solid var(--rule); padding: 22px 24px 18px; border-radius: 2px; }
+  .chart-wrap { position: relative; height: 360px; }
+  .chart-wrap.tall { height: 460px; }
+
+  .pyramid-controls { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+  .pyramid-controls label { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .pyramid-controls input[type="range"] { flex: 1; min-width: 240px; accent-color: var(--accent); }
+  .pyramid-year { font-family: "Iowan Old Style", Georgia, serif; font-size: 24px; min-width: 72px; text-align: right; color: var(--accent); }
+  .pyramid-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    h1.title { font-size: 40px; }
+    .wrap { padding: 32px 20px 60px; }
+  }
+
+  .note { font-size: 12px; color: var(--muted); margin-top: 10px; font-style: italic; }
+  footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<nav class="topnav"><a href="index.html" class="nav-home">Demographics ◇ G7</a><div class="nav-links"><a class="nav-item" href="usa.html">United States</a><a class="nav-item" href="uk.html">United Kingdom</a><a class="nav-item" href="canada.html">Canada</a><span class="nav-item nav-current">France</span><a class="nav-item" href="germany.html">Germany</a><a class="nav-item" href="italy.html">Italy</a><a class="nav-item" href="japan.html">Japan</a></div></nav>
+<div class="wrap">
+  <div class="kicker">Country profile · G7 demographic series</div>
+  <h1 class="title">France</h1>
+  <p class="deck">A snapshot of how the population of France has been reshaped since 1950 — and where UN projections expect it to go by 2100. Drawn from the UN's <em>World Population Prospects 2024</em> revision.</p>
+
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="section">
+    <h2 class="section-title">Population, 1950–2100</h2>
+    <p class="section-sub">Total population in millions. The shaded segment after 2024 shows the UN's medium-variant projection.</p>
+    <div class="chart-card"><div class="chart-wrap"><canvas id="popChart"></canvas></div></div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Age pyramid</h2>
+    <p class="section-sub">Drag the slider to watch the population structure shift across a century and a half.</p>
+    <div class="chart-card">
+      <div class="pyramid-controls">
+        <label for="yearSlider">Year</label>
+        <input type="range" id="yearSlider" min="0" max="0" value="0" step="1">
+        <div class="pyramid-year" id="yearLabel">—</div>
+      </div>
+      <div class="pyramid-meta" id="pyramidMeta"></div>
+      <div class="chart-wrap tall"><canvas id="pyramidChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Births, deaths and growth</h2>
+    <p class="section-sub">Crude birth and death rates per 1,000 people. Where the two lines cross is where natural population change flips sign.</p>
+    <div class="chart-card"><div class="chart-wrap"><canvas id="vitalChart"></canvas></div></div>
+  </div>
+
+  <div class="grid-2 section">
+    <div>
+      <h2 class="section-title" style="font-size:22px">Total fertility rate</h2>
+      <p class="section-sub">Average children per woman. The 2.1 line marks rough replacement level.</p>
+      <div class="chart-card"><div class="chart-wrap"><canvas id="fertilityChart"></canvas></div></div>
+    </div>
+    <div>
+      <h2 class="section-title" style="font-size:22px">Life expectancy &amp; median age</h2>
+      <p class="section-sub">Years at birth (left axis) and years (right axis).</p>
+      <div class="chart-card"><div class="chart-wrap"><canvas id="lifeChart"></canvas></div></div>
+    </div>
+  </div>
+
+  <footer>
+    Source: United Nations, Department of Economic and Social Affairs, Population Division (2024). <em>World Population Prospects 2024</em>. Values from 1950 to 2024 are estimates; later years are the medium-variant projection.
+  </footer>
+</div>
+
+<script id="country-data" type="application/json">{"country":"France","slug":"france","ageGroups":["0-4","5-9","10-14","15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85-89","90-94","95-99","100+"],"indicators":[{"variant":"E","year":1950,"pop":41883.119,"male":20131.284,"female":21751.836,"density":75.961,"medianAge":33.441,"growth":1.106,"birthRate":20.687,"fertility":2.965,"deathRate":12.748,"lifeExp":66.382,"infantMort":51.318,"u5Mort":59.847,"netMig":130.529,"netMigRate":3.117},{"variant":"E","year":1951,"pop":42333.662,"male":20372.131,"female":21961.531,"density":76.778,"medianAge":32.442,"growth":1.035,"birthRate":19.679,"fertility":2.818,"deathRate":13.384,"lifeExp":66.097,"infantMort":49.535,"u5Mort":58.638,"netMig":171.565,"netMigRate":4.053},{"variant":"E","year":1952,"pop":42780.273,"male":20611.142,"female":22169.131,"density":77.588,"medianAge":31.782,"growth":1.064,"birthRate":19.421,"fertility":2.779,"deathRate":12.317,"lifeExp":67.391,"infantMort":44.913,"u5Mort":53.883,"netMig":151.253,"netMigRate":3.536},{"variant":"E","year":1953,"pop":43227.88,"male":20850.642,"female":22377.237,"density":78.399,"medianAge":31.673,"growth":1.018,"birthRate":18.879,"fertility":2.702,"deathRate":12.948,"lifeExp":67.319,"infantMort":41.228,"u5Mort":48.728,"netMig":183.612,"netMigRate":4.248},{"variant":"E","year":1954,"pop":43676.898,"male":21090.35,"female":22586.548,"density":79.214,"medianAge":31.717,"growth":1.049,"birthRate":18.879,"fertility":2.713,"deathRate":11.962,"lifeExp":68.188,"infantMort":40.663,"u5Mort":47.721,"netMig":155.866,"netMigRate":3.569},{"variant":"E","year":1955,"pop":44136.09,"male":21333.571,"female":22802.519,"density":80.047,"medianAge":31.724,"growth":1.043,"birthRate":18.659,"fertility":2.699,"deathRate":11.995,"lifeExp":68.444,"infantMort":38.137,"u5Mort":45.108,"netMig":166.238,"netMigRate":3.766},{"variant":"E","year":1956,"pop":44588.519,"male":21573.593,"female":23014.926,"density":80.867,"medianAge":31.713,"growth":0.997,"birthRate":18.512,"fertility":2.693,"deathRate":12.319,"lifeExp":68.465,"infantMort":35.85,"u5Mort":41.807,"netMig":168.343,"netMigRate":3.775},{"variant":"E","year":1957,"pop":45036.376,"male":21810.268,"female":23226.108,"density":81.679,"medianAge":31.701,"growth":1.002,"birthRate":18.508,"fertility":2.71,"deathRate":11.882,"lifeExp":68.897,"infantMort":33.504,"u5Mort":39.827,"netMig":152.837,"netMigRate":3.394},{"variant":"E","year":1958,"pop":45493.498,"male":22050.708,"female":23442.79,"density":82.508,"medianAge":31.712,"growth":1.018,"birthRate":18.165,"fertility":2.689,"deathRate":11.059,"lifeExp":70.107,"infantMort":31.131,"u5Mort":36.587,"netMig":139.755,"netMigRate":3.072},{"variant":"E","year":1959,"pop":45963.763,"male":22299.359,"female":23664.404,"density":83.361,"medianAge":31.743,"growth":1.039,"birthRate":18.289,"fertility":2.746,"deathRate":11.12,"lifeExp":70.168,"infantMort":29.333,"u5Mort":34.703,"netMig":147.992,"netMigRate":3.22},{"variant":"E","year":1960,"pop":46428.134,"male":22545.913,"female":23882.22,"density":84.204,"medianAge":31.771,"growth":0.972,"birthRate":17.911,"fertility":2.735,"deathRate":11.273,"lifeExp":70.368,"infantMort":27.176,"u5Mort":31.771,"netMig":143.032,"netMigRate":3.081},{"variant":"E","year":1961,"pop":46893.835,"male":22791.73,"female":24102.106,"density":85.048,"medianAge":31.804,"growth":1.024,"birthRate":18.221,"fertility":2.829,"deathRate":10.724,"lifeExp":70.958,"infantMort":25.692,"u5Mort":30.131,"netMig":128.618,"netMigRate":2.743},{"variant":"E","year":1962,"pop":47352.622,"male":23033.608,"female":24319.015,"density":85.88,"medianAge":31.845,"growth":0.924,"birthRate":17.678,"fertility":2.788,"deathRate":11.432,"lifeExp":70.47,"infantMort":25.44,"u5Mort":29.967,"netMig":141.634,"netMigRate":2.991},{"variant":"E","year":1963,"pop":47817.824,"male":23271.844,"female":24545.98,"density":86.724,"medianAge":31.851,"growth":1.031,"birthRate":17.969,"fertility":2.873,"deathRate":11.651,"lifeExp":70.32,"infantMort":25.598,"u5Mort":29.812,"netMig":190.925,"netMigRate":3.993},{"variant":"E","year":1964,"pop":48319.087,"male":23521.363,"female":24797.724,"density":87.633,"medianAge":31.82,"growth":1.054,"birthRate":17.907,"fertility":2.88,"deathRate":10.737,"lifeExp":71.28,"infantMort":23.263,"u5Mort":27.113,"netMig":163.039,"netMigRate":3.374},{"variant":"E","year":1965,"pop":48772.83,"male":23746.636,"female":25026.194,"density":88.456,"medianAge":31.796,"growth":0.816,"birthRate":17.588,"fertility":2.826,"deathRate":11.128,"lifeExp":71.107,"infantMort":21.608,"u5Mort":25.171,"netMig":82.879,"netMigRate":1.699},{"variant":"E","year":1966,"pop":49184.656,"male":23950.691,"female":25233.965,"density":89.203,"medianAge":31.764,"growth":0.865,"birthRate":17.433,"fertility":2.781,"deathRate":10.732,"lifeExp":71.514,"infantMort":21.572,"u5Mort":24.988,"netMig":96.097,"netMigRate":1.954},{"variant":"E","year":1967,"pop":49574.909,"male":24143.633,"female":25431.275,"density":89.911,"medianAge":31.723,"growth":0.716,"birthRate":16.823,"fertility":2.649,"deathRate":10.937,"lifeExp":71.498,"infantMort":20.435,"u5Mort":23.786,"netMig":63.018,"netMigRate":1.271},{"variant":"E","year":1968,"pop":49947.251,"male":24334.065,"female":25613.186,"density":90.586,"medianAge":31.665,"growth":0.781,"birthRate":16.614,"fertility":2.571,"deathRate":11.073,"lifeExp":71.486,"infantMort":20.266,"u5Mort":23.602,"netMig":113.115,"netMigRate":2.265},{"variant":"E","year":1969,"pop":50355.295,"male":24558.176,"female":25797.119,"density":91.326,"medianAge":31.565,"growth":0.846,"birthRate":16.65,"fertility":2.526,"deathRate":11.371,"lifeExp":71.206,"infantMort":19.624,"u5Mort":22.969,"netMig":160.403,"netMigRate":3.185},{"variant":"E","year":1970,"pop":50813.075,"male":24815.861,"female":25997.214,"density":92.156,"medianAge":31.432,"growth":0.963,"birthRate":16.704,"fertility":2.481,"deathRate":10.675,"lifeExp":72.091,"infantMort":18.305,"u5Mort":21.441,"netMig":182.941,"netMigRate":3.6},{"variant":"E","year":1971,"pop":51293.059,"male":25077.483,"female":26215.575,"density":93.027,"medianAge":31.272,"growth":0.918,"birthRate":17.172,"fertility":2.499,"deathRate":10.81,"lifeExp":72.073,"infantMort":17.316,"u5Mort":20.451,"netMig":144.321,"netMigRate":2.814},{"variant":"E","year":1972,"pop":51743.874,"male":25316.201,"female":26427.673,"density":93.844,"medianAge":31.068,"growth":0.833,"birthRate":17.003,"fertility":2.427,"deathRate":10.63,"lifeExp":72.313,"infantMort":16.046,"u5Mort":18.998,"netMig":101.223,"netMigRate":1.956},{"variant":"E","year":1973,"pop":52162.21,"male":25541.71,"female":26620.5,"density":94.603,"medianAge":30.788,"growth":0.778,"birthRate":16.504,"fertility":2.32,"deathRate":10.719,"lifeExp":72.476,"infantMort":15.221,"u5Mort":18.213,"netMig":103.91,"netMigRate":1.992},{"variant":"E","year":1974,"pop":52504.738,"male":25721.699,"female":26783.038,"density":95.224,"medianAge":30.594,"growth":0.532,"birthRate":15.346,"fertility":2.125,"deathRate":10.525,"lifeExp":72.804,"infantMort":14.38,"u5Mort":17.348,"netMig":26.203,"netMigRate":0.499},{"variant":"E","year":1975,"pop":52746.325,"male":25830.519,"female":26915.806,"density":95.662,"medianAge":30.534,"growth":0.386,"birthRate":14.188,"fertility":1.935,"deathRate":10.63,"lifeExp":72.9,"infantMort":13.416,"u5Mort":16.098,"netMig":16.139,"netMigRate":0.306},{"variant":"E","year":1976,"pop":52959.113,"male":25916.942,"female":27042.171,"density":96.048,"medianAge":30.522,"growth":0.419,"birthRate":13.605,"fertility":1.832,"deathRate":10.541,"lifeExp":73.122,"infantMort":12.715,"u5Mort":15.205,"netMig":59.515,"netMigRate":1.124},{"variant":"E","year":1977,"pop":53197.137,"male":26017.591,"female":27179.547,"density":96.48,"medianAge":30.595,"growth":0.478,"birthRate":14.028,"fertility":1.868,"deathRate":10.092,"lifeExp":73.728,"infantMort":11.861,"u5Mort":14.393,"netMig":44.918,"netMigRate":0.844},{"variant":"E","year":1978,"pop":53429.668,"male":26115.677,"female":27313.991,"density":96.902,"medianAge":30.791,"growth":0.395,"birthRate":13.849,"fertility":1.83,"deathRate":10.254,"lifeExp":73.844,"infantMort":10.764,"u5Mort":13.263,"netMig":18.692,"netMigRate":0.35},{"variant":"E","year":1979,"pop":53660.895,"male":26214.784,"female":27446.112,"density":97.321,"medianAge":31.069,"growth":0.469,"birthRate":14.165,"fertility":1.863,"deathRate":10.114,"lifeExp":74.125,"infantMort":10.404,"u5Mort":12.626,"netMig":34.295,"netMigRate":0.639},{"variant":"E","year":1980,"pop":53941.061,"male":26340.449,"female":27600.611,"density":97.829,"medianAge":31.333,"growth":0.572,"birthRate":14.867,"fertility":1.951,"deathRate":10.159,"lifeExp":74.234,"infantMort":10.484,"u5Mort":12.828,"netMig":54.718,"netMigRate":1.014},{"variant":"E","year":1981,"pop":54255.012,"male":26487.971,"female":27767.04,"density":98.399,"medianAge":31.582,"growth":0.588,"birthRate":14.854,"fertility":1.947,"deathRate":10.248,"lifeExp":74.397,"infantMort":9.903,"u5Mort":12.204,"netMig":69.365,"netMigRate":1.279},{"variant":"E","year":1982,"pop":54582.408,"male":26638.714,"female":27943.694,"density":98.992,"medianAge":31.818,"growth":0.615,"birthRate":14.635,"fertility":1.917,"deathRate":9.973,"lifeExp":74.766,"infantMort":9.544,"u5Mort":11.573,"netMig":81.084,"netMigRate":1.486},{"variant":"E","year":1983,"pop":54889.408,"male":26768.722,"female":28120.685,"density":99.549,"medianAge":32.053,"growth":0.507,"birthRate":13.688,"fertility":1.79,"deathRate":10.221,"lifeExp":74.734,"infantMort":8.974,"u5Mort":11.137,"netMig":88.166,"netMigRate":1.606},{"variant":"E","year":1984,"pop":55176.619,"male":26884.568,"female":28292.051,"density":100.07,"medianAge":32.287,"growth":0.536,"birthRate":13.842,"fertility":1.806,"deathRate":9.858,"lifeExp":75.218,"infantMort":8.516,"u5Mort":10.429,"netMig":76.175,"netMigRate":1.381},{"variant":"E","year":1985,"pop":55467.15,"male":27003.04,"female":28464.109,"density":100.597,"medianAge":32.515,"growth":0.514,"birthRate":13.937,"fertility":1.816,"deathRate":9.99,"lifeExp":75.309,"infantMort":8.433,"u5Mort":10.255,"netMig":66.149,"netMigRate":1.193},{"variant":"E","year":1986,"pop":55752.834,"male":27126.442,"female":28626.392,"density":101.115,"medianAge":32.742,"growth":0.513,"birthRate":14.054,"fertility":1.832,"deathRate":9.846,"lifeExp":75.578,"infantMort":8.173,"u5Mort":9.956,"netMig":51.642,"netMigRate":0.926},{"variant":"E","year":1987,"pop":56048.364,"male":27259.001,"female":28789.363,"density":101.651,"medianAge":32.98,"growth":0.544,"birthRate":13.809,"fertility":1.804,"deathRate":9.439,"lifeExp":76.147,"infantMort":7.872,"u5Mort":9.522,"netMig":59.89,"netMigRate":1.069},{"variant":"E","year":1988,"pop":56361.849,"male":27402.504,"female":28959.344,"density":102.22,"medianAge":33.223,"growth":0.572,"birthRate":13.81,"fertility":1.808,"deathRate":9.335,"lifeExp":76.398,"infantMort":7.962,"u5Mort":9.637,"netMig":69.935,"netMigRate":1.241},{"variant":"E","year":1989,"pop":56685.082,"male":27553.922,"female":29131.16,"density":102.806,"medianAge":33.468,"growth":0.572,"birthRate":13.636,"fertility":1.791,"deathRate":9.363,"lifeExp":76.543,"infantMort":7.596,"u5Mort":9.206,"netMig":82.052,"netMigRate":1.448},{"variant":"E","year":1990,"pop":56990.238,"male":27696.324,"female":29293.914,"density":103.359,"medianAge":33.731,"growth":0.502,"birthRate":13.527,"fertility":1.782,"deathRate":9.268,"lifeExp":76.835,"infantMort":7.409,"u5Mort":8.928,"netMig":43.323,"netMigRate":0.76},{"variant":"E","year":1991,"pop":57271.565,"male":27827.786,"female":29443.779,"density":103.87,"medianAge":34.009,"growth":0.483,"birthRate":13.403,"fertility":1.773,"deathRate":9.188,"lifeExp":77.016,"infantMort":7.316,"u5Mort":8.872,"netMig":35.201,"netMigRate":0.615},{"variant":"E","year":1992,"pop":57554.87,"male":27958.771,"female":29596.099,"density":104.383,"medianAge":34.287,"growth":0.504,"birthRate":13.055,"fertility":1.735,"deathRate":9.094,"lifeExp":77.297,"infantMort":6.808,"u5Mort":8.163,"netMig":61.964,"netMigRate":1.077},{"variant":"E","year":1993,"pop":57801.266,"male":28068.216,"female":29733.051,"density":104.83,"medianAge":34.578,"growth":0.351,"birthRate":12.456,"fertility":1.661,"deathRate":9.24,"lifeExp":77.349,"infantMort":6.42,"u5Mort":7.765,"netMig":16.892,"netMigRate":0.292},{"variant":"E","year":1994,"pop":57999.866,"male":28152.89,"female":29846.977,"density":105.19,"medianAge":34.888,"growth":0.335,"birthRate":12.423,"fertility":1.665,"deathRate":8.998,"lifeExp":77.768,"infantMort":5.989,"u5Mort":7.16,"netMig":-4.232,"netMigRate":-0.073},{"variant":"E","year":1995,"pop":58192.203,"male":28233.822,"female":29958.381,"density":105.539,"medianAge":35.199,"growth":0.327,"birthRate":12.726,"fertility":1.718,"deathRate":9.162,"lifeExp":77.871,"infantMort":4.996,"u5Mort":6.216,"netMig":-17.128,"netMigRate":-0.294},{"variant":"E","year":1996,"pop":58380.641,"male":28315.408,"female":30065.234,"density":105.881,"medianAge":35.502,"growth":0.32,"birthRate":12.778,"fertility":1.74,"deathRate":9.214,"lifeExp":78.061,"infantMort":4.831,"u5Mort":5.949,"netMig":-21.463,"netMigRate":-0.368},{"variant":"E","year":1997,"pop":58568.66,"male":28398.505,"female":30170.155,"density":106.222,"medianAge":35.802,"growth":0.323,"birthRate":12.588,"fertility":1.73,"deathRate":9.093,"lifeExp":78.425,"infantMort":4.756,"u5Mort":5.877,"netMig":-15.255,"netMigRate":-0.26},{"variant":"E","year":1998,"pop":58778.816,"male":28516.926,"female":30261.891,"density":106.603,"medianAge":36.105,"growth":0.393,"birthRate":12.705,"fertility":1.764,"deathRate":9.121,"lifeExp":78.588,"infantMort":4.718,"u5Mort":5.672,"netMig":20.216,"netMigRate":0.344},{"variant":"E","year":1999,"pop":59084.21,"male":28677.981,"female":30406.23,"density":107.157,"medianAge":36.39,"growth":0.643,"birthRate":12.702,"fertility":1.793,"deathRate":9.14,"lifeExp":78.746,"infantMort":4.432,"u5Mort":5.415,"netMig":169.448,"netMigRate":2.868},{"variant":"E","year":2000,"pop":59483.717,"male":28856.747,"female":30626.97,"density":107.882,"medianAge":36.651,"growth":0.705,"birthRate":13.132,"fertility":1.876,"deathRate":8.971,"lifeExp":79.044,"infantMort":4.578,"u5Mort":5.57,"netMig":171.637,"netMigRate":2.885},{"variant":"E","year":2001,"pop":59905.128,"male":29047.552,"female":30857.575,"density":108.646,"medianAge":36.906,"growth":0.707,"birthRate":12.983,"fertility":1.879,"deathRate":8.906,"lifeExp":79.221,"infantMort":4.53,"u5Mort":5.577,"netMig":179.476,"netMigRate":2.996},{"variant":"E","year":2002,"pop":60327.248,"male":29239.954,"female":31087.293,"density":109.411,"medianAge":37.169,"growth":0.697,"birthRate":12.723,"fertility":1.865,"deathRate":8.925,"lifeExp":79.411,"infantMort":4.16,"u5Mort":5.094,"netMig":191.373,"netMigRate":3.172},{"variant":"E","year":2003,"pop":60741.126,"male":29430.235,"female":31310.891,"density":110.162,"medianAge":37.42,"growth":0.67,"birthRate":12.624,"fertility":1.873,"deathRate":9.14,"lifeExp":79.419,"infantMort":4.092,"u5Mort":5.065,"netMig":195.616,"netMigRate":3.22},{"variant":"E","year":2004,"pop":61175.247,"male":29628.474,"female":31546.772,"density":110.949,"medianAge":37.667,"growth":0.754,"birthRate":12.638,"fertility":1.898,"deathRate":8.382,"lifeExp":80.336,"infantMort":4.026,"u5Mort":4.866,"netMig":200.629,"netMigRate":3.28},{"variant":"E","year":2005,"pop":61625.032,"male":29831.64,"female":31793.393,"density":111.765,"medianAge":37.909,"growth":0.712,"birthRate":12.626,"fertility":1.916,"deathRate":8.616,"lifeExp":80.337,"infantMort":3.679,"u5Mort":4.472,"netMig":191.417,"netMigRate":3.106},{"variant":"E","year":2006,"pop":62049.838,"male":30035.339,"female":32014.499,"density":112.536,"medianAge":38.134,"growth":0.662,"birthRate":12.885,"fertility":1.974,"deathRate":8.396,"lifeExp":80.745,"infantMort":3.809,"u5Mort":4.612,"netMig":132.512,"netMigRate":2.136},{"variant":"E","year":2007,"pop":62432.439,"male":30226.191,"female":32206.249,"density":113.229,"medianAge":38.357,"growth":0.567,"birthRate":12.624,"fertility":1.952,"deathRate":8.425,"lifeExp":80.96,"infantMort":3.671,"u5Mort":4.445,"netMig":91.973,"netMigRate":1.473},{"variant":"E","year":2008,"pop":62780.19,"male":30394.999,"female":32385.191,"density":113.86,"medianAge":38.578,"growth":0.544,"birthRate":12.728,"fertility":1.987,"deathRate":8.558,"lifeExp":81.039,"infantMort":3.72,"u5Mort":4.508,"netMig":79.528,"netMigRate":1.267},{"variant":"E","year":2009,"pop":63106.463,"male":30554.042,"female":32552.421,"density":114.452,"medianAge":38.791,"growth":0.493,"birthRate":12.631,"fertility":1.99,"deathRate":8.619,"lifeExp":81.163,"infantMort":3.772,"u5Mort":4.52,"netMig":58.032,"netMigRate":0.92},{"variant":"E","year":2010,"pop":63417.363,"male":30708.895,"female":32708.467,"density":115.016,"medianAge":39.013,"growth":0.49,"birthRate":12.692,"fertility":2.017,"deathRate":8.625,"lifeExp":81.405,"infantMort":3.587,"u5Mort":4.264,"netMig":52.644,"netMigRate":0.83},{"variant":"E","year":2011,"pop":63733.777,"male":30861.392,"female":32872.385,"density":115.59,"medianAge":39.262,"growth":0.506,"birthRate":12.448,"fertility":1.995,"deathRate":8.493,"lifeExp":81.781,"infantMort":3.361,"u5Mort":4.015,"netMig":70.178,"netMigRate":1.101},{"variant":"E","year":2012,"pop":64058.465,"male":31019.013,"female":33039.453,"density":116.178,"medianAge":39.518,"growth":0.511,"birthRate":12.326,"fertility":1.99,"deathRate":8.832,"lifeExp":81.739,"infantMort":3.467,"u5Mort":4.152,"netMig":103.287,"netMigRate":1.612},{"variant":"E","year":2013,"pop":64387.734,"male":31181.964,"female":33205.77,"density":116.776,"medianAge":39.773,"growth":0.515,"birthRate":12.131,"fertility":1.973,"deathRate":8.79,"lifeExp":81.979,"infantMort":3.597,"u5Mort":4.28,"netMig":116.297,"netMigRate":1.806},{"variant":"E","year":2014,"pop":64692.493,"male":31323.019,"female":33369.474,"density":117.328,"medianAge":40.033,"growth":0.43,"birthRate":12.063,"fertility":1.974,"deathRate":8.573,"lifeExp":82.437,"infantMort":3.477,"u5Mort":4.116,"netMig":52.342,"netMigRate":0.809},{"variant":"E","year":2015,"pop":64916.336,"male":31416.099,"female":33500.238,"density":117.734,"medianAge":40.286,"growth":0.261,"birthRate":11.711,"fertility":1.927,"deathRate":9.094,"lifeExp":82.149,"infantMort":3.636,"u5Mort":4.296,"netMig":-0.345,"netMigRate":-0.005},{"variant":"E","year":2016,"pop":65086.855,"male":31501.022,"female":33585.834,"density":118.044,"medianAge":40.52,"growth":0.263,"birthRate":11.441,"fertility":1.892,"deathRate":9.045,"lifeExp":82.401,"infantMort":3.607,"u5Mort":4.241,"netMig":15.548,"netMigRate":0.239},{"variant":"E","year":2017,"pop":65284.776,"male":31605.558,"female":33679.217,"density":118.403,"medianAge":40.71,"growth":0.344,"birthRate":11.099,"fertility":1.859,"deathRate":9.239,"lifeExp":82.439,"infantMort":3.764,"u5Mort":4.373,"netMig":102.984,"netMigRate":1.577},{"variant":"E","year":2018,"pop":65519.543,"male":31721.037,"female":33798.505,"density":118.828,"medianAge":40.885,"growth":0.374,"birthRate":10.947,"fertility":1.837,"deathRate":9.234,"lifeExp":82.568,"infantMort":3.806,"u5Mort":4.44,"netMig":132.925,"netMigRate":2.029},{"variant":"E","year":2019,"pop":65729.459,"male":31832.377,"female":33897.082,"density":119.209,"medianAge":41.08,"growth":0.266,"birthRate":10.826,"fertility":1.826,"deathRate":9.264,"lifeExp":82.73,"infantMort":3.738,"u5Mort":4.417,"netMig":71.972,"netMigRate":1.095},{"variant":"E","year":2020,"pop":65905.277,"male":31923.744,"female":33981.533,"density":119.528,"medianAge":41.252,"growth":0.269,"birthRate":10.56,"fertility":1.785,"deathRate":10.084,"lifeExp":82.199,"infantMort":3.501,"u5Mort":4.045,"netMig":145.593,"netMigRate":2.209},{"variant":"E","year":2021,"pop":66083.548,"male":32016.483,"female":34067.065,"density":119.851,"medianAge":41.39,"growth":0.272,"birthRate":10.627,"fertility":1.799,"deathRate":9.899,"lifeExp":82.322,"infantMort":3.691,"u5Mort":4.295,"netMig":131.465,"netMigRate":1.989},{"variant":"E","year":2022,"pop":66277.409,"male":32116.982,"female":34160.427,"density":120.203,"medianAge":41.567,"growth":0.314,"birthRate":10.374,"fertility":1.76,"deathRate":9.94,"lifeExp":82.475,"infantMort":3.639,"u5Mort":4.471,"netMig":179.377,"netMigRate":2.706},{"variant":"E","year":2023,"pop":66438.822,"male":32202.286,"female":34236.535,"density":120.496,"medianAge":41.817,"growth":0.173,"birthRate":9.616,"fertility":1.639,"deathRate":9.273,"lifeExp":83.325,"infantMort":3.503,"u5Mort":4.125,"netMig":91.862,"netMigRate":1.383},{"variant":"M","year":2024,"pop":66548.53,"male":32261.677,"female":34286.854,"density":120.694,"medianAge":42.068,"growth":0.157,"birthRate":9.557,"fertility":1.636,"deathRate":9.343,"lifeExp":83.458,"infantMort":3.155,"u5Mort":3.758,"netMig":90.527,"netMigRate":1.36},{"variant":"M","year":2025,"pop":66650.804,"male":32312.637,"female":34338.168,"density":120.88,"medianAge":42.276,"growth":0.15,"birthRate":9.52,"fertility":1.637,"deathRate":9.399,"lifeExp":83.58,"infantMort":3.094,"u5Mort":3.686,"netMig":91.737,"netMigRate":1.376},{"variant":"M","year":2026,"pop":66746.401,"male":32359.364,"female":34387.037,"density":121.053,"medianAge":42.456,"growth":0.137,"birthRate":9.498,"fertility":1.637,"deathRate":9.455,"lifeExp":83.703,"infantMort":3.035,"u5Mort":3.615,"netMig":88.533,"netMigRate":1.326},{"variant":"M","year":2027,"pop":66838.261,"male":32403.2,"female":34435.062,"density":121.22,"medianAge":42.607,"growth":0.138,"birthRate":9.493,"fertility":1.638,"deathRate":9.507,"lifeExp":83.832,"infantMort":2.974,"u5Mort":3.543,"netMig":93.271,"netMigRate":1.395},{"variant":"M","year":2028,"pop":66928.636,"male":32445.275,"female":34483.361,"density":121.384,"medianAge":42.744,"growth":0.132,"birthRate":9.507,"fertility":1.638,"deathRate":9.568,"lifeExp":83.955,"infantMort":2.918,"u5Mort":3.476,"netMig":92.475,"netMigRate":1.382},{"variant":"M","year":2029,"pop":67018.329,"male":32486.067,"female":34532.262,"density":121.547,"medianAge":42.889,"growth":0.136,"birthRate":9.545,"fertility":1.639,"deathRate":9.629,"lifeExp":84.084,"infantMort":2.86,"u5Mort":3.408,"netMig":96.568,"netMigRate":1.441},{"variant":"M","year":2030,"pop":67107.691,"male":32525.825,"female":34581.865,"density":121.709,"medianAge":43.034,"growth":0.131,"birthRate":9.588,"fertility":1.637,"deathRate":9.704,"lifeExp":84.207,"infantMort":2.807,"u5Mort":3.344,"netMig":95.565,"netMigRate":1.424},{"variant":"M","year":2031,"pop":67194.855,"male":32563.724,"female":34631.132,"density":121.867,"medianAge":43.169,"growth":0.129,"birthRate":9.666,"fertility":1.639,"deathRate":9.797,"lifeExp":84.32,"infantMort":2.759,"u5Mort":3.287,"netMig":95.389,"netMigRate":1.42},{"variant":"M","year":2032,"pop":67281.98,"male":32601.0,"female":34680.98,"density":122.025,"medianAge":43.291,"growth":0.13,"birthRate":9.75,"fertility":1.639,"deathRate":9.893,"lifeExp":84.443,"infantMort":2.708,"u5Mort":3.227,"netMig":97.308,"netMigRate":1.446},{"variant":"M","year":2033,"pop":67369.322,"male":32637.935,"female":34731.386,"density":122.183,"medianAge":43.392,"growth":0.129,"birthRate":9.848,"fertility":1.64,"deathRate":10.008,"lifeExp":84.557,"infantMort":2.663,"u5Mort":3.173,"netMig":97.749,"netMigRate":1.451},{"variant":"M","year":2034,"pop":67458.149,"male":32675.224,"female":34782.926,"density":122.344,"medianAge":43.469,"growth":0.134,"birthRate":9.951,"fertility":1.641,"deathRate":10.133,"lifeExp":84.67,"infantMort":2.618,"u5Mort":3.12,"netMig":102.884,"netMigRate":1.525},{"variant":"M","year":2035,"pop":67547.946,"male":32712.77,"female":34835.175,"density":122.507,"medianAge":43.523,"growth":0.132,"birthRate":10.053,"fertility":1.641,"deathRate":10.26,"lifeExp":84.79,"infantMort":2.572,"u5Mort":3.065,"netMig":102.963,"netMigRate":1.524},{"variant":"M","year":2036,"pop":67635.315,"male":32749.205,"female":34886.111,"density":122.666,"medianAge":43.549,"growth":0.127,"birthRate":10.154,"fertility":1.643,"deathRate":10.387,"lifeExp":84.919,"infantMort":2.524,"u5Mort":3.007,"netMig":101.494,"netMigRate":1.501},{"variant":"M","year":2037,"pop":67721.11,"male":32785.35,"female":34935.76,"density":122.821,"medianAge":43.535,"growth":0.127,"birthRate":10.246,"fertility":1.644,"deathRate":10.518,"lifeExp":85.048,"infantMort":2.477,"u5Mort":2.952,"netMig":104.247,"netMigRate":1.539},{"variant":"M","year":2038,"pop":67801.927,"male":32819.779,"female":34982.147,"density":122.968,"medianAge":43.473,"growth":0.112,"birthRate":10.309,"fertility":1.643,"deathRate":10.652,"lifeExp":85.177,"infantMort":2.431,"u5Mort":2.897,"netMig":99.053,"netMigRate":1.461},{"variant":"M","year":2039,"pop":67873.403,"male":32850.537,"female":35022.865,"density":123.097,"medianAge":43.396,"growth":0.099,"birthRate":10.35,"fertility":1.642,"deathRate":10.8,"lifeExp":85.29,"infantMort":2.393,"u5Mort":2.851,"netMig":97.646,"netMigRate":1.439},{"variant":"M","year":2040,"pop":67938.904,"male":32879.329,"female":35059.575,"density":123.216,"medianAge":43.324,"growth":0.094,"birthRate":10.384,"fertility":1.643,"deathRate":10.936,"lifeExp":85.409,"infantMort":2.352,"u5Mort":2.803,"netMig":101.394,"netMigRate":1.492},{"variant":"M","year":2041,"pop":68002.575,"male":32908.397,"female":35094.179,"density":123.332,"medianAge":43.259,"growth":0.093,"birthRate":10.401,"fertility":1.644,"deathRate":11.055,"lifeExp":85.537,"infantMort":2.31,"u5Mort":2.752,"netMig":107.953,"netMigRate":1.587},{"variant":"M","year":2042,"pop":68063.86,"male":32937.69,"female":35126.17,"density":123.443,"medianAge":43.235,"growth":0.087,"birthRate":10.396,"fertility":1.645,"deathRate":11.177,"lifeExp":85.649,"infantMort":2.273,"u5Mort":2.709,"netMig":112.259,"netMigRate":1.649},{"variant":"M","year":2043,"pop":68115.786,"male":32963.81,"female":35151.976,"density":123.537,"medianAge":43.218,"growth":0.066,"birthRate":10.378,"fertility":1.647,"deathRate":11.285,"lifeExp":85.761,"infantMort":2.238,"u5Mort":2.667,"netMig":106.563,"netMigRate":1.564},{"variant":"M","year":2044,"pop":68157.083,"male":32985.986,"female":35171.097,"density":123.612,"medianAge":43.197,"growth":0.056,"birthRate":10.326,"fertility":1.647,"deathRate":11.371,"lifeExp":85.879,"infantMort":2.201,"u5Mort":2.623,"netMig":109.08,"netMigRate":1.6},{"variant":"M","year":2045,"pop":68190.955,"male":33005.565,"female":35185.389,"density":123.673,"medianAge":43.201,"growth":0.044,"birthRate":10.273,"fertility":1.649,"deathRate":11.44,"lifeExp":85.996,"infantMort":2.165,"u5Mort":2.58,"netMig":109.47,"netMigRate":1.605},{"variant":"M","year":2046,"pop":68214.673,"male":33021.183,"female":35193.49,"density":123.716,"medianAge":43.221,"growth":0.026,"birthRate":10.181,"fertility":1.647,"deathRate":11.501,"lifeExp":86.107,"infantMort":2.133,"u5Mort":2.541,"netMig":107.621,"netMigRate":1.578},{"variant":"M","year":2047,"pop":68229.077,"male":33032.962,"female":35196.115,"density":123.742,"medianAge":43.26,"growth":0.017,"birthRate":10.096,"fertility":1.647,"deathRate":11.535,"lifeExp":86.23,"infantMort":2.097,"u5Mort":2.498,"netMig":109.43,"netMigRate":1.604},{"variant":"M","year":2048,"pop":68235.289,"male":33041.414,"female":35193.876,"density":123.754,"medianAge":43.323,"growth":0.002,"birthRate":10.008,"fertility":1.648,"deathRate":11.563,"lifeExp":86.348,"infantMort":2.063,"u5Mort":2.458,"netMig":107.257,"netMigRate":1.572},{"variant":"M","year":2049,"pop":68231.375,"male":33045.408,"female":35185.967,"density":123.747,"medianAge":43.412,"growth":-0.013,"birthRate":9.902,"fertility":1.647,"deathRate":11.578,"lifeExp":86.47,"infantMort":2.028,"u5Mort":2.417,"netMig":105.349,"netMigRate":1.544},{"variant":"M","year":2050,"pop":68219.675,"male":33045.816,"female":35173.859,"density":123.725,"medianAge":43.523,"growth":-0.021,"birthRate":9.807,"fertility":1.647,"deathRate":11.599,"lifeExp":86.579,"infantMort":1.999,"u5Mort":2.382,"netMig":107.825,"netMigRate":1.581},{"variant":"M","year":2051,"pop":68200.254,"male":33042.583,"female":35157.671,"density":123.69,"medianAge":43.651,"growth":-0.036,"birthRate":9.71,"fertility":1.646,"deathRate":11.603,"lifeExp":86.699,"infantMort":1.965,"u5Mort":2.342,"netMig":104.645,"netMigRate":1.534},{"variant":"M","year":2052,"pop":68175.77,"male":33036.727,"female":35139.043,"density":123.646,"medianAge":43.786,"growth":-0.036,"birthRate":9.627,"fertility":1.648,"deathRate":11.603,"lifeExp":86.82,"infantMort":1.934,"u5Mort":2.304,"netMig":110.136,"netMigRate":1.615},{"variant":"M","year":2053,"pop":68146.932,"male":33028.702,"female":35118.23,"density":123.593,"medianAge":43.922,"growth":-0.049,"birthRate":9.565,"fertility":1.65,"deathRate":11.607,"lifeExp":86.933,"infantMort":1.904,"u5Mort":2.269,"netMig":106.042,"netMigRate":1.556},{"variant":"M","year":2054,"pop":68111.015,"male":33017.293,"female":35093.722,"density":123.528,"medianAge":44.063,"growth":-0.057,"birthRate":9.49,"fertility":1.65,"deathRate":11.609,"lifeExp":87.046,"infantMort":1.875,"u5Mort":2.235,"netMig":105.658,"netMigRate":1.551},{"variant":"M","year":2055,"pop":68067.631,"male":33002.304,"female":35065.327,"density":123.45,"medianAge":44.212,"growth":-0.071,"birthRate":9.427,"fertility":1.649,"deathRate":11.596,"lifeExp":87.174,"infantMort":1.843,"u5Mort":2.197,"netMig":99.549,"netMigRate":1.462},{"variant":"M","year":2056,"pop":68022.156,"male":32986.462,"female":35035.694,"density":123.367,"medianAge":44.358,"growth":-0.063,"birthRate":9.379,"fertility":1.649,"deathRate":11.602,"lifeExp":87.28,"infantMort":1.818,"u5Mort":2.166,"netMig":108.286,"netMigRate":1.592},{"variant":"M","year":2057,"pop":67978.669,"male":32971.643,"female":35007.026,"density":123.288,"medianAge":44.494,"growth":-0.065,"birthRate":9.357,"fertility":1.651,"deathRate":11.591,"lifeExp":87.397,"infantMort":1.789,"u5Mort":2.132,"netMig":107.794,"netMigRate":1.586},{"variant":"M","year":2058,"pop":67935.849,"male":32957.005,"female":34978.845,"density":123.211,"medianAge":44.618,"growth":-0.061,"birthRate":9.342,"fertility":1.652,"deathRate":11.592,"lifeExp":87.5,"infantMort":1.765,"u5Mort":2.103,"netMig":111.338,"netMigRate":1.639},{"variant":"M","year":2059,"pop":67892.952,"male":32942.437,"female":34950.515,"density":123.133,"medianAge":44.735,"growth":-0.065,"birthRate":9.33,"fertility":1.651,"deathRate":11.572,"lifeExp":87.62,"infantMort":1.737,"u5Mort":2.07,"netMig":107.967,"netMigRate":1.59},{"variant":"M","year":2060,"pop":67850.295,"male":32928.098,"female":34922.196,"density":123.055,"medianAge":44.843,"growth":-0.061,"birthRate":9.335,"fertility":1.651,"deathRate":11.55,"lifeExp":87.736,"infantMort":1.71,"u5Mort":2.039,"netMig":109.227,"netMigRate":1.61},{"variant":"M","year":2061,"pop":67810.557,"male":32915.09,"female":34895.467,"density":122.983,"medianAge":44.93,"growth":-0.057,"birthRate":9.363,"fertility":1.652,"deathRate":11.524,"lifeExp":87.851,"infantMort":1.684,"u5Mort":2.007,"netMig":108.098,"netMigRate":1.594},{"variant":"M","year":2062,"pop":67772.616,"male":32902.887,"female":34869.73,"density":122.915,"medianAge":45.038,"growth":-0.055,"birthRate":9.389,"fertility":1.652,"deathRate":11.493,"lifeExp":87.966,"infantMort":1.659,"u5Mort":1.977,"netMig":105.101,"netMigRate":1.551},{"variant":"M","year":2063,"pop":67739.664,"male":32893.228,"female":34846.436,"density":122.855,"medianAge":45.13,"growth":-0.042,"birthRate":9.419,"fertility":1.651,"deathRate":11.469,"lifeExp":88.071,"infantMort":1.637,"u5Mort":1.951,"netMig":110.387,"netMigRate":1.63},{"variant":"M","year":2064,"pop":67713.647,"male":32887.171,"female":34826.476,"density":122.808,"medianAge":45.162,"growth":-0.035,"birthRate":9.456,"fertility":1.649,"deathRate":11.42,"lifeExp":88.193,"infantMort":1.611,"u5Mort":1.92,"netMig":109.412,"netMigRate":1.616},{"variant":"M","year":2065,"pop":67691.804,"male":32883.042,"female":34808.762,"density":122.768,"medianAge":45.185,"growth":-0.03,"birthRate":9.509,"fertility":1.65,"deathRate":11.383,"lifeExp":88.299,"infantMort":1.589,"u5Mort":1.894,"netMig":106.737,"netMigRate":1.577},{"variant":"M","year":2066,"pop":67677.299,"male":32882.389,"female":34794.91,"density":122.742,"medianAge":45.192,"growth":-0.013,"birthRate":9.552,"fertility":1.649,"deathRate":11.327,"lifeExp":88.42,"infantMort":1.564,"u5Mort":1.864,"netMig":111.221,"netMigRate":1.643},{"variant":"M","year":2067,"pop":67669.052,"male":32884.702,"female":34784.349,"density":122.727,"medianAge":45.214,"growth":-0.011,"birthRate":9.596,"fertility":1.648,"deathRate":11.281,"lifeExp":88.525,"infantMort":1.543,"u5Mort":1.839,"netMig":106.453,"netMigRate":1.573},{"variant":"M","year":2068,"pop":67664.28,"male":32888.661,"female":34775.619,"density":122.718,"medianAge":45.259,"growth":-0.003,"birthRate":9.647,"fertility":1.648,"deathRate":11.217,"lifeExp":88.647,"infantMort":1.519,"u5Mort":1.81,"netMig":104.266,"netMigRate":1.541},{"variant":"M","year":2069,"pop":67668.109,"male":32897.01,"female":34771.099,"density":122.725,"medianAge":45.276,"growth":0.014,"birthRate":9.697,"fertility":1.649,"deathRate":11.15,"lifeExp":88.767,"infantMort":1.495,"u5Mort":1.782,"netMig":107.937,"netMigRate":1.595},{"variant":"M","year":2070,"pop":67678.905,"male":32908.717,"female":34770.188,"density":122.745,"medianAge":45.257,"growth":0.018,"birthRate":9.743,"fertility":1.651,"deathRate":11.094,"lifeExp":88.871,"infantMort":1.476,"u5Mort":1.759,"netMig":103.395,"netMigRate":1.528},{"variant":"M","year":2071,"pop":67698.398,"male":32924.448,"female":34773.949,"density":122.78,"medianAge":45.229,"growth":0.04,"birthRate":9.77,"fertility":1.651,"deathRate":11.011,"lifeExp":89.0,"infantMort":1.451,"u5Mort":1.73,"netMig":111.006,"netMigRate":1.64},{"variant":"M","year":2072,"pop":67724.514,"male":32943.302,"female":34781.211,"density":122.827,"medianAge":45.203,"growth":0.037,"birthRate":9.785,"fertility":1.65,"deathRate":10.947,"lifeExp":89.11,"infantMort":1.431,"u5Mort":1.705,"netMig":103.881,"netMigRate":1.534},{"variant":"M","year":2073,"pop":67752.34,"male":32962.959,"female":34789.381,"density":122.878,"medianAge":45.18,"growth":0.045,"birthRate":9.799,"fertility":1.651,"deathRate":10.884,"lifeExp":89.219,"infantMort":1.411,"u5Mort":1.681,"netMig":103.903,"netMigRate":1.534},{"variant":"M","year":2074,"pop":67784.584,"male":32984.753,"female":34799.832,"density":122.936,"medianAge":45.162,"growth":0.05,"birthRate":9.802,"fertility":1.651,"deathRate":10.823,"lifeExp":89.328,"infantMort":1.391,"u5Mort":1.658,"netMig":103.229,"netMigRate":1.523},{"variant":"M","year":2075,"pop":67822.261,"male":33009.201,"female":34813.06,"density":123.005,"medianAge":45.149,"growth":0.061,"birthRate":9.796,"fertility":1.652,"deathRate":10.762,"lifeExp":89.436,"infantMort":1.372,"u5Mort":1.635,"netMig":106.841,"netMigRate":1.575},{"variant":"M","year":2076,"pop":67863.936,"male":33035.611,"female":34828.325,"density":123.08,"medianAge":45.144,"growth":0.062,"birthRate":9.77,"fertility":1.652,"deathRate":10.705,"lifeExp":89.543,"infantMort":1.353,"u5Mort":1.613,"netMig":105.453,"netMigRate":1.554},{"variant":"M","year":2077,"pop":67905.318,"male":33061.858,"female":34843.46,"density":123.155,"medianAge":45.149,"growth":0.06,"birthRate":9.744,"fertility":1.652,"deathRate":10.648,"lifeExp":89.649,"infantMort":1.334,"u5Mort":1.591,"netMig":102.137,"netMigRate":1.504},{"variant":"M","year":2078,"pop":67945.204,"male":33087.3,"female":34857.904,"density":123.228,"medianAge":45.168,"growth":0.057,"birthRate":9.692,"fertility":1.65,"deathRate":10.593,"lifeExp":89.754,"infantMort":1.316,"u5Mort":1.569,"netMig":100.274,"netMigRate":1.476},{"variant":"M","year":2079,"pop":67984.811,"male":33112.46,"female":34872.351,"density":123.299,"medianAge":45.2,"growth":0.059,"birthRate":9.646,"fertility":1.65,"deathRate":10.54,"lifeExp":89.859,"infantMort":1.299,"u5Mort":1.548,"netMig":100.92,"netMigRate":1.484},{"variant":"M","year":2080,"pop":68024.937,"male":33137.529,"female":34887.408,"density":123.372,"medianAge":45.245,"growth":0.059,"birthRate":9.59,"fertility":1.649,"deathRate":10.494,"lifeExp":89.955,"infantMort":1.282,"u5Mort":1.529,"netMig":101.625,"netMigRate":1.494},{"variant":"M","year":2081,"pop":68066.815,"male":33162.927,"female":34903.889,"density":123.448,"medianAge":45.303,"growth":0.064,"birthRate":9.526,"fertility":1.647,"deathRate":10.424,"lifeExp":90.076,"infantMort":1.262,"u5Mort":1.505,"netMig":104.792,"netMigRate":1.54},{"variant":"M","year":2082,"pop":68108.439,"male":33187.671,"female":34920.768,"density":123.524,"medianAge":45.375,"growth":0.058,"birthRate":9.471,"fertility":1.647,"deathRate":10.376,"lifeExp":90.178,"infantMort":1.246,"u5Mort":1.485,"netMig":101.242,"netMigRate":1.486},{"variant":"M","year":2083,"pop":68153.317,"male":33213.241,"female":34940.075,"density":123.605,"medianAge":45.457,"growth":0.074,"birthRate":9.406,"fertility":1.646,"deathRate":10.32,"lifeExp":90.289,"infantMort":1.228,"u5Mort":1.463,"netMig":112.514,"netMigRate":1.651},{"variant":"M","year":2084,"pop":68198.943,"male":33238.268,"female":34960.675,"density":123.688,"medianAge":45.55,"growth":0.06,"birthRate":9.353,"fertility":1.646,"deathRate":10.264,"lifeExp":90.407,"infantMort":1.209,"u5Mort":1.441,"netMig":103.186,"netMigRate":1.513},{"variant":"M","year":2085,"pop":68237.654,"male":33259.088,"female":34978.565,"density":123.758,"medianAge":45.656,"growth":0.053,"birthRate":9.308,"fertility":1.647,"deathRate":10.231,"lifeExp":90.508,"infantMort":1.193,"u5Mort":1.422,"netMig":99.337,"netMigRate":1.456},{"variant":"M","year":2086,"pop":68276.452,"male":33278.889,"female":34997.563,"density":123.828,"medianAge":45.767,"growth":0.06,"birthRate":9.262,"fertility":1.647,"deathRate":10.197,"lifeExp":90.617,"infantMort":1.176,"u5Mort":1.402,"netMig":105.087,"netMigRate":1.539},{"variant":"M","year":2087,"pop":68316.292,"male":33298.153,"female":35018.139,"density":123.901,"medianAge":45.883,"growth":0.056,"birthRate":9.214,"fertility":1.646,"deathRate":10.174,"lifeExp":90.724,"infantMort":1.16,"u5Mort":1.383,"netMig":104.003,"netMigRate":1.522},{"variant":"M","year":2088,"pop":68354.444,"male":33315.366,"female":35039.078,"density":123.97,"medianAge":46.004,"growth":0.055,"birthRate":9.184,"fertility":1.648,"deathRate":10.166,"lifeExp":90.824,"infantMort":1.145,"u5Mort":1.365,"netMig":105.02,"netMigRate":1.536},{"variant":"M","year":2089,"pop":68389.693,"male":33329.77,"female":35059.923,"density":124.034,"medianAge":46.127,"growth":0.048,"birthRate":9.151,"fertility":1.647,"deathRate":10.157,"lifeExp":90.938,"infantMort":1.128,"u5Mort":1.344,"netMig":101.43,"netMigRate":1.483},{"variant":"M","year":2090,"pop":68421.883,"male":33341.524,"female":35080.358,"density":124.092,"medianAge":46.251,"growth":0.046,"birthRate":9.134,"fertility":1.648,"deathRate":10.164,"lifeExp":91.052,"infantMort":1.111,"u5Mort":1.324,"netMig":102.206,"netMigRate":1.494},{"variant":"M","year":2091,"pop":68451.045,"male":33350.569,"female":35100.476,"density":124.145,"medianAge":46.373,"growth":0.039,"birthRate":9.119,"fertility":1.649,"deathRate":10.193,"lifeExp":91.157,"infantMort":1.095,"u5Mort":1.306,"netMig":100.067,"netMigRate":1.462},{"variant":"M","year":2092,"pop":68475.278,"male":33355.973,"female":35119.305,"density":124.189,"medianAge":46.491,"growth":0.032,"birthRate":9.11,"fertility":1.649,"deathRate":10.237,"lifeExp":91.262,"infantMort":1.08,"u5Mort":1.288,"netMig":99.131,"netMigRate":1.448},{"variant":"M","year":2093,"pop":68498.701,"male":33360.049,"female":35138.651,"density":124.231,"medianAge":46.602,"growth":0.036,"birthRate":9.108,"fertility":1.65,"deathRate":10.29,"lifeExp":91.373,"infantMort":1.064,"u5Mort":1.269,"netMig":105.898,"netMigRate":1.546},{"variant":"M","year":2094,"pop":68518.865,"male":33361.776,"female":35157.09,"density":124.268,"medianAge":46.705,"growth":0.022,"birthRate":9.111,"fertility":1.65,"deathRate":10.346,"lifeExp":91.492,"infantMort":1.047,"u5Mort":1.249,"netMig":99.993,"netMigRate":1.459},{"variant":"M","year":2095,"pop":68529.647,"male":33358.289,"female":35171.357,"density":124.288,"medianAge":46.8,"growth":0.009,"birthRate":9.113,"fertility":1.649,"deathRate":10.431,"lifeExp":91.595,"infantMort":1.033,"u5Mort":1.232,"netMig":96.464,"netMigRate":1.408},{"variant":"M","year":2096,"pop":68529.527,"male":33349.16,"female":35180.366,"density":124.287,"medianAge":46.888,"growth":-0.009,"birthRate":9.115,"fertility":1.648,"deathRate":10.524,"lifeExp":91.697,"infantMort":1.02,"u5Mort":1.215,"netMig":90.164,"netMigRate":1.316},{"variant":"M","year":2097,"pop":68523.856,"male":33337.389,"female":35186.467,"density":124.277,"medianAge":46.963,"growth":-0.007,"birthRate":9.126,"fertility":1.647,"deathRate":10.615,"lifeExp":91.806,"infantMort":1.005,"u5Mort":1.198,"netMig":97.086,"netMigRate":1.417},{"variant":"M","year":2098,"pop":68516.588,"male":33325.13,"female":35191.459,"density":124.264,"medianAge":47.024,"growth":-0.014,"birthRate":9.144,"fertility":1.648,"deathRate":10.697,"lifeExp":91.921,"infantMort":0.989,"u5Mort":1.179,"netMig":96.791,"netMigRate":1.413},{"variant":"M","year":2099,"pop":68503.747,"male":33310.528,"female":35193.219,"density":124.241,"medianAge":47.073,"growth":-0.023,"birthRate":9.161,"fertility":1.647,"deathRate":10.777,"lifeExp":92.036,"infantMort":0.974,"u5Mort":1.161,"netMig":94.65,"netMigRate":1.382},{"variant":"M","year":2100,"pop":68484.558,"male":33293.603,"female":35190.955,"density":124.206,"medianAge":47.111,"growth":-0.033,"birthRate":9.174,"fertility":1.646,"deathRate":10.862,"lifeExp":92.142,"infantMort":0.96,"u5Mort":1.144,"netMig":93.308,"netMigRate":1.362}],"pyramid":{"1950":{"female":[1946.3305,1337.7885,1402.553,1546.4665,1583.51,1635.739,989.2755,1457.58,1546.0875,1528.581,1425.557,1293.2515,1180.861,1038.577,837.3125,565.75,295.231,113.1935,25.199,2.8255,0.166],"male":[2021.1795,1382.413,1424.7605,1595.862,1641.898,1649.9905,987.64,1442.872,1538.4515,1514.451,1258.1055,935.231,848.5715,714.92,579.395,366.412,166.525,52.547,9.1635,0.8465,0.0485]},"1960":{"female":[2022.7245,2013.9795,1999.848,1388.9735,1432.3465,1589.9615,1634.591,1670.0365,1009.918,1462.1715,1511.792,1461.052,1318.397,1128.2365,934.26,688.8505,404.1155,165.471,39.677,5.466,0.3525],"male":[2104.0635,2087.256,2077.436,1464.657,1520.346,1669.8865,1687.675,1674.227,998.968,1414.5905,1449.4975,1357.5925,1061.1045,725.912,571.012,383.111,209.2515,74.075,13.815,1.368,0.0685]},"1970":{"female":[2041.7895,2089.6495,2048.209,2050.89,2048.193,1430.203,1482.9285,1628.3055,1658.3005,1663.9765,994.7535,1407.843,1414.9345,1313.8085,1093.1315,805.043,511.5635,234.95,67.336,10.6325,0.773],"male":[2134.193,2177.527,2127.093,2106.902,2147.339,1542.465,1583.2255,1704.683,1699.9205,1635.1365,949.297,1285.8005,1226.1025,1042.6875,712.0725,402.6915,225.1375,88.9505,21.7365,2.746,0.1545]},"1980":{"female":[1773.7085,2042.4155,2069.4075,2137.349,2095.146,2101.391,2087.6365,1460.211,1487.9225,1605.5125,1611.92,1602.352,934.706,1286.7295,1220.1175,994.774,646.2925,317.4745,105.029,18.9065,1.61],"male":[1861.2585,2141.016,2182.97,2211.7085,2121.86,2153.1375,2193.7955,1540.894,1538.281,1620.293,1569.2055,1468.3815,816.5765,1018.547,860.763,603.316,301.0095,104.491,28.345,4.2815,0.319]},"1990":{"female":[1856.136,1891.0055,1858.454,2109.212,2143.5855,2172.3295,2176.618,2162.335,2099.1185,1437.24,1451.4765,1557.79,1544.518,1494.5555,831.6755,1040.563,807.5985,460.7305,163.1255,32.604,3.2435],"male":[1942.523,1980.0865,1948.4565,2201.979,2155.1905,2139.4635,2152.2925,2160.6325,2143.3395,1472.1635,1431.4515,1466.8175,1367.2095,1210.0255,614.5865,657.04,418.1395,182.646,45.843,5.948,0.49]},"2000":{"female":[1822.105,1781.389,1890.407,1905.9165,1888.45,2087.578,2146.8435,2217.753,2188.833,2153.1525,2066.662,1405.921,1401.508,1475.485,1408.1035,1271.892,614.9305,569.245,260.7235,63.1435,6.9285],"male":[1919.068,1863.977,1981.0295,1982.8705,1949.39,2081.7455,2101.1925,2166.421,2136.5715,2103.7575,2046.8435,1377.9715,1293.8225,1251.963,1072.833,841.8425,346.592,243.412,80.9685,13.5025,0.9725]},"2010":{"female":[1905.1755,1912.3395,1918.7135,1886.402,1939.5135,1951.355,1976.333,2192.3695,2210.0755,2240.0635,2176.1105,2128.4375,2028.4055,1354.997,1315.357,1309.429,1119.862,786.3875,245.262,97.64,14.239],"male":[1992.817,2003.7835,2019.124,1969.8995,1964.9695,1908.734,1980.896,2174.332,2146.156,2160.0995,2081.7335,2005.413,1901.2305,1222.657,1082.7065,942.5045,668.81,370.0745,87.7815,22.9205,2.2525]},"2020":{"female":[1720.51,1897.2275,1990.537,1959.7425,1905.1245,1849.8345,2006.988,2061.36,2054.7675,2208.996,2198.7515,2212.152,2133.3795,2044.815,1907.1735,1218.6035,1075.341,872.584,487.4735,159.041,17.1315],"male":[1803.6845,1988.995,2092.3715,2072.4375,1978.4015,1848.2165,1938.5685,1973.359,2030.7165,2170.9765,2098.906,2084.2515,1951.364,1804.982,1633.579,975.965,752.6735,483.4645,195.327,42.47,3.0345]},"2030":{"male":[1637.7765,1713.2715,1832.984,2040.9705,2279.8985,2181.292,1942.357,1814.1245,1914.97,1946.029,1986.051,2090.045,1972.35,1899.813,1710.645,1487.01,1195.93,555.1705,253.203,64.9335,7.001],"female":[1566.493,1646.691,1755.9805,1955.78,2199.7965,2098.178,1898.045,1837.6185,2002.461,2054.0,2037.488,2173.878,2141.5995,2127.8505,2011.9655,1859.6895,1609.045,863.398,511.013,196.3395,34.5555]},"2040":{"male":[1789.277,1715.5615,1663.03,1757.8595,2022.2515,2245.958,2288.641,2101.7525,1877.639,1763.0385,1859.0145,1869.05,1869.569,1914.88,1753.07,1610.9665,1314.123,908.8815,454.8135,88.9765,10.976],"female":[1709.004,1648.1205,1605.0695,1703.222,1971.988,2202.4975,2245.581,2045.535,1854.5335,1806.611,1971.5005,2014.2175,1982.677,2092.3745,2031.5915,1962.772,1740.745,1374.3825,833.944,221.7455,41.463]},"2050":{"male":[1766.8305,1835.661,1817.3725,1762.5935,1857.445,1971.9935,2039.8135,2171.661,2225.598,2051.7795,1828.604,1700.7195,1761.62,1730.044,1687.8585,1661.692,1397.5075,1048.149,544.3475,161.8405,22.6855],"female":[1687.447,1761.8705,1750.683,1707.23,1826.056,1958.378,2025.5265,2154.742,2204.6265,2016.939,1829.6885,1776.912,1926.048,1950.0935,1897.6435,1956.4075,1800.228,1516.3455,964.37,385.773,76.851]},"2060":{"male":[1641.268,1704.779,1794.726,1882.464,2011.3805,1977.253,1876.2435,1899.9545,1980.1295,2123.3145,2173.9705,1987.3505,1743.1075,1588.477,1611.587,1532.0605,1390.894,1138.8925,628.8895,210.379,30.9775],"female":[1568.1055,1637.337,1728.892,1820.7345,1971.1715,1962.379,1879.688,1911.1535,1985.923,2126.9225,2178.98,1988.304,1793.9445,1729.569,1857.3145,1846.4405,1719.5435,1570.776,1069.32,474.2515,101.4465]},"2070":{"male":[1680.71,1662.8265,1669.6915,1751.86,1988.3085,2096.766,2031.4185,1907.633,1820.1795,1857.512,1937.007,2063.2945,2082.9015,1871.392,1614.24,1432.7335,1366.171,1101.4165,679.0975,252.9645,40.5935],"female":[1605.2255,1597.2955,1610.004,1696.359,1948.6425,2075.24,2025.8465,1916.9615,1842.283,1886.6475,1965.0915,2101.069,2142.325,1943.7875,1742.495,1656.377,1714.6395,1537.8935,1094.8305,539.1555,128.019]},"2080":{"male":[1701.384,1726.5015,1708.137,1709.3125,1862.805,1964.4045,2006.1155,2025.4905,1974.4385,1866.4215,1782.5025,1809.521,1864.1005,1956.2235,1948.06,1714.67,1404.5875,1076.4785,715.404,271.0525,49.919],"female":[1624.808,1657.6595,1646.091,1655.6535,1828.964,1948.43,2000.4815,2027.942,1987.4855,1892.923,1824.2565,1866.9465,1937.5555,2061.764,2091.7215,1878.9035,1636.7445,1425.626,1157.75,584.7155,150.986]},"2090":{"male":[1624.154,1676.5355,1728.685,1773.1365,1902.6515,1923.5465,1881.1325,1893.4715,1949.7705,1984.7335,1937.457,1823.2085,1723.186,1727.199,1759.9265,1815.968,1730.784,1343.433,790.7815,293.05,58.714],"female":[1551.442,1610.2965,1665.614,1716.222,1866.5055,1909.259,1880.817,1900.767,1962.2125,2004.328,1970.411,1876.3775,1803.758,1839.5265,1902.3725,2008.276,1991.8375,1668.2185,1175.6225,597.2745,179.22]},"2100":{"male":[1615.259,1625.682,1649.7225,1721.8805,1921.3675,1984.031,1916.6865,1849.593,1823.935,1853.783,1914.8165,1943.0145,1879.9955,1750.596,1640.909,1623.204,1593.227,1469.3095,1033.442,409.145,74.004],"female":[1543.025,1562.02,1590.466,1667.5015,1883.9995,1966.2195,1913.717,1858.016,1840.7855,1876.9755,1946.0675,1989.1515,1952.105,1854.726,1779.552,1804.847,1833.5575,1826.88,1508.8655,781.334,211.144]}}}</script>
+<script>
+(function(){
+  const data = JSON.parse(document.getElementById('country-data').textContent);
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  const projColor = '#c9c2b5';
+  const ink = '#1a1a1a';
+  const muted = '#6b6b6b';
+  Chart.defaults.font.family = '-apple-system, "Helvetica Neue", Arial, sans-serif';
+  Chart.defaults.color = ink;
+  Chart.defaults.borderColor = 'rgba(0,0,0,0.06)';
+
+  const ind = data.indicators;
+  const years = ind.map(d => d.year);
+  const splitIndex = ind.findIndex(d => d.variant !== 'E');
+  const splitYear = splitIndex >= 0 ? ind[splitIndex].year : 2024;
+
+  // --- KPIs (current year = today's reference year, fall back to 2024) ---
+  const currentYear = 2024;
+  const cur = ind.find(d => d.year === currentYear) || ind[ind.length - 1];
+  const yr1950 = ind[0];
+  const yr2100 = ind[ind.length - 1];
+  function fmtPop(thousands) {
+    const m = thousands / 1000;
+    if (m >= 100) return m.toFixed(1) + 'M';
+    return m.toFixed(2) + 'M';
+  }
+  function fmtN(n, digits) { return n.toLocaleString(undefined, {maximumFractionDigits: digits||1, minimumFractionDigits: digits||1}); }
+  const kpis = [
+    {label: 'Population, ' + currentYear, value: fmtPop(cur.pop), sub: (cur.pop/yr1950.pop).toFixed(2) + '× the 1950 total'},
+    {label: 'Median age', value: fmtN(cur.medianAge, 1), sub: 'years'},
+    {label: 'Fertility rate', value: fmtN(cur.fertility, 2), sub: 'births per woman'},
+    {label: 'Life expectancy', value: fmtN(cur.lifeExp, 1), sub: 'years at birth'},
+    {label: 'Projected, 2100', value: fmtPop(yr2100.pop), sub: ((yr2100.pop/cur.pop - 1) * 100).toFixed(1) + '% vs. today'},
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k =>
+    `<div class="kpi"><div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div><div class="kpi-sub">${k.sub}</div></div>`
+  ).join('');
+
+  // --- Helper: split a series into estimate vs projection (overlapping point for continuity) ---
+  function splitSeries(values) {
+    const est = values.map((v,i) => i <= splitIndex ? v : null);
+    const proj = values.map((v,i) => i >= splitIndex - 1 && i >= splitIndex - 0 ? v : null);
+    // Just use null masking for projection
+    const projOnly = values.map((v,i) => i >= splitIndex ? v : null);
+    // make estimate include splitIndex (the first projection year) so lines connect
+    return { est: est, proj: projOnly };
+  }
+
+  // --- Population chart ---
+  const popMillions = ind.map(d => d.pop / 1000);
+  const popSplit = splitSeries(popMillions);
+  new Chart(document.getElementById('popChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        { label: 'Estimate', data: popSplit.est, borderColor: accent, backgroundColor: accent + '22', fill: true, tension: 0.25, pointRadius: 0, borderWidth: 2 },
+        { label: 'Projection', data: popSplit.proj, borderColor: accent, borderDash: [4,4], backgroundColor: projColor + '55', fill: true, tension: 0.25, pointRadius: 0, borderWidth: 2 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + 'M'
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { maxTicksLimit: 10, color: muted }, grid: { display: false } },
+        y: { title: { display: true, text: 'Population (millions)', color: muted }, ticks: { color: muted }, grid: { color: '#eeeae0' } }
+      }
+    }
+  });
+
+  // --- Vitals chart (birth vs death rate) ---
+  new Chart(document.getElementById('vitalChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        { label: 'Birth rate', data: ind.map(d => d.birthRate), borderColor: '#2a8a5c', backgroundColor: 'transparent', tension: 0.25, pointRadius: 0, borderWidth: 2 },
+        { label: 'Death rate', data: ind.map(d => d.deathRate), borderColor: '#b34a3a', backgroundColor: 'transparent', tension: 0.25, pointRadius: 0, borderWidth: 2 },
+        { label: 'Pop. growth (%)', data: ind.map(d => d.growth), borderColor: accent, backgroundColor: 'transparent', tension: 0.25, pointRadius: 0, borderWidth: 1.5, yAxisID: 'y1', borderDash: [3,3] },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 10, color: muted }, grid: { display: false } },
+        y: { title: { display: true, text: 'per 1,000 people', color: muted }, ticks: { color: muted }, grid: { color: '#eeeae0' } },
+        y1: { position: 'right', title: { display: true, text: 'growth (%)', color: muted }, ticks: { color: muted }, grid: { display: false } }
+      }
+    }
+  });
+
+  // --- Fertility chart ---
+  new Chart(document.getElementById('fertilityChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        { label: 'Fertility rate', data: ind.map(d => d.fertility), borderColor: accent, backgroundColor: accent + '15', tension: 0.25, pointRadius: 0, borderWidth: 2, fill: true },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toFixed(2) + ' children/woman' } },
+        annotation: false
+      },
+      scales: {
+        x: { ticks: { maxTicksLimit: 8, color: muted }, grid: { display: false } },
+        y: {
+          title: { display: true, text: 'children per woman', color: muted },
+          ticks: { color: muted },
+          grid: { color: '#eeeae0' },
+          suggestedMin: 1, suggestedMax: 4
+        }
+      }
+    },
+    plugins: [{
+      id: 'replacementLine',
+      afterDraw(chart) {
+        const {ctx, chartArea: a, scales: s} = chart;
+        const y = s.y.getPixelForValue(2.1);
+        if (y < a.top || y > a.bottom) return;
+        ctx.save();
+        ctx.strokeStyle = '#999';
+        ctx.setLineDash([3,3]);
+        ctx.beginPath(); ctx.moveTo(a.left, y); ctx.lineTo(a.right, y); ctx.stroke();
+        ctx.fillStyle = '#666'; ctx.font = '11px sans-serif';
+        ctx.fillText('replacement (2.1)', a.left + 8, y - 5);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // --- Life expectancy + median age ---
+  new Chart(document.getElementById('lifeChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        { label: 'Life expectancy', data: ind.map(d => d.lifeExp), borderColor: accent, backgroundColor: 'transparent', tension: 0.25, pointRadius: 0, borderWidth: 2, yAxisID: 'y' },
+        { label: 'Median age', data: ind.map(d => d.medianAge), borderColor: '#a36a00', backgroundColor: 'transparent', tension: 0.25, pointRadius: 0, borderWidth: 2, yAxisID: 'y1', borderDash: [4,3] },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 8, color: muted }, grid: { display: false } },
+        y: { title: { display: true, text: 'life expectancy (yrs)', color: muted }, ticks: { color: muted }, grid: { color: '#eeeae0' } },
+        y1: { position: 'right', title: { display: true, text: 'median age (yrs)', color: muted }, ticks: { color: muted }, grid: { display: false } }
+      }
+    }
+  });
+
+  // --- Age pyramid ---
+  const pyramidYears = Object.keys(data.pyramid).map(Number).sort((a,b)=>a-b);
+  const ageLabels = data.ageGroups;
+  const slider = document.getElementById('yearSlider');
+  const yearLabel = document.getElementById('yearLabel');
+  const meta = document.getElementById('pyramidMeta');
+  slider.max = pyramidYears.length - 1;
+  // default to 2024 if available, else middle
+  let defaultIdx = pyramidYears.indexOf(2020);
+  if (defaultIdx < 0) defaultIdx = Math.floor(pyramidYears.length / 2);
+  slider.value = defaultIdx;
+
+  let pyramidChart;
+  function renderPyramid(idx) {
+    const yr = pyramidYears[idx];
+    const p = data.pyramid[yr];
+    const male = p.male.map(v => -v);
+    const female = p.female.map(v => v);
+    yearLabel.textContent = yr;
+    const total = (p.male.reduce((a,b)=>a+b,0) + p.female.reduce((a,b)=>a+b,0));
+    const variant = yr <= splitYear ? 'estimate' : 'projection';
+    meta.textContent = `Total population ${(total/1000).toFixed(2)}M — ${variant}.`;
+    if (!pyramidChart) {
+      pyramidChart = new Chart(document.getElementById('pyramidChart'), {
+        type: 'bar',
+        data: {
+          labels: ageLabels,
+          datasets: [
+            { label: 'Male', data: male, backgroundColor: accent, borderWidth: 0 },
+            { label: 'Female', data: female, backgroundColor: '#c98a8a', borderWidth: 0 },
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12 } },
+            tooltip: {
+              callbacks: {
+                label: ctx => ' ' + ctx.dataset.label + ': ' + Math.abs(ctx.parsed.x).toFixed(0) + 'k'
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: false,
+              ticks: { color: muted, callback: v => Math.abs(v).toLocaleString() },
+              title: { display: true, text: 'thousands', color: muted },
+              grid: { color: '#eeeae0' }
+            },
+            y: { ticks: { color: muted }, grid: { display: false }, reverse: true }
+          }
+        }
+      });
+    } else {
+      pyramidChart.data.datasets[0].data = male;
+      pyramidChart.data.datasets[1].data = female;
+      pyramidChart.update('none');
+    }
+  }
+  slider.addEventListener('input', e => renderPyramid(parseInt(e.target.value, 10)));
+  renderPyramid(defaultIdx);
+})();
+</script>
+</body>
+</html>

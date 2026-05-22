@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graph Builder — multi-instance test</title>
+  <link rel="stylesheet" href="graph-builder.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1200px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Graph Builder — multi-instance test (segment 4.3 Activity 6 et al.)</h1>
+  <p class="hint">
+    Two independent widgets on one page. Each must keep its own state:
+    placing a vertex in one widget must not affect the other; mode
+    switches, color toggles, drags, and resets must scope per-widget.
+    The keyboard shortcuts (V / E / L / D / C / Esc) only fire when the
+    widget has focus — click a widget first.
+  </p>
+
+  <!-- Widget 1: default config, empty graph -->
+  <div class="gb-widget" data-problem='{
+    "title": "Widget 1 — default (empty)",
+    "viz": {}
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: pre-loaded triangle, fewer property sections (just summary +
+       connectivity + cycles + tree). Verifies sections-config and initialGraph
+       support. -->
+  <div class="gb-widget" data-problem='{
+    "title": "Widget 2 — triangle pre-loaded, minimal sidebar",
+    "viz": {
+      "sections": {
+        "bipartite": false,
+        "chromatic": false,
+        "degrees": false
+      },
+      "initialGraph": {
+        "vertices": [
+          { "id": 1, "x": 240, "y": 100, "label": "a" },
+          { "id": 2, "x": 140, "y": 270, "label": "b" },
+          { "id": 3, "x": 340, "y": 270, "label": "c" }
+        ],
+        "edges": [
+          { "from": 1, "to": 2 },
+          { "from": 2, "to": 3 },
+          { "from": 1, "to": 3 }
+        ]
+      }
+    }
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: bridges mode with the canonical 9-vertex bridge graph from
+       segment 4.5 Activity 6 — a K4-like piece of 5 vertices joined to a
+       triangle by a single bridge edge. Expected: 1 bridge (g–h), 2 cut
+       vertices (g and h, the endpoints of the bridge). δ(G) = 2. -->
+  <div class="gb-widget" data-problem='{
+    "title": "Widget 3 — bridges mode (9-vertex bridge graph)",
+    "viz": {
+      "mode": "bridges",
+      "sections": {
+        "bipartite": false,
+        "chromatic": false
+      },
+      "initialGraph": {
+        "vertices": [
+          { "id": 1, "x": 110, "y": 90,  "label": "a" },
+          { "id": 2, "x": 60,  "y": 200, "label": "b" },
+          { "id": 3, "x": 110, "y": 310, "label": "c" },
+          { "id": 4, "x": 220, "y": 310, "label": "d" },
+          { "id": 5, "x": 220, "y": 90,  "label": "e" },
+          { "id": 6, "x": 320, "y": 200, "label": "g" },
+          { "id": 7, "x": 460, "y": 200, "label": "h" },
+          { "id": 8, "x": 540, "y": 130, "label": "i" },
+          { "id": 9, "x": 540, "y": 270, "label": "j" }
+        ],
+        "edges": [
+          { "from": 1, "to": 2 }, { "from": 1, "to": 3 }, { "from": 1, "to": 4 }, { "from": 1, "to": 5 },
+          { "from": 2, "to": 3 }, { "from": 2, "to": 4 }, { "from": 2, "to": 5 },
+          { "from": 3, "to": 4 }, { "from": 3, "to": 5 },
+          { "from": 4, "to": 5 },
+          { "from": 5, "to": 6 },
+          { "from": 6, "to": 7 },
+          { "from": 7, "to": 8 }, { "from": 7, "to": 9 }, { "from": 8, "to": 9 }
+        ]
+      }
+    }
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 4: tree-eq mode. Pre-loaded with a 4-cycle so two of the six
+       lights are green at start (Connected, |E|=|V|−1 — wait, C4 has 4
+       edges and 4 vertices, so |E|=|V|, not |V|−1; only Connected is
+       green for C4). Removing one edge yields a tree (P4) and all six
+       light up. Suppress chromatic/bipartite/degrees to keep the sidebar
+       focused on the tree-property lights. -->
+  <div class="gb-widget" data-problem='{
+    "title": "Widget 4 — tree-eq mode (4-cycle, modify to make a tree)",
+    "viz": {
+      "mode": "tree-eq",
+      "sections": {
+        "bipartite": false,
+        "chromatic": false,
+        "degrees": false
+      },
+      "initialGraph": {
+        "vertices": [
+          { "id": 1, "x": 200, "y": 100, "label": "a" },
+          { "id": 2, "x": 350, "y": 200, "label": "b" },
+          { "id": 3, "x": 200, "y": 300, "label": "c" },
+          { "id": 4, "x": 50,  "y": 200, "label": "d" }
+        ],
+        "edges": [
+          { "from": 1, "to": 2 },
+          { "from": 2, "to": 3 },
+          { "from": 3, "to": 4 },
+          { "from": 1, "to": 4 }
+        ]
+      }
+    }
+  }'></div>
+
+  <script src="graph-builder.js"></script>
+
+</body>
+</html>

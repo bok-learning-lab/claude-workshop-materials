@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayesian Update Slider Explorer — multi-instance test</title>
+  <link rel="stylesheet" href="bayesian-update-slider-explorer.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1200px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 32px; }
+  </style>
+</head>
+<body>
+
+  <h1>Bayesian Update Slider Explorer — multi-instance test (segment 8.1 Activity 10)</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own slider state,
+    preset selection, and pinned snapshot. Moving a slider in one widget should
+    not change another. Try Guided Exercise 1 (reproduce Laura's posterior),
+    Guided Exercise 2 (slide the prior on the second widget), and Guided
+    Exercise 3 (drive the posterior toward 100% by lowering FPR).
+  </p>
+
+  <!-- Widget 1: Laura preset (default) -->
+  <div class="bus-widget" data-problem='{
+    "title": "Widget 1 — Laura: prior 0.0625, sens 0.90, FPR 0.05 → posterior ≈ 0.545",
+    "defaultPreset": "laura"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: Mammogram preset -->
+  <div class="bus-widget" data-problem='{
+    "title": "Widget 2 — Mammogram: prior 0.01, sens 0.90, FPR 0.05 → posterior ≈ 0.154",
+    "defaultPreset": "mammogram"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: Low-prior screening -->
+  <div class="bus-widget" data-problem='{
+    "title": "Widget 3 — Low-prior screening: prior 0.001, sens 0.95, FPR 0.05 → posterior ≈ 0.019",
+    "defaultPreset": "lowPrior"
+  }'></div>
+
+  <script src="bayesian-update-slider-explorer.js"></script>
+
+</body>
+</html>

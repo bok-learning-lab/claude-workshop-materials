@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What the machine cannot read — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>What the machine cannot read</h1>
+      <p class="subtitle">One of three day-4 projects in the Bok Center workshop. ← <a href="../index.md">Project landing page</a>. Companion docs: <a href="summary.md">Summary</a> · <a href="tradition.md">Tradition</a>.</p>
+
+      <p>The <a href="tradition.md">tradition</a> doc sketched two centuries of close textual work — philology from Lachmann to Pollock, translation theory from Schleiermacher to Venuti, the Sanskrit commentarial tradition, and the computational-humanities turn that ran mostly through English-language corpora and bumped against everything else. The question this companion takes up is what LLMs change about that work — and, with equal seriousness, what they do not. The temptation now is either to extrapolate enthusiastically from what worked in a demo or to dismiss the enterprise on the strength of what didn't. Neither response is adequate. A discipline this old and this self-aware deserves a more careful account.</p>
+
+      <h2>Two kinds of labor</h2>
+
+      <p>The labor of close textual work is heterogeneous, and a serious account of LLM use has to keep the distinctions sharp. There is work that is labor-intensive but conceptually well-defined; there is work that is interpretively irreducible; and there is a slippery middle.</p>
+
+      <p>The labor-intensive but conceptually well-defined work is what graduate students have always done. Collating multiple witnesses against a base text. Building a glossary of specialized terminology — Homeric formulae, the technical vocabulary of <em>rasa-dhvani</em> theory, the <em>alaṃkāra</em> names whose definitions vary across authors. Aligning translations to source passages line by line. Indexing a corpus by character, theme, motif, or trope. Cross-referencing commentaries — locating, in Mathurā Nāth Śāstrī's commentary on the <em>Rasagaṅgādhara</em>, where a given verse is taken up. Producing first-pass translations of routine passages. None of this work is unimportant — critical editions depend on it, teaching depends on it, subsequent interpretive work depends on it — but none is the discipline's defining intellectual activity.</p>
+
+      <p>The interpretively irreducible work is what scholars are paid to do. Deciding what a contested passage means. Weighing competing readings. Assessing a translator's solution to an untranslatable phrase. Identifying which figure of speech is operating in a Sanskrit verse where two or three <em>alaṃkāras</em> could be defended. Situating a passage in a literary tradition. Recognizing what is at stake in a translator's choice — that Emily Wilson's "Tell me about a complicated man" is a stance, that "complicated" for πολύτροπον is a defensible reading among others (Fagles' "the man of twists and turns," Lattimore's "the man of many ways," Lombardo's "the cunning hero"), and that the stakes of choosing among them have to do with what kind of figure Odysseus is taken to be. This is what makes humanistic scholarship recognizable as a form of knowledge.</p>
+
+      <p>The two corpora in this project illustrate both ends of the spectrum, and the slippery middle between them. Greek allows πολύτροπος to mean both "much-wandering" and "much-turning of mind" — physically itinerant and mentally versatile, even, as Daniel Mendelsohn has observed, morally slippery.<sup><a href="#fn-1" id="fnref-1">1</a></sup> Each translator picks a register; <em>polytropos</em> itself is the question, the translations are answers. Jagannātha's central concept, <em>ramaṇīyatā</em> — the captivating beauty that distinguishes <em>kāvya</em> from non-poetry — unfolds across hundreds of illustrative verses, mostly Jagannātha's own composition, and the <em>alaṃkāra</em> identifications in those verses are themselves contested. The same verse can be read under multiple <em>alaṃkāras</em> depending on which aspect the scholar foregrounds. Jagannātha himself spends much of the <em>Citra-mīmāṃsā-khaṇḍana</em> refuting earlier rhetoricians' identifications and proposing his own. The decision is interpretive, not mechanical.</p>
+
+      <p>Between these poles lies the slippery middle: tasks that look mechanical but contain interpretive moves. Transliterating an ambiguous Sanskrit <em>sandhi</em>, where the same string can resolve into different lexical sequences. Rendering a Homeric epithet that has no English equivalent (ῥοδοδάκτυλος Ἠώς, "rosy-fingered Dawn," whose translation Sam Anderson in the <em>New York Times</em> praised Wilson for varying — "When early Dawn revealed her rose-red hands"; "her fingers bloomed"; "touched the sky with roses"). Choosing whether to render a Greek aorist with an English simple past or perfect, given the temporal nuance of the surrounding narrative. These middle-case tasks are where LLM use becomes most fraught. A first-pass translation that smooths an ambiguity into a confident reading has already done interpretive work — and has done it without showing its working.</p>
+
+      <h2>Where LLMs actually help</h2>
+
+      <p>With those distinctions in place, the affordances fall out in a usefully constrained way. None of these is hypothetical; each is the kind of move a candidate skill in this project's <a href="../../projects/texts-and-translation/PLAN.md">PLAN.md</a> would make.</p>
+
+      <p><strong>Comparative translation at scale.</strong> When a scholar wants to see what fourteen translators did with <em>Odyssey</em> 1.1–10, the LLM can assemble the side-by-side reliably — given the translations are in its training corpus or are provided in context — with attribution to which translator made which choice. The scholar then reads the comparison and decides what those choices mean. The judgment is irreducibly the scholar's; the labor of pulling fourteen volumes off the shelf and lining them up is the LLM's. This is what the project's <code>/compare-translations</code> candidate would do.</p>
+
+      <p><strong>Glossary construction.</strong> Building a working glossary of Homeric formulaic epithets — πολύμητις Ὀδυσσεύς, πόδας ὠκύς Ἀχιλλεύς, βοῶπις Ἥρη — or of <em>rasa-dhvani</em> technical terminology is mechanical labor at production scale. The LLM produces a first pass; the scholar edits. The result is a teaching tool or research aid that previously required a research assistant or did not get built at all.</p>
+
+      <p><strong>Candidate identification of figures of speech.</strong> This is one of the more interesting affordances, because the validation is built into the corpus. The <em>Rasagaṅgādhara</em> itself defines each <em>alaṃkāra</em> and gives illustrative verses. An LLM can apply that taxonomy to other passages and produce candidate identifications, which the scholar accepts, rejects, or refines. The same text that defines the categories can audit the LLM's calls — a kind of internal consistency check that is harder to engineer for less codified literary traditions. This is what <code>/identify-figures</code> would do.</p>
+
+      <p><strong>Indexing across long corpora.</strong> Twenty-four books of the <em>Odyssey</em> across multiple translations; the eight <em>ānanas</em> of the <em>Rasagaṅgādhara</em>. Building per-passage indexes — by character, by theme, by figure, by intertextual reference — is precisely the labor LLMs are good at. The scholar provides categories and validates output.</p>
+
+      <p><strong>Non-Latin script handling.</strong> A meaningful affordance the older computational-humanities tradition often lacked. Frontier LLMs handle Devanāgarī, polytonic Greek, classical Chinese, Arabic, Hebrew, Tibetan, and Pali natively in their tokenizers, without OCR or transliteration loss. The constraint is that the model's competence varies dramatically across scripts and is generally worse for languages with less training data. Recent evaluations on Sanskrit, Ancient Greek, Latin, and Coptic confirm the pattern: uneven but non-trivial performance, systematically better for languages with more digital substrate.<sup><a href="#fn-2" id="fnref-2">2</a></sup><sup><a href="#fn-3" id="fnref-3">3</a></sup></p>
+
+      <p>The pattern these affordances share is that the LLM helps with what is <em>labor-bound</em>. It does not help — and should not be allowed to be seen as helping — with what is <em>judgment-bound</em>. The validation work, the choosing among readings, the situating in a tradition, the recognizing of what is at stake: these remain the scholar's.</p>
+
+      <h2>What we are not claiming</h2>
+
+      <p>The credibility of any account of LLM-assisted humanistic text work depends on what it says about the failure modes. The discipline that produced Lachmann and Pollock, Auerbach and Venuti, is well-equipped to detect over-claims; this overview should make none.</p>
+
+      <p><strong>The politics of training data.</strong> LLMs trained on existing translations, commentaries, and scholarly editions reproduce — and may launder — the editorial and ideological choices in those sources. The colonial-era European editions of South Asian texts (Müller, Whitney, Macdonell) are deeply embedded in the models' priors, in ways that are hard to audit and harder to undo. When an LLM produces a "first-pass translation" of a Sanskrit verse, it is producing a translation shaped by the assumptions of the philologists who edited the source texts it learned from. Adluri and Bagchee's <em>Philology and Criticism</em> (2018) makes the case that nineteenth-century German Indology baked specific racial and theological commitments into its editorial work; those commitments now propagate, automatically, through every LLM that learned to read Sanskrit on those editions.<sup><a href="#fn-4" id="fnref-4">4</a></sup></p>
+
+      <p><strong>Hallucinated citations.</strong> LLMs invent plausible-sounding bibliographic references. For philologically careful work, this is disqualifying without verification. A <em>Nature</em> analysis in early 2026 estimated that tens of thousands of 2025 publications may contain LLM-invented citations; a study of NeurIPS 2025 accepted papers identified approximately 100 fabricated citations across 53 of the 4,841 accepted papers, even though each was peer-reviewed by three to five experts.<sup><a href="#fn-5" id="fnref-5">5</a></sup> The implication for humanistic text work is that any LLM-mediated citation must be verified against the actual source.</p>
+
+      <p><strong>The "good enough translation" risk.</strong> LLM-produced translations of canonical texts are often good enough for casual reading and not nearly good enough for scholarly use. The boundary is easy to lose track of, especially in pedagogical settings. A student who reads an LLM translation of Sappho 1 alongside an Anne Carson and a Diane Rayor translation may not be in a position to see what is wrong with the LLM's rendering — and the LLM's confident, fluent prose makes the wrongness harder to detect than the awkwardness of a less polished but more accurate scholarly translation would.</p>
+
+      <p><strong>The colonial inheritance.</strong> Philological work on non-European traditions has a history, and automating the work without engaging that history risks reproducing it at scale. Pollock's "philology of the future" — a critical practice that knows its own history — is one articulation of what reflective practice might look like; it requires the scholar to keep asking what the LLM's confidence has been built out of.</p>
+
+      <p><strong>Access and corpus politics.</strong> Whose digital editions get used? Whose stay locked behind paywalls? Who pays for the API calls when faculty at well-resourced institutions can run LLM-assisted comparative work that faculty at less well-resourced institutions cannot? The Risam and Liu critique of digital humanities anticipated this in the 2010s; LLM-assisted text work raises the stakes. A two-tier humanities in which the scholars with API budgets work at one scale and the scholars without them work at another is not a humanities anyone should want.</p>
+
+      <p>The other day-4 projects sit in different relations to this kind of risk. The <a href="../interview-coding/affordance.md">interview-coding</a> project handles validity by foregrounding negative cases; the <a href="../physics-interactives/affordance.md">physics-interactives</a> project handles it by enforcing learning-goal-first design before any code is written. Close textual work needs the equivalent move — a discipline around the LLM's outputs that keeps the scholar, not the model, in the position of judgment. That is what the "first-pass collaborator" framing in this project's <a href="../../projects/texts-and-translation/CLAUDE.md">CLAUDE.md</a> is trying to name. Whether the discipline holds in practice is what the workshop is asking faculty to test.</p>
+
+      <hr>
+
+      <p><em>Texts and translation overview: <a href="summary.md">Summary</a> · <a href="tradition.md">Tradition</a> · <a href="affordance.md">Affordance</a>. Back to the <a href="../index.md">project landing page</a>.</em></p>
+
+      <ol class="footnotes">
+        <li id="fn-1">Mendelsohn, D. (2017). <em>An Odyssey: A Father, a Son, and an Epic</em>. New York: Knopf. <a href="#fnref-1">↩</a></li>
+        <li id="fn-2">Aralikatte, R., et al. (2025). "A Case Study of Cross-Lingual Zero-Shot Generalization for Classical Languages in LLMs." arXiv:2505.13173. <a href="#fnref-2">↩</a></li>
+        <li id="fn-3">Volk, M., et al. (2024). "Assessing Large Language Models in Translating Coptic and Ancient Greek Ostraca." <em>Proceedings of the 4th International Conference on Natural Language Processing for Digital Humanities (NLP4DH)</em>. <a href="#fnref-3">↩</a></li>
+        <li id="fn-4">Adluri, V., &amp; Bagchee, J. (2018). <em>Philology and Criticism: A Guide to Mahābhārata Textual Criticism</em>. London: Anthem Press. <a href="#fnref-4">↩</a></li>
+        <li id="fn-5">Ansari, S. (2026). "Compound Deception in Elite Peer Review: A Failure Mode Taxonomy of 100 Fabricated Citations at NeurIPS 2025." arXiv:2602.05930. <a href="#fnref-5">↩</a></li>
+      </ol>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># What the machine cannot read
+
+*One of three day-4 projects in the Bok Center workshop. ← [Project landing page](../index.md). Companion docs: [Summary](summary.md) · [Tradition](tradition.md).*
+
+The [tradition](tradition.md) doc sketched two centuries of close textual work — philology from Lachmann to Pollock, translation theory from Schleiermacher to Venuti, the Sanskrit commentarial tradition, and the computational-humanities turn that ran mostly through English-language corpora and bumped against everything else. The question this companion takes up is what LLMs change about that work — and, with equal seriousness, what they do not. The temptation now is either to extrapolate enthusiastically from what worked in a demo or to dismiss the enterprise on the strength of what didn't. Neither response is adequate. A discipline this old and this self-aware deserves a more careful account.
+
+## Two kinds of labor
+
+The labor of close textual work is heterogeneous, and a serious account of LLM use has to keep the distinctions sharp. There is work that is labor-intensive but conceptually well-defined; there is work that is interpretively irreducible; and there is a slippery middle.
+
+The labor-intensive but conceptually well-defined work is what graduate students have always done. Collating multiple witnesses against a base text. Building a glossary of specialized terminology — Homeric formulae, the technical vocabulary of *rasa-dhvani* theory, the *alaṃkāra* names whose definitions vary across authors. Aligning translations to source passages line by line. Indexing a corpus by character, theme, motif, or trope. Cross-referencing commentaries — locating, in Mathurā Nāth Śāstrī's commentary on the *Rasagaṅgādhara*, where a given verse is taken up. Producing first-pass translations of routine passages. None of this work is unimportant — critical editions depend on it, teaching depends on it, subsequent interpretive work depends on it — but none is the discipline's defining intellectual activity.
+
+The interpretively irreducible work is what scholars are paid to do. Deciding what a contested passage means. Weighing competing readings. Assessing a translator's solution to an untranslatable phrase. Identifying which figure of speech is operating in a Sanskrit verse where two or three *alaṃkāras* could be defended. Situating a passage in a literary tradition. Recognizing what is at stake in a translator's choice — that Emily Wilson's "Tell me about a complicated man" is a stance, that "complicated" for πολύτροπον is a defensible reading among others (Fagles' "the man of twists and turns," Lattimore's "the man of many ways," Lombardo's "the cunning hero"), and that the stakes of choosing among them have to do with what kind of figure Odysseus is taken to be. This is what makes humanistic scholarship recognizable as a form of knowledge.
+
+The two corpora in this project illustrate both ends of the spectrum, and the slippery middle between them. Greek allows πολύτροπος to mean both "much-wandering" and "much-turning of mind" — physically itinerant and mentally versatile, even, as Daniel Mendelsohn has observed, morally slippery.[^mendelsohn] Each translator picks a register; *polytropos* itself is the question, the translations are answers. Jagannātha's central concept, *ramaṇīyatā* — the captivating beauty that distinguishes *kāvya* from non-poetry — unfolds across hundreds of illustrative verses, mostly Jagannātha's own composition, and the *alaṃkāra* identifications in those verses are themselves contested. The same verse can be read under multiple *alaṃkāras* depending on which aspect the scholar foregrounds. Jagannātha himself spends much of the *Citra-mīmāṃsā-khaṇḍana* refuting earlier rhetoricians' identifications and proposing his own. The decision is interpretive, not mechanical.
+
+Between these poles lies the slippery middle: tasks that look mechanical but contain interpretive moves. Transliterating an ambiguous Sanskrit *sandhi*, where the same string can resolve into different lexical sequences. Rendering a Homeric epithet that has no English equivalent (ῥοδοδάκτυλος Ἠώς, "rosy-fingered Dawn," whose translation Sam Anderson in the *New York Times* praised Wilson for varying — "When early Dawn revealed her rose-red hands"; "her fingers bloomed"; "touched the sky with roses"). Choosing whether to render a Greek aorist with an English simple past or perfect, given the temporal nuance of the surrounding narrative. These middle-case tasks are where LLM use becomes most fraught. A first-pass translation that smooths an ambiguity into a confident reading has already done interpretive work — and has done it without showing its working.
+
+## Where LLMs actually help
+
+With those distinctions in place, the affordances fall out in a usefully constrained way. None of these is hypothetical; each is the kind of move a candidate skill in this project's [PLAN.md](../../projects/texts-and-translation/PLAN.md) would make.
+
+**Comparative translation at scale.** When a scholar wants to see what fourteen translators did with *Odyssey* 1.1–10, the LLM can assemble the side-by-side reliably — given the translations are in its training corpus or are provided in context — with attribution to which translator made which choice. The scholar then reads the comparison and decides what those choices mean. The judgment is irreducibly the scholar's; the labor of pulling fourteen volumes off the shelf and lining them up is the LLM's. This is what the project's `/compare-translations` candidate would do.
+
+**Glossary construction.** Building a working glossary of Homeric formulaic epithets — πολύμητις Ὀδυσσεύς, πόδας ὠκύς Ἀχιλλεύς, βοῶπις Ἥρη — or of *rasa-dhvani* technical terminology is mechanical labor at production scale. The LLM produces a first pass; the scholar edits. The result is a teaching tool or research aid that previously required a research assistant or did not get built at all.
+
+**Candidate identification of figures of speech.** This is one of the more interesting affordances, because the validation is built into the corpus. The *Rasagaṅgādhara* itself defines each *alaṃkāra* and gives illustrative verses. An LLM can apply that taxonomy to other passages and produce candidate identifications, which the scholar accepts, rejects, or refines. The same text that defines the categories can audit the LLM's calls — a kind of internal consistency check that is harder to engineer for less codified literary traditions. This is what `/identify-figures` would do.
+
+**Indexing across long corpora.** Twenty-four books of the *Odyssey* across multiple translations; the eight *ānanas* of the *Rasagaṅgādhara*. Building per-passage indexes — by character, by theme, by figure, by intertextual reference — is precisely the labor LLMs are good at. The scholar provides categories and validates output.
+
+**Non-Latin script handling.** A meaningful affordance the older computational-humanities tradition often lacked. Frontier LLMs handle Devanāgarī, polytonic Greek, classical Chinese, Arabic, Hebrew, Tibetan, and Pali natively in their tokenizers, without OCR or transliteration loss. The constraint is that the model's competence varies dramatically across scripts and is generally worse for languages with less training data. Recent evaluations on Sanskrit, Ancient Greek, Latin, and Coptic confirm the pattern: uneven but non-trivial performance, systematically better for languages with more digital substrate.[^aralikatte][^volk]
+
+The pattern these affordances share is that the LLM helps with what is *labor-bound*. It does not help — and should not be allowed to be seen as helping — with what is *judgment-bound*. The validation work, the choosing among readings, the situating in a tradition, the recognizing of what is at stake: these remain the scholar's.
+
+## What we are not claiming
+
+The credibility of any account of LLM-assisted humanistic text work depends on what it says about the failure modes. The discipline that produced Lachmann and Pollock, Auerbach and Venuti, is well-equipped to detect over-claims; this overview should make none.
+
+**The politics of training data.** LLMs trained on existing translations, commentaries, and scholarly editions reproduce — and may launder — the editorial and ideological choices in those sources. The colonial-era European editions of South Asian texts (Müller, Whitney, Macdonell) are deeply embedded in the models' priors, in ways that are hard to audit and harder to undo. When an LLM produces a "first-pass translation" of a Sanskrit verse, it is producing a translation shaped by the assumptions of the philologists who edited the source texts it learned from. Adluri and Bagchee's *Philology and Criticism* (2018) makes the case that nineteenth-century German Indology baked specific racial and theological commitments into its editorial work; those commitments now propagate, automatically, through every LLM that learned to read Sanskrit on those editions.[^adluri-bagchee]
+
+**Hallucinated citations.** LLMs invent plausible-sounding bibliographic references. For philologically careful work, this is disqualifying without verification. A *Nature* analysis in early 2026 estimated that tens of thousands of 2025 publications may contain LLM-invented citations; a study of NeurIPS 2025 accepted papers identified approximately 100 fabricated citations across 53 of the 4,841 accepted papers, even though each was peer-reviewed by three to five experts.[^ansari] The implication for humanistic text work is that any LLM-mediated citation must be verified against the actual source.
+
+**The "good enough translation" risk.** LLM-produced translations of canonical texts are often good enough for casual reading and not nearly good enough for scholarly use. The boundary is easy to lose track of, especially in pedagogical settings. A student who reads an LLM translation of Sappho 1 alongside an Anne Carson and a Diane Rayor translation may not be in a position to see what is wrong with the LLM's rendering — and the LLM's confident, fluent prose makes the wrongness harder to detect than the awkwardness of a less polished but more accurate scholarly translation would.
+
+**The colonial inheritance.** Philological work on non-European traditions has a history, and automating the work without engaging that history risks reproducing it at scale. Pollock's "philology of the future" — a critical practice that knows its own history — is one articulation of what reflective practice might look like; it requires the scholar to keep asking what the LLM's confidence has been built out of.
+
+**Access and corpus politics.** Whose digital editions get used? Whose stay locked behind paywalls? Who pays for the API calls when faculty at well-resourced institutions can run LLM-assisted comparative work that faculty at less well-resourced institutions cannot? The Risam and Liu critique of digital humanities anticipated this in the 2010s; LLM-assisted text work raises the stakes. A two-tier humanities in which the scholars with API budgets work at one scale and the scholars without them work at another is not a humanities anyone should want.
+
+The other day-4 projects sit in different relations to this kind of risk. The [interview-coding](../interview-coding/affordance.md) project handles validity by foregrounding negative cases; the [physics-interactives](../physics-interactives/affordance.md) project handles it by enforcing learning-goal-first design before any code is written. Close textual work needs the equivalent move — a discipline around the LLM's outputs that keeps the scholar, not the model, in the position of judgment. That is what the "first-pass collaborator" framing in this project's [CLAUDE.md](../../projects/texts-and-translation/CLAUDE.md) is trying to name. Whether the discipline holds in practice is what the workshop is asking faculty to test.
+
+---
+
+*Texts and translation overview: [Summary](summary.md) · [Tradition](tradition.md) · [Affordance](affordance.md). Back to the [project landing page](../index.md).*
+
+[^mendelsohn]: Mendelsohn, D. (2017). *An Odyssey: A Father, a Son, and an Epic*. New York: Knopf.
+[^aralikatte]: Aralikatte, R., et al. (2025). "A Case Study of Cross-Lingual Zero-Shot Generalization for Classical Languages in LLMs." arXiv:2505.13173.
+[^volk]: Volk, M., et al. (2024). "Assessing Large Language Models in Translating Coptic and Ancient Greek Ostraca." *Proceedings of the 4th International Conference on Natural Language Processing for Digital Humanities (NLP4DH)*.
+[^adluri-bagchee]: Adluri, V., &amp; Bagchee, J. (2018). *Philology and Criticism: A Guide to Mahābhārata Textual Criticism*. London: Anthem Press.
+[^ansari]: Ansari, S. (2026). "Compound Deception in Elite Peer Review: A Failure Mode Taxonomy of 100 Fabricated Citations at NeurIPS 2025." arXiv:2602.05930.
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

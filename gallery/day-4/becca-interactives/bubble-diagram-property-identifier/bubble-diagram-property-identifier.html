@@ -1,0 +1,73 @@
+<!--
+  Bubble Diagram Property Identifier (W33) — embeddable widget.
+
+  Embed shape: a single self-contained <div class="bdpi-widget"> per problem.
+  Edit the JSON inside the data-problem attribute to author a new problem.
+  Multiple <div class="bdpi-widget"> blocks can coexist on the same page.
+
+  data-problem JSON keys:
+    title    (string, optional) — bold heading shown above the intro.
+             Omit if no heading is wanted on the page.
+    intro    (HTML string, optional) — short instructional text shown above
+             the round chrome.
+    rounds   (Array<Round>, required) — one or more diagrams shown one at
+             a time. Each Round has:
+      label   (string, optional) — short label/title for this diagram,
+              e.g. "Diagram 1" or "A relation but not a function". Defaults
+              to "Diagram <n>".
+      A       (Array<string>, required) — labels for the elements of set A.
+              Only the length is used to render circles; the labels in A
+              are not rendered (the widget renders a₁, a₂, ... instead),
+              but the array length determines how many circles appear in
+              set A. Length must be in [0, 9]; pedagogically expect 2–5.
+      B       (Array<string>, required) — labels for the elements of set B,
+              same conventions as A.
+      arrows  (Array<[fromIdx, toIdx]>, required) — 0-indexed list of
+              (A-index, B-index) pairs representing the relation. The
+              widget computes which properties hold from this list; authors
+              do NOT specify expected properties.
+
+  Property semantics computed by the widget:
+    relation    — always true (any set of pairs is a relation).
+    partial     — every element of A has at most one outgoing arrow.
+    total       — every element of A has exactly one outgoing arrow.
+    injective   — no two elements of A point to the same element of B.
+    surjective  — every element of B is hit by at least one arrow.
+    bijective   — total AND injective AND surjective.
+-->
+<div class="bdpi-widget" data-problem='{
+  "title": "Bubble Diagram Property Identifier",
+  "intro": "<p>For each bubble diagram, check ALL the properties that apply, then click Check.</p>",
+  "rounds": [
+    {
+      "label": "Diagram 1 — a total bijection",
+      "A": ["a1", "a2", "a3"],
+      "B": ["b1", "b2", "b3"],
+      "arrows": [[0, 0], [1, 1], [2, 2]]
+    },
+    {
+      "label": "Diagram 2 — a relation that is not a function",
+      "A": ["a1", "a2"],
+      "B": ["b1", "b2"],
+      "arrows": [[0, 0], [0, 1], [1, 0]]
+    },
+    {
+      "label": "Diagram 3 — a partial injective function",
+      "A": ["a1", "a2", "a3"],
+      "B": ["b1", "b2", "b3"],
+      "arrows": [[0, 0], [2, 2]]
+    },
+    {
+      "label": "Diagram 4 — a total surjective function that is not injective",
+      "A": ["a1", "a2", "a3"],
+      "B": ["b1", "b2"],
+      "arrows": [[0, 0], [1, 0], [2, 1]]
+    },
+    {
+      "label": "Diagram 5 — the empty relation",
+      "A": ["a1", "a2"],
+      "B": ["b1", "b2"],
+      "arrows": []
+    }
+  ]
+}'></div>

@@ -1,0 +1,32 @@
+<!--
+  Jugs Sandbox (W24) — embeddable widget.
+
+  Each <div class="jugs-widget"> is mounted as an independent instance.
+  Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students click action buttons (fill, empty, pour) on a pair of
+  jugs and watch (a) the water levels in two visual jugs and (b) a grid
+  of all possible states (a, b) — visited cells light up green, goal cells
+  carry a yellow tint. A "Highlight reachable" toggle runs BFS from the
+  start state and shades all reachable cells (so students can answer
+  "which states are unreachable?"). An ordered path history records the
+  sequence of actions and visited states. Used in segment 5.3 Activity 5.
+
+  Two presets:
+    "die-hard" — (cap_a, cap_b) = (3, 5), goal value 4.
+                 The classic Die Hard with a Vengeance puzzle.
+    "coprime"  — (cap_a, cap_b) = (4, 9), goal value 1.
+                 The (4, 9) variant teased in activity task (d).
+
+  data-problem JSON keys (all optional):
+    title          (string) — bold heading; defaults to "Jugs Sandbox."
+    intro          (HTML)   — short intro card above the widget.
+    defaultPreset  ("die-hard" | "coprime") — initial preset; default "die-hard."
+
+  No document-wide IDs; everything scoped via root.querySelector.
+-->
+<div class="jugs-widget" data-problem='{
+  "title": "Jugs Sandbox",
+  "intro": "<p>Click action buttons to fill, empty, and pour between two jugs. The state grid on the right shows every possible (a, b) configuration; visited states light up in green, goal states are pre-highlighted in yellow. Try to reach a goal state, then explore which states are reachable from the start.</p>",
+  "defaultPreset": "die-hard"
+}'></div>

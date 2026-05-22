@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stars-and-Bars Distribution Builder — multi-instance test</title>
+  <link rel="stylesheet" href="stars-and-bars-builder.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1200px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Stars-and-Bars Distribution Builder — multi-instance test (segment 7.1 Activity 11)</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own k, n,
+    mode, and bar positions. Dragging a bar in one widget must not affect
+    the others; pressing Next in one must not advance the others.
+  </p>
+
+  <!-- Widget 1: 2020 ice-cream scooper example (k=3, n=5) -->
+  <div class="sb-widget" data-problem='{
+    "title": "Widget 1 — 2020 scooper (k=3, n=5; expect 35 configs)",
+    "defaultK": 3,
+    "defaultN": 5,
+    "defaultMode": "scooper"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: 2026 slushy example (k=6, n=4) -->
+  <div class="sb-widget" data-problem='{
+    "title": "Widget 2 — 2026 slushy (k=6, n=4; expect 84 configs)",
+    "defaultK": 6,
+    "defaultN": 4,
+    "defaultMode": "slushy"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: bijection edge cases — k=0 and n=1 should both produce 1 config without crashing -->
+  <div class="sb-widget" data-problem='{
+    "title": "Widget 3 — bijection view (try k=0 and n=1 edge cases)",
+    "defaultK": 12,
+    "defaultN": 5,
+    "defaultMode": "bijection"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 4: Practice mode — 3 problems, defaults to Practice. Sliders
+       are relabeled "stars" and "bars" in this mode, and viewMode per
+       problem lets slushies use the slushy view while abstract problems
+       use the generic bijection view. -->
+  <div class="sb-widget" data-problem='{
+    "title": "Widget 4 — Practice (set the right stars and bars)",
+    "defaultK": 0,
+    "defaultN": 1,
+    "defaultLearnMode": "practice",
+    "practiceProblems": [
+      { "statement": "12 donuts from 5 kinds. How many distinct selections?", "k": 12, "n": 5, "objectsLabel": "donuts", "typesLabel": "kinds", "viewMode": "bijection" },
+      { "statement": "6 slushies from 4 colors. How many distinct orders?", "k": 6, "n": 4, "objectsLabel": "slushies", "typesLabel": "colors", "viewMode": "slushy" },
+      { "statement": "Distribute 10 identical candies among 3 children. How many distributions?", "k": 10, "n": 3, "objectsLabel": "candies", "typesLabel": "children", "viewMode": "bijection" }
+    ],
+    "maxK": 12
+  }'></div>
+
+  <script src="stars-and-bars-builder.js"></script>
+
+</body>
+</html>

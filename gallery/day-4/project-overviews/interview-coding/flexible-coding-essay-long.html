@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From Index Cards to Indexed Codes: Flexible Coding, Its Methodological Lineage, and Its LLM-Assisted Successors — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>From Index Cards to Indexed Codes: Flexible Coding, Its Methodological Lineage, and Its LLM-Assisted Successors</h1>
+      <p class="subtitle">A contextualizing essay for faculty workshop participants. Companion piece to a live demo of LLM-assisted qualitative coding built around Deterding &amp; Waters (2021).</p>
+
+      <hr>
+
+      <h2>Part 1 — The methodological tradition Deterding &amp; Waters are addressing</h2>
+
+      <p>To understand why Nicole Deterding and Mary Waters' 2021 paper matters, it helps to remember what qualitative coding <em>was a reaction against</em> in the first place. In the 1950s and 1960s, mainstream American sociology was dominated by survey research and statistical analysis. Interview-based and ethnographic work — when it appeared in flagship journals at all — was frequently dismissed by methodological gatekeepers as "biased, impressionistic, and anecdotal" (Glaser &amp; Strauss, 1967, p. 16). Barney Glaser and Anselm Strauss's <em>The Discovery of Grounded Theory</em> (1967) was the seminal response: a book-length argument that qualitative inquiry could be systematic, replicable, and theory-generating if researchers worked through their data in a disciplined sequence of comparisons, eventually building from concrete observation toward formal theory. The book gave qualitative sociologists a procedural answer to positivist criticism, and that answer has structured graduate methods training for nearly sixty years.</p>
+
+      <p>The procedural core that emerged — taught in essentially the same form today in qualitative methods seminars from sociology to nursing to education — is the <em>open–axial–selective</em> coding pipeline. A researcher reads transcripts line by line, attaching short interpretive labels ("open codes") to small chunks of text. Open codes are then clustered into broader conceptual categories ("axial codes"). Finally, the analyst identifies the one or two categories that organize the rest into a coherent theoretical argument ("selective codes"). Memos written along the way trace the analyst's reasoning. The constant comparative method — comparing each new instance to the codes already developed, refining as one goes — is the engine that runs through all three stages. The work was originally imagined as the activity of a lone scholar, working slowly, surrounded by paper.</p>
+
+      <p>Grounded theory was never a single thing, however. By the early 1990s, Glaser and Strauss had publicly split over what the method demanded. Strauss and Juliet Corbin's <em>Basics of Qualitative Research</em> (1990) introduced a more elaborate set of procedural scaffolds — the "coding paradigm," conditional/consequential matrices — that Glaser (1992) attacked as a betrayal of pure induction. The Glaser–Strauss split was real and methodologically substantive: Glaser continued to defend pure induction in subsequent monographs (1998, 2005), while Strauss and Corbin pursued a more systematic, validation-oriented procedural model that has been the dominant teaching version in much of North America for thirty years. Kathy Charmaz (2000, 2006) then carved out a third position: <em>constructivist</em> grounded theory, which preserves the procedural rigor but rejects the realist epistemology, treating codes as researcher constructions rather than as discoveries lying in the data. Charmaz's variant remains the most widely taught version of grounded theory in North American graduate programs today, and any honest discussion of qualitative coding has to credit it as a vital, ongoing tradition rather than as a relic.</p>
+
+      <p>What unites all three branches is a particular relationship between method and <em>technology</em>. The line-by-line coding workflow was designed for paper. Glaser and Strauss imagined the analyst with coloured pens, scissors, and index cards spread across a dining-room table, physically grouping snippets of transcript into stacks. When word processing arrived in the 1980s and qualitative data analysis (QDA) software — NVivo, ATLAS.ti, MAXQDA, Dedoose — arrived in the 1990s and 2000s, the software designers faced a path-dependent choice: rebuild qualitative analysis around the affordances of databases and full-text search, or replicate the dining-room table in electronic form. They chose the latter. The "code" in NVivo is, functionally, a digital index card. The interface privileges line-by-line tagging because that is what graduate seminars taught researchers to expect. This is Deterding and Waters's central technological observation: "Qualitative coding procedures emanating from grounded theory were limited by technologies of the 1960s: colored pens, scissors, and index cards. Today, electronic documents can be flexibly stored, retrieved, and cross-referenced using qualitative data analysis (QDA) software" — but the software has, until recently, faithfully reproduced the workflow of the older technology rather than exploiting what databases can actually do. Full-text retrieval, faceted search, relational joins between respondent attributes and coded passages: all of these are trivially supported by the underlying storage layer of any modern QDA package, and almost none are the <em>first</em> thing a graduate student is taught to use.</p>
+
+      <p>There is a second, deeper inheritance issue: what Loïc Wacquant (2002) called the "epistemological fairytale" of grounded theory. The fairytale is that researchers can enter the field as theoretical blank slates and let categories emerge purely from the data. Practically every working qualitative researcher knows this is not how research happens. Interview protocols are designed with prior theoretical commitments. Recruitment criteria reflect what the researcher already thinks matters. The literature review precedes — not follows — the field. Yet the rhetorical convention has been to describe analysis as "inductive" or "emergent" and to leave the antecedent theoretical scaffolding implicit. Deterding and Waters's empirical contribution is to document this gap quantitatively: in their content analysis of 98 ASA-sponsored articles using interview methods, 55% used the language of induction or emergence, but only a small minority specified what their actual coding procedure had been. The fairytale, in other words, is not just an epistemological problem; it is a transparency problem. Honored more in citation than in actual practice, the rhetoric of pure induction has obscured what working researchers actually do, which is the iterative, theoretically informed, partially deductive work of trying to understand a phenomenon they already cared about before they started.</p>
+
+      <p>To make Part 3 of this essay coherent, two further traditions need brief introduction, because they will turn out to anticipate Deterding and Waters's proposal more closely than the grounded-theory mainstream did.</p>
+
+      <p><strong>Framework analysis</strong>, developed by Jane Ritchie and Liz Spencer at Britain's National Centre for Social Research in the late 1980s and published in 1994, was designed from the start for <em>applied policy research</em> — that is, for large, team-based projects with deliverables on a deadline. Its five-stage workflow — familiarization, thematic framework identification, <em>indexing</em>, charting, and mapping/interpretation — explicitly places indexing before analytic charting. The thematic framework is allowed to be informed by prior research questions; the indexing pass applies broad topical labels to whole transcripts; analytic charting and interpretation come later. Framework analysis was developed by researchers at the Qualitative Research Unit at the National Centre for Social Research in the United Kingdom in the late 1980s for use in large-scale policy research, and it is now widely used across health research, social policy, and applied evaluation. The relevance to Deterding and Waters is direct: framework analysis has been doing indexing-before-analysis in UK health services research for thirty years. The Deterding and Waters proposal is, in a real sense, importing into mainstream US sociology a workflow that adjacent communities of qualitative researchers had already routinized.</p>
+
+      <p><strong>Thematic analysis</strong> as codified by Virginia Braun and Victoria Clarke (2006) is the other workhorse method to know. It is less prescriptive than grounded theory and less rigid than framework analysis, and partly for that reason it has become the default coding method in psychology, health research, and education. Braun and Clarke explicitly distinguish <em>theme</em> from <em>code</em> and require analysts to be transparent about whether their themes are inductively or theoretically generated.</p>
+
+      <p>Adjacent traditions worth naming in passing: Stefan Timmermans and Iddo Tavory's (2012) <em>abductive analysis</em>, which argues that meaningful theoretical innovation requires neither pure induction nor pure deduction but the Peircean third path of abduction — Tavory and Timmermans note that "induction does not logically lead to novel theoretical insights" and propose that abduction, rather than induction, should be the guiding principle of empirically based theory construction; Jonathan Smith's interpretive phenomenological analysis (Smith, 1996), oriented to the texture of individual experience; Catherine Riessman's narrative analysis (Riessman, 2008), which insists on preserving sequential and narrative form; and Matthew Miles and A. Michael Huberman's (1994) display-matrix approach, which prefigures the indexing logic in important ways by organizing coded passages into cross-case matrices rather than into hierarchical code trees. Each of these traditions does something different on a transcript: framework analysis tags by topic, thematic analysis tags by theme, IPA tags by experiential structure, narrative analysis preserves sequential form, abductive analysis treats surprises as the analytic engine. The Deterding–Waters proposal sits inside this diverse field, not in opposition to it. The point is not that grounded theory is wrong, nor that thematic analysis is wrong, nor that any of these traditions is wrong. The point is that the <em>coding</em> prescriptions inherited from 1967 were shaped by the technological and labor realities of that decade, and the technological and labor realities of contemporary interview research are different.</p>
+
+      <h2>Part 2 — What Deterding &amp; Waters propose, and why now</h2>
+
+      <p>Deterding and Waters's argument has three structural moves: a diagnosis, a redesign, and a defense.</p>
+
+      <p>The diagnosis is empirical. They content-coded interview-based studies in flagship sociology journals and found that contemporary practice has drifted decisively away from the grounded-theory template. Sample sizes have grown — their journal sample had a median N of 55 and a maximum of 208 — well past the point at which line-by-line open coding by a single researcher remains tractable. Coding is increasingly done by teams of graduate students and postdocs rather than by lone investigators. Interview studies are increasingly nested inside mixed-methods designs where the interview data must be made commensurable with survey or administrative data. None of these conditions was foreseen in the 1967 framework, and none is well served by it. "We argue the oft-cited grounded theory framework poorly fits many features of contemporary sociological interview studies, including large samples, coding by teams, and mixed-method analysis. The grounded theory approach also hampers transparency and does not facilitate reanalysis or secondary analysis of interview data" (Deterding &amp; Waters, 2021).</p>
+
+      <p>The redesign is a three-stage workflow. <strong>Stage 1 is indexing</strong>: applying broad, mostly topical codes anchored to the sections of the interview protocol itself. If the protocol had a block of questions on workplace experiences, the index code is "workplace." Indexing is fast, systematic, and high-reliability across coders because the categories are coarse and protocol-anchored rather than interpretively delicate. The work that the line-by-line first pass was supposed to do — making the corpus searchable and navigable — is done here, but with a unit of analysis sized to the affordances of QDA software rather than to those of index cards. Indexing is, importantly, not analysis; it is the prerequisite for analysis. Deterding and Waters are clear that researchers who confuse indexing with analytic coding will produce flat, descriptive findings that miss the interpretive contribution interviews are uniquely positioned to make.</p>
+
+      <p><strong>Stage 2 is analytic coding</strong>: applying interpretive codes that bear on the eventual argument, but doing so <em>within</em> the indexed sections rather than across the entire corpus. If the analyst is working on a theme of "moral worth at work" inside the workplace index code, they apply analytic codes there. This is where researcher judgment lives. It is slower than indexing, lower-agreement across coders, and rightly so: it is interpretive work, not bookkeeping. The crucial structural point is that the analytic codes can be developed against a manageable subset of the data — every passage with the workplace index code — rather than against the entire transcribed corpus. The analyst can read deeply where it matters, without having to read everything deeply.</p>
+
+      <p><strong>Stage 3 is validation</strong>: refining the analytic typology by checking it against the indexed corpus, with particular attention to negative cases. The typology is treated as provisional until it can account for every relevant instance or has principled grounds for excluding outliers. Deterding and Waters explicitly endorse the Blee (2009) standard — that divergent data should not be discounted without a clear rationale — and ground their validity machinery in the older qualitative tradition of Katz (1982) and Luker (2008) on negative-case analysis. The move is not to suppress disconfirming evidence but to engage it systematically.</p>
+
+      <p>Embedded in this redesign is a careful taxonomy of three <em>kinds</em> of codes that play different roles and admit different levels of mechanization: <strong>attributes</strong> (respondent-level demographic and contextual variables like age, occupation, race, region — what survey methodology would simply call covariates), <strong>index codes</strong> (broad protocol-anchored topical anchors), and <strong>analytic codes</strong> (interpretive concepts that drive the eventual argument). The distinction is doing crucial work and will be central to Part 3. Attributes are essentially mechanical to record. Index codes are systematizable. Analytic codes are where the researcher's judgment is irreducible.</p>
+
+      <p>The defense is methodological. Deterding and Waters argue that the legitimate goals of grounded theory — systematic engagement with the data, theoretical traction, defensibility against the old positivist charge of impressionism — are <em>better</em> served by the three-stage workflow than by line-by-line open coding for studies of contemporary scale. Construct validity is established through iterative typology refinement, in the manner of Deterding's (2015) own work on instrumental, expressive, and mixed orientations toward post-recession education. Theoretical validity is established through exhaustive engagement with negative cases. Transparency is established through reportable, replicable indexing decisions. What flexible coding asks of the researcher is theoretical engagement <em>before</em> fieldwork — not in defiance of induction but as honest accounting of what interview researchers actually do.</p>
+
+      <p>They are also explicit about limits. Flexible coding is not appropriate for small-N projects (their floor is roughly N = 30), nor for purely phenomenological work where the texture of individual accounts is the entire point, nor for projects in which interview snippets serve mainly as illustrative supplements to a quantitative argument. The method is for medium-to-large semi-structured interview studies aimed at producing portable, defensible findings — a band of practice that happens to describe an enormous share of contemporary social science qualitative work, but not all of it. Charmaz's constructivist grounded theory remains the right tool for projects of a different shape, as does narrative analysis for projects where preserving the arc of individual stories is the entire methodological commitment. Deterding and Waters do not pretend otherwise; flexible coding is a method for a specific kind of study, and the explicit naming of when <em>not</em> to use it is part of what makes the proposal honest.</p>
+
+      <p>What flexible coding asks of the researcher, in the end, is honest accounting. The interview protocol embodies prior theoretical commitments. The index codes inherit those commitments. The analytic codes refine them. The validity work checks them. None of this is a betrayal of grounded inquiry; it is what grounded inquiry has actually looked like, for most working researchers, for at least a generation. The proposal is to stop performing emergence and start documenting reasoning.</p>
+
+      <h2>Part 3 — Where LLMs extend the tradition, and into which adjacent fields</h2>
+
+      <p>The Deterding and Waters framework maps onto LLM affordances with unusual cleanliness, because the moves it proposes are precisely the moves that scale poorly under human-only labor at N &gt; 50. The mapping is not a happy accident; it follows from the structure of what indexing, analytic coding, and validation each ask of the analyst. The framework was developed without LLMs in view — the paper appears in 2018 online and 2021 in print, before the post-GPT-3 inflection — but the three-stage architecture happens to factor the work in a way that aligns almost line-for-line with what contemporary language models do well and where they should not be trusted.</p>
+
+      <h3>Stage by stage</h3>
+
+      <p><strong>Indexing at scale</strong> is the most LLM-tractable move in the workflow. The task — assign one or more of a small set of protocol-anchored topic codes to a passage — is precisely what contemporary instruction-tuned language models are reliable at when given a clear codebook. Tai and colleagues (2024) document that LLM analysis can aid qualitative researchers by deductively coding transcripts and providing a systematic, reliable platform for code identification, with their study testing 160 iterations of LLM coding against human coders using traditional methods. Qiao et al. (2024) demonstrated that deductive coding using ChatGPT was comparable to traditional coding when provided with a clear codebook, structure, and contextual information. The empirical question — does an LLM assign the same index code that a trained human RA would assign, given the same protocol and codebook — is just that, an empirical question, and one that several recent studies have begun to answer with cautious affirmatives. Doing indexing well at scale opens up workflows that are currently prohibitive: secondary analysis of archived corpora at the Qualitative Data Repository at Syracuse, multi-investigator collaborations across institutions, longitudinal re-coding of long-running interview projects as theoretical questions evolve. The NSF, NIH, and major foundations are increasingly mandating qualitative data archiving; the gap between the existence of an archive and the practical accessibility of its contents is, in part, an indexing problem. An indexed corpus is a navigable corpus; a transcribed-but-unindexed corpus is a black box that few secondary analysts will ever crack open.</p>
+
+      <p><strong>Analytic coding under researcher control</strong> is the move where care is most warranted. The strongest framing — and the only one defensible to a senior methodologist — is that the LLM applies <em>the researcher's analytic codes</em> to indexed sections, not that it discovers analytic themes. The researcher writes the codebook. The researcher refines it through iterative reading of a manageable subset of the corpus. The LLM then applies those codes to the rest, and the researcher reviews disagreements and edge cases. Than and colleagues (2025), updating "The Future of Coding" for the LLM era, examine whether instruction-tuned generative LLMs can replicate and reliably augment the traditional iterative qualitative process of alternating between deductive and inductive analysis when annotating complex social science textual data, with explicit reference to Deterding and Waters' flexible coding framework. The verb to refuse, across the entire workflow, is <em>discover</em>. The verb to keep is <em>apply</em>. The analytic insight remains the researcher's, and the trace of how it was developed remains transparent and reviewable. A workflow that lets the LLM generate themes is a workflow that has confused indexing with analysis, in precisely the way Deterding and Waters warn against in the human case.</p>
+
+      <p><strong>Validation through exhaustive negative-case hunting</strong> is where the LLM contribution is most novel and most defensible. The Katz–Luker–Blee tradition has long demanded that analysts engage seriously with cases that diverge from the emerging pattern. At N = 200, doing this exhaustively by hand is essentially impossible; in practice, "engagement with negative cases" has often meant engagement with the negative cases the analyst happened to notice. An LLM can systematically surface every passage in the corpus that the proposed typology fails to accommodate, and the analyst can then judge each one. The reliability question shifts from "did the researcher think hard enough?" to "given the typology and the corpus, what did the search return?" — an answerable question rather than an article of methodological faith. This is, in important ways, the move that has been least available to qualitative researchers historically, and the one where LLM assistance is most clearly augmenting rather than substituting. The analyst still decides whether the negative case is a genuine disconfirmation, an edge case, or a misclassification. The LLM only makes sure the cases reach the analyst's desk.</p>
+
+      <p><strong>Transparency and methods-section reporting</strong> is the unglamorous but practically consequential affordance. Deterding and Waters's central empirical finding is that 17.3% of the interview articles in their ASA-journal sample described no coding procedure at all, and only 39.7% mentioned which QDA software they used. The reporting gap is enormous, and most of it is not malice; it is the difficulty of reconstructing months of distributed analytic decisions after the fact. If coding decisions are made through a tool that logs the codebook version, the indexed sections, the analytic prompts, and the human override points, an auto-summarized methods report becomes a reasonable expectation rather than a virtuous afterthought. This is a small but significant shift in what counts as good qualitative practice: not just doing the work transparently, but having the receipts.</p>
+
+      <h3>Beyond sociology</h3>
+
+      <p>The same affordances reach into adjacent fields, with the specific match depending on what each field's coding work typically looks like.</p>
+
+      <p><strong>Anthropology</strong> sits closest to sociology methodologically, but with an internal tension: thick description and systematic coding are not always compatible aims, and many ethnographers reasonably resist coding as a category mistake. Where anthropological projects do involve large semi-structured interview corpora — which is now common in applied medical anthropology, organizational ethnography, and policy-relevant work — the indexing-first move applies cleanly. The thick-description work is preserved at the analytic and writing stages; what the LLM helps with is the navigability of the corpus. The thick-description work is what anthropology has always been irreplaceably good at, and nothing in the flexible-coding proposal threatens it; what changes is the cost of treating a large interview corpus as something other than a source of illustrative quotes.</p>
+
+      <p><strong>Education research</strong> generates very large transcript volumes from teacher interviews, classroom observations, focus groups with students and parents, and increasingly from coded video. Mixed-methods designs are now standard in policy-relevant education work, and the pressure for codebooks that survive contact with multiple research assistants over multiple grant cycles is intense. Flexible coding maps almost without translation, and the LLM affordance most relevant is indexing for team workflows.</p>
+
+      <p><strong>Public health, nursing, and qualitative health services research</strong> are among the largest qualitative research literatures globally. They already use framework analysis heavily, often with NVivo or Dedoose as the platform. The Framework Method is described in Gale et al. (2013) as "a systematic and flexible approach to analysing qualitative data and is appropriate for use in research teams even where not all members have previous experience of conducting qualitative research." For this audience, Deterding and Waters's argument will look less like a revelation than like confirmation: of course indexing comes before analytic coding, of course teams need shared codebooks, of course large-N work needs to scale. The LLM contribution here is incremental rather than transformative, and the field is well placed to absorb it carefully because it already has the methodological vocabulary.</p>
+
+      <p><strong>Communication and media studies</strong> does message analysis, audience reception studies, and organizational communication research with substantial interview components. Content-analytic traditions in this field already have a long history of reliability-coded categorical work; the move toward LLM-assisted application of codebooks is, in some ways, simply more of what the field already does.</p>
+
+      <p><strong>HCI and UX research</strong> is methodologically pragmatic and has been quickest to engage with LLMs in qualitative work, partly because the field overlaps with the people building the tools. Recent CHI workshops have built on this work, leveraging a new generation of LLMs to create tools for qualitative researchers that bear researcher goals in mind, like agency over the coding process or convergent discussion on coding among collaborators (Overney et al., 2024). The risk in this community is the opposite of the risk elsewhere: not under-adoption but over-confidence, with LLM-coded findings used to make product decisions before the reliability questions have been answered.</p>
+
+      <p><strong>Marketing and consumer research</strong> runs methodologically parallel to academic interview research but at higher volume, lower transparency, and faster turnaround. The flexible-coding move would benefit this community, though the publication incentives that drive transparency in academic work are weaker.</p>
+
+      <p><strong>Political science</strong> does interpretive policy analysis, elite interviews, and oral histories. Elite-interview work in particular has often been single-investigator and idiosyncratically coded; the indexing-first move would substantially improve the comparability of findings across studies.</p>
+
+      <p><strong>Organizational and management research</strong> has a long tradition of qualitative case-study work (Eisenhardt 1989; Yin 2014) with codebook-driven analysis. The fit is straightforward; the main barrier is field-specific norms around what counts as evidence in a top management journal, not methodological capacity.</p>
+
+      <p><strong>Religious studies, area studies, and language-community ethnography</strong> introduce an affordance the original Deterding and Waters paper does not address: <strong>translation-assisted coding for non-English transcripts</strong>. Contemporary multilingual LLMs can produce English-language indexing of source-language transcripts with a fidelity that simply did not exist a decade ago, and they can do so while preserving the original-language text alongside the indexed translation. For researchers working in communities where the publishable target audience is English-reading but the data are not, this is a genuinely novel capability. It needs handling with care — the translation step introduces a second layer of interpretation that compounds with the coding step, and the model's competence varies enormously across languages and registers — but the alternative has often been not to do the work at all, or to outsource translation to bilingual research assistants whose interpretive choices are at least as opaque as a model's.</p>
+
+      <p><strong>Digital humanities-adjacent fields</strong> have been working out the conceptual machinery for distant reading and computational-text scholarship for two decades. The move from line-by-line coding to indexed coding has a direct structural analog in the digital humanities move from close to distant reading, and the methodological vocabulary developed there — for warranting computational findings, for combining computational and interpretive work, for citing both the algorithm and the analyst — is largely portable. Franco Moretti's distant-reading polemic and the subsequent corpus-stylistics literature have already worked through many of the legitimation questions that qualitative social scientists are about to face.</p>
+
+      <h3>The hard problems</h3>
+
+      <p>A senior methodologist will press on the difficulties, and the credibility of any LLM-assisted-coding proposal depends on naming them honestly.</p>
+
+      <p><strong>IRB, consent, and the data-transfer question.</strong> Researchers working with human subject data need to recognize that the act of entering participant data into a commercial LLM is a data transfer in and of itself, and the researchers should obtain consent for this process; IRB guidance in this area remains uneven (Davison et al., 2024). Most interview studies were consented under language that did not anticipate transmission of transcript text to third-party model APIs. For corpora collected under earlier consent regimes — including most archived data — the question of whether secondary analysts can use LLM-assisted methods is genuinely open and currently being worked out in IRB offices on a case-by-case basis. Locally hosted open-source models, increasingly viable for medium-sized projects on consumer-grade hardware, are one path through this; explicit consent language for new studies is another; institutional enterprise agreements with model vendors that contractually exclude training-on-input are a third. None of these is yet the field default, and the question of what becomes the default will shape qualitative research practice for the next decade.</p>
+
+      <p><strong>Reproducibility and version stability.</strong> Models change. The same prompt run against the same transcript on the same model name, six months later, can produce a different coding. This is a problem for replication and a problem for longitudinal work. Pinning to specific model versions, archiving prompts and codebooks alongside data, and treating the model as a versioned dependency — much as computational scientists already do with software environments — are partial answers. The field will need to develop conventions for what counts as adequate versioning information in a methods section, and journals will need to decide what they expect.</p>
+
+      <p><strong>Researcher trust.</strong> How does one convince a peer reviewer that what the LLM did is what a careful human would have done? The honest answer is: by reporting reliability metrics calibrated against a subset of human-coded transcripts, and by showing that the analytic insights are reviewable and reasonable on inspection. The field will need to develop a shared vocabulary for this kind of reporting, and several recent methodological papers are beginning to do that work (Than et al. 2025; Tai et al. 2024; Misra et al. 2026). The model is not exempt from the requirement that coding decisions be defensible; the model is just a coder whose defenses are partially externalizable as code and prompt.</p>
+
+      <p><strong>The construct-validity feedback loop.</strong> This is the most interesting hard problem and the one any senior qualitative methodologist might actually press on. Deterding and Waters's validity machinery assumes the researcher is reading enough of the corpus, with enough care, that they can <em>feel</em> when their typology stops fitting. If indexing is LLM-mediated, does the researcher still develop that tacit feel? The answer is probably: only if the workflow is designed to preserve it — if the researcher is required to read fully and code by hand some calibration subset before the LLM extends their work, and if the validation stage forces them back into close reading of the cases the typology fails on. The workflow that simply hands transcripts to a model and accepts the output undermines the very judgment that gives flexible coding its warrant. This is not a problem that will solve itself; it has to be designed for, and the design choices a research group makes here are arguably more consequential than which model they use.</p>
+
+      <p><strong>The labor and credit question.</strong> Line-by-line coding is partly a method and partly an enculturation ritual. Graduate students learn to <em>see</em> through it — to notice things in transcripts that they would not otherwise have noticed, to develop the slow eye that the working qualitative researcher needs. If the first-pass work is LLM-mediated, the question is what replaces the enculturation. The honest answer is probably not "nothing"; it is "different training," with more emphasis on codebook design, on validation reading, and on the analytic and writing stages where researcher judgment is irreplaceable. But the field has not yet worked out what that training looks like, and senior methodologists are right to worry about it. There is also a credit question: when a graduate RA does the indexing alongside an LLM, what is their contribution, and how is it acknowledged in the methods section and the authorship list?</p>
+
+      <p><strong>False fluency.</strong> LLMs can produce plausible-sounding methods text and plausible-sounding analytic memos that are not supported by the underlying data. This is the failure mode that should worry qualitative researchers most, because the social cues that usually catch sloppy coding — a graduate student who can't defend their choices in lab meeting, a methods section that reads as evasive — do not apply to model output. The mitigation is structural: every LLM-produced claim should be traceable to a specific passage, every analytic code should be reviewable against the corpus, and every methods-section paragraph should be auditable against the actual log of coding decisions. False fluency is the LLM-era version of the impressionism charge that the original grounded theorists were trying to defeat; the answer is, again, transparency and trace.</p>
+
+      <hr>
+
+      <p>Deterding and Waters wrote their paper to liberate a generation of interview researchers from a methodological inheritance that no longer fit the work they were actually doing. The LLM extension of their framework is, at its best, more of the same liberation: relieving the parts of the workflow that scale poorly, preserving the parts where researcher judgment is the whole point, and making transparent what was previously buried. None of this is automatic, and none of it requires accepting that machines do qualitative analysis. What it requires is the same thing flexible coding has always required: honest accounting of what the researcher does, what the tools do, and where the line between them runs.</p>
+
+      <p>The line is movable. It has moved before — from index cards to NVivo, from NVivo to the kind of indexing-first workflow Deterding and Waters describe. Where it moves next depends less on what the models can do than on what the methodological community decides counts as good work.</p>
+
+      <hr>
+
+      <h2>References</h2>
+
+      <p>Bail, C. A. (2014). The cultural environment: Measuring culture with big data. <em>Theory and Society, 43</em>(3–4), 465–482.</p>
+
+      <p>Blee, K. M. (2009). Access and methods in research on hidden communities: Reflections on studying U.S. organized racism. In <em>eResearch: Transformation in scholarly practice</em> (pp. 10–27). New York: Routledge.</p>
+
+      <p>Braun, V., &amp; Clarke, V. (2006). Using thematic analysis in psychology. <em>Qualitative Research in Psychology, 3</em>(2), 77–101.</p>
+
+      <p>Chakrabarti, P., &amp; Frye, M. (2017). A mixed-methods framework for analyzing text data: Integrating computational techniques with qualitative methods in demography. <em>Demographic Research, 37</em>, 1351–1382.</p>
+
+      <p>Charmaz, K. (2000). Grounded theory: Objectivist and constructivist methods. In N. K. Denzin &amp; Y. S. Lincoln (Eds.), <em>Handbook of qualitative research</em> (2nd ed., pp. 509–535). Thousand Oaks, CA: Sage.</p>
+
+      <p>Charmaz, K. (2006). <em>Constructing grounded theory: A practical guide through qualitative analysis</em>. London: Sage.</p>
+
+      <p>Christou, P. A. (2024). How to use artificial intelligence (AI) as a resource, methodological and analysis tool in qualitative research? <em>The Qualitative Report, 28</em>(7), 1968–1980.</p>
+
+      <p>Davison, R. M., Chughtai, H., Nielsen, P., Marabelli, M., Iannacci, F., van Offenbeek, M., Tarafdar, M., Trenz, M., Techatassanasoontorn, A. A., Díaz Andrade, A., &amp; Panteli, N. (2024). The ethics of using generative AI for qualitative data analysis. <em>Information Systems Journal, 34</em>(5), 1433–1439.</p>
+
+      <p>Deterding, N. M. (2015). Instrumental and expressive education: College planning in the face of poverty. <em>Sociology of Education, 88</em>(4), 284–301.</p>
+
+      <p>Deterding, N. M., &amp; Waters, M. C. (2021). Flexible coding of in-depth interviews: A twenty-first-century approach. <em>Sociological Methods &amp; Research, 50</em>(2), 708–739. https://doi.org/10.1177/0049124118799377</p>
+
+      <p>Eisenhardt, K. M. (1989). Building theories from case study research. <em>Academy of Management Review, 14</em>(4), 532–550.</p>
+
+      <p>Gale, N. K., Heath, G., Cameron, E., Rashid, S., &amp; Redwood, S. (2013). Using the framework method for the analysis of qualitative data in multi-disciplinary health research. <em>BMC Medical Research Methodology, 13</em>(117).</p>
+
+      <p>Glaser, B. G. (1992). <em>Basics of grounded theory analysis: Emergence vs. forcing</em>. Mill Valley, CA: Sociology Press.</p>
+
+      <p>Glaser, B. G., &amp; Strauss, A. L. (1967). <em>The discovery of grounded theory: Strategies for qualitative research</em>. Chicago: Aldine.</p>
+
+      <p>Hämäläinen, P., Oksanen, J., Tavast, M., &amp; Bhatnagar, P. (2024). LLMCode: A toolkit for AI-assisted qualitative data analysis. <em>Software repository</em>. https://github.com/PerttuHamalainen/LLMCode</p>
+
+      <p>Katz, J. (1982). <em>Poor people's lawyers in transition</em>. New Brunswick, NJ: Rutgers University Press.</p>
+
+      <p>Luker, K. (2008). <em>Salsa dancing into the social sciences: Research in an age of info-glut</em>. Cambridge, MA: Harvard University Press.</p>
+
+      <p>Miles, M. B., &amp; Huberman, A. M. (1994). <em>Qualitative data analysis: An expanded sourcebook</em> (2nd ed.). Thousand Oaks, CA: Sage.</p>
+
+      <p>Misra, R., Dahal, R., Kirk, B., Khan, R., Dogan, G., Chataut, R., &amp; Gyawali, P. (2026). Large language models in qualitative analysis: Comparing traditional and researcher-interpreted approaches. <em>International Journal of Qualitative Methods</em>. https://doi.org/10.1177/16094069261426100</p>
+
+      <p>Overney, C., et al. (2024). Sensemate: An accessible and beginner-friendly human-AI platform for qualitative data analysis. In <em>Proceedings of the 2024 ACM Conference on Intelligent User Interfaces</em>.</p>
+
+      <p>Qiao, S., et al. (2024). Comparing ChatGPT and trained human coders in qualitative deductive analysis. <em>Qualitative Health Research</em>, advance online publication.</p>
+
+      <p>Riessman, C. K. (2008). <em>Narrative methods for the human sciences</em>. Thousand Oaks, CA: Sage.</p>
+
+      <p>Ritchie, J., &amp; Spencer, L. (1994). Qualitative data analysis for applied policy research. In A. Bryman &amp; R. G. Burgess (Eds.), <em>Analyzing qualitative data</em> (pp. 173–194). London: Routledge.</p>
+
+      <p>Smith, J. A. (1996). Beyond the divide between cognition and discourse: Using interpretative phenomenological analysis in health psychology. <em>Psychology &amp; Health, 11</em>(2), 261–271.</p>
+
+      <p>Strauss, A., &amp; Corbin, J. (1990). <em>Basics of qualitative research: Grounded theory procedures and techniques</em>. Newbury Park, CA: Sage.</p>
+
+      <p>Tai, R. H., Bentley, L. R., Xia, X., Sitt, J. M., Fankhauser, S. C., Chicas-Mosier, A. M., &amp; Monteith, B. G. (2024). An examination of the use of large language models to aid analysis of textual data. <em>International Journal of Qualitative Methods, 23</em>. https://doi.org/10.1177/16094069241231168</p>
+
+      <p>Than, N., Fan, L., Law, T., Nelson, L. K., &amp; McCall, L. (2025). Updating "The Future of Coding": Qualitative coding with generative large language models. <em>Sociological Methods &amp; Research</em>. https://doi.org/10.1177/00491241251339188</p>
+
+      <p>Timmermans, S., &amp; Tavory, I. (2012). Theory construction in qualitative research: From grounded theory to abductive analysis. <em>Sociological Theory, 30</em>(3), 167–186.</p>
+
+      <p>Wacquant, L. (2002). Scrutinizing the street: Poverty, morality, and the pitfalls of urban ethnography. <em>American Journal of Sociology, 107</em>(6), 1468–1532.</p>
+
+      <p>Yin, R. K. (2014). <em>Case study research: Design and methods</em> (5th ed.). Thousand Oaks, CA: Sage.</p>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># From Index Cards to Indexed Codes: Flexible Coding, Its Methodological Lineage, and Its LLM-Assisted Successors
+
+*A contextualizing essay for faculty workshop participants. Companion piece to a live demo of LLM-assisted qualitative coding built around Deterding & Waters (2021).*
+
+---
+
+## Part 1 — The methodological tradition Deterding & Waters are addressing
+
+To understand why Nicole Deterding and Mary Waters' 2021 paper matters, it helps to remember what qualitative coding *was a reaction against* in the first place. In the 1950s and 1960s, mainstream American sociology was dominated by survey research and statistical analysis. Interview-based and ethnographic work — when it appeared in flagship journals at all — was frequently dismissed by methodological gatekeepers as "biased, impressionistic, and anecdotal" (Glaser & Strauss, 1967, p. 16). Barney Glaser and Anselm Strauss's *The Discovery of Grounded Theory* (1967) was the seminal response: a book-length argument that qualitative inquiry could be systematic, replicable, and theory-generating if researchers worked through their data in a disciplined sequence of comparisons, eventually building from concrete observation toward formal theory. The book gave qualitative sociologists a procedural answer to positivist criticism, and that answer has structured graduate methods training for nearly sixty years.
+
+The procedural core that emerged — taught in essentially the same form today in qualitative methods seminars from sociology to nursing to education — is the *open–axial–selective* coding pipeline. A researcher reads transcripts line by line, attaching short interpretive labels ("open codes") to small chunks of text. Open codes are then clustered into broader conceptual categories ("axial codes"). Finally, the analyst identifies the one or two categories that organize the rest into a coherent theoretical argument ("selective codes"). Memos written along the way trace the analyst's reasoning. The constant comparative method — comparing each new instance to the codes already developed, refining as one goes — is the engine that runs through all three stages. The work was originally imagined as the activity of a lone scholar, working slowly, surrounded by paper.
+
+Grounded theory was never a single thing, however. By the early 1990s, Glaser and Strauss had publicly split over what the method demanded. Strauss and Juliet Corbin's *Basics of Qualitative Research* (1990) introduced a more elaborate set of procedural scaffolds — the "coding paradigm," conditional/consequential matrices — that Glaser (1992) attacked as a betrayal of pure induction. The Glaser–Strauss split was real and methodologically substantive: Glaser continued to defend pure induction in subsequent monographs (1998, 2005), while Strauss and Corbin pursued a more systematic, validation-oriented procedural model that has been the dominant teaching version in much of North America for thirty years. Kathy Charmaz (2000, 2006) then carved out a third position: *constructivist* grounded theory, which preserves the procedural rigor but rejects the realist epistemology, treating codes as researcher constructions rather than as discoveries lying in the data. Charmaz's variant remains the most widely taught version of grounded theory in North American graduate programs today, and any honest discussion of qualitative coding has to credit it as a vital, ongoing tradition rather than as a relic.
+
+What unites all three branches is a particular relationship between method and *technology*. The line-by-line coding workflow was designed for paper. Glaser and Strauss imagined the analyst with coloured pens, scissors, and index cards spread across a dining-room table, physically grouping snippets of transcript into stacks. When word processing arrived in the 1980s and qualitative data analysis (QDA) software — NVivo, ATLAS.ti, MAXQDA, Dedoose — arrived in the 1990s and 2000s, the software designers faced a path-dependent choice: rebuild qualitative analysis around the affordances of databases and full-text search, or replicate the dining-room table in electronic form. They chose the latter. The "code" in NVivo is, functionally, a digital index card. The interface privileges line-by-line tagging because that is what graduate seminars taught researchers to expect. This is Deterding and Waters's central technological observation: "Qualitative coding procedures emanating from grounded theory were limited by technologies of the 1960s: colored pens, scissors, and index cards. Today, electronic documents can be flexibly stored, retrieved, and cross-referenced using qualitative data analysis (QDA) software" — but the software has, until recently, faithfully reproduced the workflow of the older technology rather than exploiting what databases can actually do. Full-text retrieval, faceted search, relational joins between respondent attributes and coded passages: all of these are trivially supported by the underlying storage layer of any modern QDA package, and almost none are the *first* thing a graduate student is taught to use.
+
+There is a second, deeper inheritance issue: what Loïc Wacquant (2002) called the "epistemological fairytale" of grounded theory. The fairytale is that researchers can enter the field as theoretical blank slates and let categories emerge purely from the data. Practically every working qualitative researcher knows this is not how research happens. Interview protocols are designed with prior theoretical commitments. Recruitment criteria reflect what the researcher already thinks matters. The literature review precedes — not follows — the field. Yet the rhetorical convention has been to describe analysis as "inductive" or "emergent" and to leave the antecedent theoretical scaffolding implicit. Deterding and Waters's empirical contribution is to document this gap quantitatively: in their content analysis of 98 ASA-sponsored articles using interview methods, 55% used the language of induction or emergence, but only a small minority specified what their actual coding procedure had been. The fairytale, in other words, is not just an epistemological problem; it is a transparency problem. Honored more in citation than in actual practice, the rhetoric of pure induction has obscured what working researchers actually do, which is the iterative, theoretically informed, partially deductive work of trying to understand a phenomenon they already cared about before they started.
+
+To make Part 3 of this essay coherent, two further traditions need brief introduction, because they will turn out to anticipate Deterding and Waters's proposal more closely than the grounded-theory mainstream did.
+
+**Framework analysis**, developed by Jane Ritchie and Liz Spencer at Britain's National Centre for Social Research in the late 1980s and published in 1994, was designed from the start for *applied policy research* — that is, for large, team-based projects with deliverables on a deadline. Its five-stage workflow — familiarization, thematic framework identification, *indexing*, charting, and mapping/interpretation — explicitly places indexing before analytic charting. The thematic framework is allowed to be informed by prior research questions; the indexing pass applies broad topical labels to whole transcripts; analytic charting and interpretation come later. Framework analysis was developed by researchers at the Qualitative Research Unit at the National Centre for Social Research in the United Kingdom in the late 1980s for use in large-scale policy research, and it is now widely used across health research, social policy, and applied evaluation. The relevance to Deterding and Waters is direct: framework analysis has been doing indexing-before-analysis in UK health services research for thirty years. The Deterding and Waters proposal is, in a real sense, importing into mainstream US sociology a workflow that adjacent communities of qualitative researchers had already routinized.
+
+**Thematic analysis** as codified by Virginia Braun and Victoria Clarke (2006) is the other workhorse method to know. It is less prescriptive than grounded theory and less rigid than framework analysis, and partly for that reason it has become the default coding method in psychology, health research, and education. Braun and Clarke explicitly distinguish *theme* from *code* and require analysts to be transparent about whether their themes are inductively or theoretically generated.
+
+Adjacent traditions worth naming in passing: Stefan Timmermans and Iddo Tavory's (2012) *abductive analysis*, which argues that meaningful theoretical innovation requires neither pure induction nor pure deduction but the Peircean third path of abduction — Tavory and Timmermans note that "induction does not logically lead to novel theoretical insights" and propose that abduction, rather than induction, should be the guiding principle of empirically based theory construction; Jonathan Smith's interpretive phenomenological analysis (Smith, 1996), oriented to the texture of individual experience; Catherine Riessman's narrative analysis (Riessman, 2008), which insists on preserving sequential and narrative form; and Matthew Miles and A. Michael Huberman's (1994) display-matrix approach, which prefigures the indexing logic in important ways by organizing coded passages into cross-case matrices rather than into hierarchical code trees. Each of these traditions does something different on a transcript: framework analysis tags by topic, thematic analysis tags by theme, IPA tags by experiential structure, narrative analysis preserves sequential form, abductive analysis treats surprises as the analytic engine. The Deterding–Waters proposal sits inside this diverse field, not in opposition to it. The point is not that grounded theory is wrong, nor that thematic analysis is wrong, nor that any of these traditions is wrong. The point is that the *coding* prescriptions inherited from 1967 were shaped by the technological and labor realities of that decade, and the technological and labor realities of contemporary interview research are different.
+
+## Part 2 — What Deterding & Waters propose, and why now
+
+Deterding and Waters's argument has three structural moves: a diagnosis, a redesign, and a defense.
+
+The diagnosis is empirical. They content-coded interview-based studies in flagship sociology journals and found that contemporary practice has drifted decisively away from the grounded-theory template. Sample sizes have grown — their journal sample had a median N of 55 and a maximum of 208 — well past the point at which line-by-line open coding by a single researcher remains tractable. Coding is increasingly done by teams of graduate students and postdocs rather than by lone investigators. Interview studies are increasingly nested inside mixed-methods designs where the interview data must be made commensurable with survey or administrative data. None of these conditions was foreseen in the 1967 framework, and none is well served by it. "We argue the oft-cited grounded theory framework poorly fits many features of contemporary sociological interview studies, including large samples, coding by teams, and mixed-method analysis. The grounded theory approach also hampers transparency and does not facilitate reanalysis or secondary analysis of interview data" (Deterding & Waters, 2021).
+
+The redesign is a three-stage workflow. **Stage 1 is indexing**: applying broad, mostly topical codes anchored to the sections of the interview protocol itself. If the protocol had a block of questions on workplace experiences, the index code is "workplace." Indexing is fast, systematic, and high-reliability across coders because the categories are coarse and protocol-anchored rather than interpretively delicate. The work that the line-by-line first pass was supposed to do — making the corpus searchable and navigable — is done here, but with a unit of analysis sized to the affordances of QDA software rather than to those of index cards. Indexing is, importantly, not analysis; it is the prerequisite for analysis. Deterding and Waters are clear that researchers who confuse indexing with analytic coding will produce flat, descriptive findings that miss the interpretive contribution interviews are uniquely positioned to make.
+
+**Stage 2 is analytic coding**: applying interpretive codes that bear on the eventual argument, but doing so *within* the indexed sections rather than across the entire corpus. If the analyst is working on a theme of "moral worth at work" inside the workplace index code, they apply analytic codes there. This is where researcher judgment lives. It is slower than indexing, lower-agreement across coders, and rightly so: it is interpretive work, not bookkeeping. The crucial structural point is that the analytic codes can be developed against a manageable subset of the data — every passage with the workplace index code — rather than against the entire transcribed corpus. The analyst can read deeply where it matters, without having to read everything deeply.
+
+**Stage 3 is validation**: refining the analytic typology by checking it against the indexed corpus, with particular attention to negative cases. The typology is treated as provisional until it can account for every relevant instance or has principled grounds for excluding outliers. Deterding and Waters explicitly endorse the Blee (2009) standard — that divergent data should not be discounted without a clear rationale — and ground their validity machinery in the older qualitative tradition of Katz (1982) and Luker (2008) on negative-case analysis. The move is not to suppress disconfirming evidence but to engage it systematically.
+
+Embedded in this redesign is a careful taxonomy of three *kinds* of codes that play different roles and admit different levels of mechanization: **attributes** (respondent-level demographic and contextual variables like age, occupation, race, region — what survey methodology would simply call covariates), **index codes** (broad protocol-anchored topical anchors), and **analytic codes** (interpretive concepts that drive the eventual argument). The distinction is doing crucial work and will be central to Part 3. Attributes are essentially mechanical to record. Index codes are systematizable. Analytic codes are where the researcher's judgment is irreducible.
+
+The defense is methodological. Deterding and Waters argue that the legitimate goals of grounded theory — systematic engagement with the data, theoretical traction, defensibility against the old positivist charge of impressionism — are *better* served by the three-stage workflow than by line-by-line open coding for studies of contemporary scale. Construct validity is established through iterative typology refinement, in the manner of Deterding's (2015) own work on instrumental, expressive, and mixed orientations toward post-recession education. Theoretical validity is established through exhaustive engagement with negative cases. Transparency is established through reportable, replicable indexing decisions. What flexible coding asks of the researcher is theoretical engagement *before* fieldwork — not in defiance of induction but as honest accounting of what interview researchers actually do.
+
+They are also explicit about limits. Flexible coding is not appropriate for small-N projects (their floor is roughly N = 30), nor for purely phenomenological work where the texture of individual accounts is the entire point, nor for projects in which interview snippets serve mainly as illustrative supplements to a quantitative argument. The method is for medium-to-large semi-structured interview studies aimed at producing portable, defensible findings — a band of practice that happens to describe an enormous share of contemporary social science qualitative work, but not all of it. Charmaz's constructivist grounded theory remains the right tool for projects of a different shape, as does narrative analysis for projects where preserving the arc of individual stories is the entire methodological commitment. Deterding and Waters do not pretend otherwise; flexible coding is a method for a specific kind of study, and the explicit naming of when *not* to use it is part of what makes the proposal honest.
+
+What flexible coding asks of the researcher, in the end, is honest accounting. The interview protocol embodies prior theoretical commitments. The index codes inherit those commitments. The analytic codes refine them. The validity work checks them. None of this is a betrayal of grounded inquiry; it is what grounded inquiry has actually looked like, for most working researchers, for at least a generation. The proposal is to stop performing emergence and start documenting reasoning.
+
+## Part 3 — Where LLMs extend the tradition, and into which adjacent fields
+
+The Deterding and Waters framework maps onto LLM affordances with unusual cleanliness, because the moves it proposes are precisely the moves that scale poorly under human-only labor at N > 50. The mapping is not a happy accident; it follows from the structure of what indexing, analytic coding, and validation each ask of the analyst. The framework was developed without LLMs in view — the paper appears in 2018 online and 2021 in print, before the post-GPT-3 inflection — but the three-stage architecture happens to factor the work in a way that aligns almost line-for-line with what contemporary language models do well and where they should not be trusted.
+
+### Stage by stage
+
+**Indexing at scale** is the most LLM-tractable move in the workflow. The task — assign one or more of a small set of protocol-anchored topic codes to a passage — is precisely what contemporary instruction-tuned language models are reliable at when given a clear codebook. Tai and colleagues (2024) document that LLM analysis can aid qualitative researchers by deductively coding transcripts and providing a systematic, reliable platform for code identification, with their study testing 160 iterations of LLM coding against human coders using traditional methods. Qiao et al. (2024) demonstrated that deductive coding using ChatGPT was comparable to traditional coding when provided with a clear codebook, structure, and contextual information. The empirical question — does an LLM assign the same index code that a trained human RA would assign, given the same protocol and codebook — is just that, an empirical question, and one that several recent studies have begun to answer with cautious affirmatives. Doing indexing well at scale opens up workflows that are currently prohibitive: secondary analysis of archived corpora at the Qualitative Data Repository at Syracuse, multi-investigator collaborations across institutions, longitudinal re-coding of long-running interview projects as theoretical questions evolve. The NSF, NIH, and major foundations are increasingly mandating qualitative data archiving; the gap between the existence of an archive and the practical accessibility of its contents is, in part, an indexing problem. An indexed corpus is a navigable corpus; a transcribed-but-unindexed corpus is a black box that few secondary analysts will ever crack open.
+
+**Analytic coding under researcher control** is the move where care is most warranted. The strongest framing — and the only one defensible to a senior methodologist — is that the LLM applies *the researcher's analytic codes* to indexed sections, not that it discovers analytic themes. The researcher writes the codebook. The researcher refines it through iterative reading of a manageable subset of the corpus. The LLM then applies those codes to the rest, and the researcher reviews disagreements and edge cases. Than and colleagues (2025), updating "The Future of Coding" for the LLM era, examine whether instruction-tuned generative LLMs can replicate and reliably augment the traditional iterative qualitative process of alternating between deductive and inductive analysis when annotating complex social science textual data, with explicit reference to Deterding and Waters' flexible coding framework. The verb to refuse, across the entire workflow, is *discover*. The verb to keep is *apply*. The analytic insight remains the researcher's, and the trace of how it was developed remains transparent and reviewable. A workflow that lets the LLM generate themes is a workflow that has confused indexing with analysis, in precisely the way Deterding and Waters warn against in the human case.
+
+**Validation through exhaustive negative-case hunting** is where the LLM contribution is most novel and most defensible. The Katz–Luker–Blee tradition has long demanded that analysts engage seriously with cases that diverge from the emerging pattern. At N = 200, doing this exhaustively by hand is essentially impossible; in practice, "engagement with negative cases" has often meant engagement with the negative cases the analyst happened to notice. An LLM can systematically surface every passage in the corpus that the proposed typology fails to accommodate, and the analyst can then judge each one. The reliability question shifts from "did the researcher think hard enough?" to "given the typology and the corpus, what did the search return?" — an answerable question rather than an article of methodological faith. This is, in important ways, the move that has been least available to qualitative researchers historically, and the one where LLM assistance is most clearly augmenting rather than substituting. The analyst still decides whether the negative case is a genuine disconfirmation, an edge case, or a misclassification. The LLM only makes sure the cases reach the analyst's desk.
+
+**Transparency and methods-section reporting** is the unglamorous but practically consequential affordance. Deterding and Waters's central empirical finding is that 17.3% of the interview articles in their ASA-journal sample described no coding procedure at all, and only 39.7% mentioned which QDA software they used. The reporting gap is enormous, and most of it is not malice; it is the difficulty of reconstructing months of distributed analytic decisions after the fact. If coding decisions are made through a tool that logs the codebook version, the indexed sections, the analytic prompts, and the human override points, an auto-summarized methods report becomes a reasonable expectation rather than a virtuous afterthought. This is a small but significant shift in what counts as good qualitative practice: not just doing the work transparently, but having the receipts.
+
+### Beyond sociology
+
+The same affordances reach into adjacent fields, with the specific match depending on what each field's coding work typically looks like.
+
+**Anthropology** sits closest to sociology methodologically, but with an internal tension: thick description and systematic coding are not always compatible aims, and many ethnographers reasonably resist coding as a category mistake. Where anthropological projects do involve large semi-structured interview corpora — which is now common in applied medical anthropology, organizational ethnography, and policy-relevant work — the indexing-first move applies cleanly. The thick-description work is preserved at the analytic and writing stages; what the LLM helps with is the navigability of the corpus. The thick-description work is what anthropology has always been irreplaceably good at, and nothing in the flexible-coding proposal threatens it; what changes is the cost of treating a large interview corpus as something other than a source of illustrative quotes.
+
+**Education research** generates very large transcript volumes from teacher interviews, classroom observations, focus groups with students and parents, and increasingly from coded video. Mixed-methods designs are now standard in policy-relevant education work, and the pressure for codebooks that survive contact with multiple research assistants over multiple grant cycles is intense. Flexible coding maps almost without translation, and the LLM affordance most relevant is indexing for team workflows.
+
+**Public health, nursing, and qualitative health services research** are among the largest qualitative research literatures globally. They already use framework analysis heavily, often with NVivo or Dedoose as the platform. The Framework Method is described in Gale et al. (2013) as "a systematic and flexible approach to analysing qualitative data and is appropriate for use in research teams even where not all members have previous experience of conducting qualitative research." For this audience, Deterding and Waters's argument will look less like a revelation than like confirmation: of course indexing comes before analytic coding, of course teams need shared codebooks, of course large-N work needs to scale. The LLM contribution here is incremental rather than transformative, and the field is well placed to absorb it carefully because it already has the methodological vocabulary.
+
+**Communication and media studies** does message analysis, audience reception studies, and organizational communication research with substantial interview components. Content-analytic traditions in this field already have a long history of reliability-coded categorical work; the move toward LLM-assisted application of codebooks is, in some ways, simply more of what the field already does.
+
+**HCI and UX research** is methodologically pragmatic and has been quickest to engage with LLMs in qualitative work, partly because the field overlaps with the people building the tools. Recent CHI workshops have built on this work, leveraging a new generation of LLMs to create tools for qualitative researchers that bear researcher goals in mind, like agency over the coding process or convergent discussion on coding among collaborators (Overney et al., 2024). The risk in this community is the opposite of the risk elsewhere: not under-adoption but over-confidence, with LLM-coded findings used to make product decisions before the reliability questions have been answered.
+
+**Marketing and consumer research** runs methodologically parallel to academic interview research but at higher volume, lower transparency, and faster turnaround. The flexible-coding move would benefit this community, though the publication incentives that drive transparency in academic work are weaker.
+
+**Political science** does interpretive policy analysis, elite interviews, and oral histories. Elite-interview work in particular has often been single-investigator and idiosyncratically coded; the indexing-first move would substantially improve the comparability of findings across studies.
+
+**Organizational and management research** has a long tradition of qualitative case-study work (Eisenhardt 1989; Yin 2014) with codebook-driven analysis. The fit is straightforward; the main barrier is field-specific norms around what counts as evidence in a top management journal, not methodological capacity.
+
+**Religious studies, area studies, and language-community ethnography** introduce an affordance the original Deterding and Waters paper does not address: **translation-assisted coding for non-English transcripts**. Contemporary multilingual LLMs can produce English-language indexing of source-language transcripts with a fidelity that simply did not exist a decade ago, and they can do so while preserving the original-language text alongside the indexed translation. For researchers working in communities where the publishable target audience is English-reading but the data are not, this is a genuinely novel capability. It needs handling with care — the translation step introduces a second layer of interpretation that compounds with the coding step, and the model's competence varies enormously across languages and registers — but the alternative has often been not to do the work at all, or to outsource translation to bilingual research assistants whose interpretive choices are at least as opaque as a model's.
+
+**Digital humanities-adjacent fields** have been working out the conceptual machinery for distant reading and computational-text scholarship for two decades. The move from line-by-line coding to indexed coding has a direct structural analog in the digital humanities move from close to distant reading, and the methodological vocabulary developed there — for warranting computational findings, for combining computational and interpretive work, for citing both the algorithm and the analyst — is largely portable. Franco Moretti's distant-reading polemic and the subsequent corpus-stylistics literature have already worked through many of the legitimation questions that qualitative social scientists are about to face.
+
+### The hard problems
+
+A senior methodologist will press on the difficulties, and the credibility of any LLM-assisted-coding proposal depends on naming them honestly.
+
+**IRB, consent, and the data-transfer question.** Researchers working with human subject data need to recognize that the act of entering participant data into a commercial LLM is a data transfer in and of itself, and the researchers should obtain consent for this process; IRB guidance in this area remains uneven (Davison et al., 2024). Most interview studies were consented under language that did not anticipate transmission of transcript text to third-party model APIs. For corpora collected under earlier consent regimes — including most archived data — the question of whether secondary analysts can use LLM-assisted methods is genuinely open and currently being worked out in IRB offices on a case-by-case basis. Locally hosted open-source models, increasingly viable for medium-sized projects on consumer-grade hardware, are one path through this; explicit consent language for new studies is another; institutional enterprise agreements with model vendors that contractually exclude training-on-input are a third. None of these is yet the field default, and the question of what becomes the default will shape qualitative research practice for the next decade.
+
+**Reproducibility and version stability.** Models change. The same prompt run against the same transcript on the same model name, six months later, can produce a different coding. This is a problem for replication and a problem for longitudinal work. Pinning to specific model versions, archiving prompts and codebooks alongside data, and treating the model as a versioned dependency — much as computational scientists already do with software environments — are partial answers. The field will need to develop conventions for what counts as adequate versioning information in a methods section, and journals will need to decide what they expect.
+
+**Researcher trust.** How does one convince a peer reviewer that what the LLM did is what a careful human would have done? The honest answer is: by reporting reliability metrics calibrated against a subset of human-coded transcripts, and by showing that the analytic insights are reviewable and reasonable on inspection. The field will need to develop a shared vocabulary for this kind of reporting, and several recent methodological papers are beginning to do that work (Than et al. 2025; Tai et al. 2024; Misra et al. 2026). The model is not exempt from the requirement that coding decisions be defensible; the model is just a coder whose defenses are partially externalizable as code and prompt.
+
+**The construct-validity feedback loop.** This is the most interesting hard problem and the one any senior qualitative methodologist might actually press on. Deterding and Waters's validity machinery assumes the researcher is reading enough of the corpus, with enough care, that they can *feel* when their typology stops fitting. If indexing is LLM-mediated, does the researcher still develop that tacit feel? The answer is probably: only if the workflow is designed to preserve it — if the researcher is required to read fully and code by hand some calibration subset before the LLM extends their work, and if the validation stage forces them back into close reading of the cases the typology fails on. The workflow that simply hands transcripts to a model and accepts the output undermines the very judgment that gives flexible coding its warrant. This is not a problem that will solve itself; it has to be designed for, and the design choices a research group makes here are arguably more consequential than which model they use.
+
+**The labor and credit question.** Line-by-line coding is partly a method and partly an enculturation ritual. Graduate students learn to *see* through it — to notice things in transcripts that they would not otherwise have noticed, to develop the slow eye that the working qualitative researcher needs. If the first-pass work is LLM-mediated, the question is what replaces the enculturation. The honest answer is probably not "nothing"; it is "different training," with more emphasis on codebook design, on validation reading, and on the analytic and writing stages where researcher judgment is irreplaceable. But the field has not yet worked out what that training looks like, and senior methodologists are right to worry about it. There is also a credit question: when a graduate RA does the indexing alongside an LLM, what is their contribution, and how is it acknowledged in the methods section and the authorship list?
+
+**False fluency.** LLMs can produce plausible-sounding methods text and plausible-sounding analytic memos that are not supported by the underlying data. This is the failure mode that should worry qualitative researchers most, because the social cues that usually catch sloppy coding — a graduate student who can't defend their choices in lab meeting, a methods section that reads as evasive — do not apply to model output. The mitigation is structural: every LLM-produced claim should be traceable to a specific passage, every analytic code should be reviewable against the corpus, and every methods-section paragraph should be auditable against the actual log of coding decisions. False fluency is the LLM-era version of the impressionism charge that the original grounded theorists were trying to defeat; the answer is, again, transparency and trace.
+
+---
+
+Deterding and Waters wrote their paper to liberate a generation of interview researchers from a methodological inheritance that no longer fit the work they were actually doing. The LLM extension of their framework is, at its best, more of the same liberation: relieving the parts of the workflow that scale poorly, preserving the parts where researcher judgment is the whole point, and making transparent what was previously buried. None of this is automatic, and none of it requires accepting that machines do qualitative analysis. What it requires is the same thing flexible coding has always required: honest accounting of what the researcher does, what the tools do, and where the line between them runs.
+
+The line is movable. It has moved before — from index cards to NVivo, from NVivo to the kind of indexing-first workflow Deterding and Waters describe. Where it moves next depends less on what the models can do than on what the methodological community decides counts as good work.
+
+---
+
+## References
+
+Bail, C. A. (2014). The cultural environment: Measuring culture with big data. *Theory and Society, 43*(3–4), 465–482.
+
+Blee, K. M. (2009). Access and methods in research on hidden communities: Reflections on studying U.S. organized racism. In *eResearch: Transformation in scholarly practice* (pp. 10–27). New York: Routledge.
+
+Braun, V., & Clarke, V. (2006). Using thematic analysis in psychology. *Qualitative Research in Psychology, 3*(2), 77–101.
+
+Chakrabarti, P., & Frye, M. (2017). A mixed-methods framework for analyzing text data: Integrating computational techniques with qualitative methods in demography. *Demographic Research, 37*, 1351–1382.
+
+Charmaz, K. (2000). Grounded theory: Objectivist and constructivist methods. In N. K. Denzin & Y. S. Lincoln (Eds.), *Handbook of qualitative research* (2nd ed., pp. 509–535). Thousand Oaks, CA: Sage.
+
+Charmaz, K. (2006). *Constructing grounded theory: A practical guide through qualitative analysis*. London: Sage.
+
+Christou, P. A. (2024). How to use artificial intelligence (AI) as a resource, methodological and analysis tool in qualitative research? *The Qualitative Report, 28*(7), 1968–1980.
+
+Davison, R. M., Chughtai, H., Nielsen, P., Marabelli, M., Iannacci, F., van Offenbeek, M., Tarafdar, M., Trenz, M., Techatassanasoontorn, A. A., Díaz Andrade, A., & Panteli, N. (2024). The ethics of using generative AI for qualitative data analysis. *Information Systems Journal, 34*(5), 1433–1439.
+
+Deterding, N. M. (2015). Instrumental and expressive education: College planning in the face of poverty. *Sociology of Education, 88*(4), 284–301.
+
+Deterding, N. M., & Waters, M. C. (2021). Flexible coding of in-depth interviews: A twenty-first-century approach. *Sociological Methods & Research, 50*(2), 708–739. https://doi.org/10.1177/0049124118799377
+
+Eisenhardt, K. M. (1989). Building theories from case study research. *Academy of Management Review, 14*(4), 532–550.
+
+Gale, N. K., Heath, G., Cameron, E., Rashid, S., & Redwood, S. (2013). Using the framework method for the analysis of qualitative data in multi-disciplinary health research. *BMC Medical Research Methodology, 13*(117).
+
+Glaser, B. G. (1992). *Basics of grounded theory analysis: Emergence vs. forcing*. Mill Valley, CA: Sociology Press.
+
+Glaser, B. G., & Strauss, A. L. (1967). *The discovery of grounded theory: Strategies for qualitative research*. Chicago: Aldine.
+
+Hämäläinen, P., Oksanen, J., Tavast, M., & Bhatnagar, P. (2024). LLMCode: A toolkit for AI-assisted qualitative data analysis. *Software repository*. https://github.com/PerttuHamalainen/LLMCode
+
+Katz, J. (1982). *Poor people's lawyers in transition*. New Brunswick, NJ: Rutgers University Press.
+
+Luker, K. (2008). *Salsa dancing into the social sciences: Research in an age of info-glut*. Cambridge, MA: Harvard University Press.
+
+Miles, M. B., & Huberman, A. M. (1994). *Qualitative data analysis: An expanded sourcebook* (2nd ed.). Thousand Oaks, CA: Sage.
+
+Misra, R., Dahal, R., Kirk, B., Khan, R., Dogan, G., Chataut, R., & Gyawali, P. (2026). Large language models in qualitative analysis: Comparing traditional and researcher-interpreted approaches. *International Journal of Qualitative Methods*. https://doi.org/10.1177/16094069261426100
+
+Overney, C., et al. (2024). Sensemate: An accessible and beginner-friendly human-AI platform for qualitative data analysis. In *Proceedings of the 2024 ACM Conference on Intelligent User Interfaces*.
+
+Qiao, S., et al. (2024). Comparing ChatGPT and trained human coders in qualitative deductive analysis. *Qualitative Health Research*, advance online publication.
+
+Riessman, C. K. (2008). *Narrative methods for the human sciences*. Thousand Oaks, CA: Sage.
+
+Ritchie, J., & Spencer, L. (1994). Qualitative data analysis for applied policy research. In A. Bryman & R. G. Burgess (Eds.), *Analyzing qualitative data* (pp. 173–194). London: Routledge.
+
+Smith, J. A. (1996). Beyond the divide between cognition and discourse: Using interpretative phenomenological analysis in health psychology. *Psychology & Health, 11*(2), 261–271.
+
+Strauss, A., & Corbin, J. (1990). *Basics of qualitative research: Grounded theory procedures and techniques*. Newbury Park, CA: Sage.
+
+Tai, R. H., Bentley, L. R., Xia, X., Sitt, J. M., Fankhauser, S. C., Chicas-Mosier, A. M., & Monteith, B. G. (2024). An examination of the use of large language models to aid analysis of textual data. *International Journal of Qualitative Methods, 23*. https://doi.org/10.1177/16094069241231168
+
+Than, N., Fan, L., Law, T., Nelson, L. K., & McCall, L. (2025). Updating "The Future of Coding": Qualitative coding with generative large language models. *Sociological Methods & Research*. https://doi.org/10.1177/00491241251339188
+
+Timmermans, S., & Tavory, I. (2012). Theory construction in qualitative research: From grounded theory to abductive analysis. *Sociological Theory, 30*(3), 167–186.
+
+Wacquant, L. (2002). Scrutinizing the street: Poverty, morality, and the pitfalls of urban ethnography. *American Journal of Sociology, 107*(6), 1468–1532.
+
+Yin, R. K. (2014). *Case study research: Design and methods* (5th ed.). Thousand Oaks, CA: Sage.
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modular Arithmetic Explorer — multi-instance test</title>
+  <link rel="stylesheet" href="modular-arithmetic-explorer.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 900px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Modular Arithmetic Explorer — multi-instance test</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own state:
+    changing the modulus or operation in widget 1 must not affect widgets
+    2 or 3, hovering and clicking row labels must scope to the widget you
+    are interacting with, and the reveal-answer toggle must be independent
+    per widget. There are no document-wide IDs, so multiple instances
+    coexist cleanly.
+  </p>
+
+  <!-- Widget 1: canonical Activity 9 — full set of moduli, default n=6 (composite). -->
+  <div class="mae-widget" data-problem='{
+    "title": "Widget 1 — Modular Arithmetic Explorer (default)",
+    "intro": "<p>Pick a modulus and decide whether each row of the multiplication table represents an invertible element or a zero divisor. Notice the special behavior when <em>n</em> is prime.</p>",
+    "moduli": [4, 5, 6, 7, 8, 9, 12],
+    "defaultModulus": 6,
+    "defaultOp": "mult"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: starts in addition mode, prime modulus default. -->
+  <div class="mae-widget" data-problem='{
+    "title": "Widget 2 — Starts in addition mode at n = 7",
+    "intro": "<p>This instance starts in <em>addition</em> mode at the prime modulus 7. Switch to multiplication and observe that every nonzero row contains a 1 — confirming that ℤ<sub>7</sub> is a field.</p>",
+    "moduli": [5, 7, 11, 13],
+    "defaultModulus": 7,
+    "defaultOp": "add"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: no title, no intro, smallest modulus list. -->
+  <div class="mae-widget" data-problem='{
+    "moduli": [4, 8, 12],
+    "defaultModulus": 8
+  }'></div>
+
+  <script src="modular-arithmetic-explorer.js"></script>
+
+</body>
+</html>

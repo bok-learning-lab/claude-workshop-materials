@@ -1,0 +1,145 @@
+<!--
+  Proof-Step Arranger — embeddable widget.
+
+  Embed shape: a single self-contained <div class="psa-widget" data-problem='...'></div>
+  per problem. The data-problem JSON describes a proof to be reconstructed by
+  drag-and-drop. Multiple <div class="psa-widget"> blocks can coexist on the
+  same page; state and DOM refs are scoped per instance.
+
+  data-problem JSON keys:
+    title    (string, optional) — bold heading shown above the intro card.
+    intro    (HTML string, optional) — body of the introductory card. Use
+             this to state the claim being proved.
+    steps    (Array<Step>, required, ordered) — the *correct* proof in
+             order. Each Step has:
+      id           (string, required) — stable identifier referenced by
+                   `dependsOn`. Must be unique within this problem.
+      html         (HTML string, required) — what the student sees on the
+                   draggable card. Keep it tight; one sentence is ideal.
+      role         ('claim' | 'assumption' | 'derivation' | 'contradiction',
+                   required) — used at the end to colour-tag the
+                   structural components of the proof. Every proof should
+                   open with at least one `claim` step that states what is
+                   to be proved.
+      dependsOn    (Array<string>, optional) — ids of earlier steps this
+                   step requires. On Check, if a depended-on step lands
+                   *after* this one (or is missing entirely), the widget
+                   surfaces a feedback message naming the missing
+                   prerequisite. Leave empty/omit for the assumption
+                   step(s) that begin the proof.
+    distractors (Array<Distractor>, optional) — plausible-looking cards that
+             do *not* belong in the final proof. Each Distractor has:
+      id           (string, required) — must not collide with any step id.
+      html         (HTML string, required) — what the student sees.
+      reason       (string, optional) — feedback shown when the student
+                   leaves a distractor in the proof and presses Check.
+                   Falls back to a generic "this card isn't part of the
+                   proof" message if omitted.
+
+  Behavior:
+    Cards start in the Bench at top, in a deterministic-but-shuffled order
+    (seeded so the layout is consistent across reloads of the same widget).
+    Students drag cards from the Bench into the Proof zone below, reorder
+    within the Proof, or drag cards back to the Bench. Pressing **Check**
+    validates the Proof against the correct sequence:
+      1. Distractors in the Proof are flagged with their `reason`.
+      2. Steps whose `dependsOn` prerequisites are missing or come later
+         are flagged with an auto-generated message naming the missing
+         prerequisite.
+      3. Steps that satisfy their dependencies are marked correct.
+    A "Reset" button returns all cards to the Bench in the original
+    scrambled order. When the proof is complete and correct, the Proof
+    cards are recoloured by `role` (assumption / derivation / contradiction)
+    and a success banner appears.
+-->
+<div class="psa-widget" data-problem='{
+  "title": "Arrange the proof: √2 is irrational",
+  "intro": "<p>Drag the cards from the <strong>Bench</strong> into the <strong>Proof</strong> in the order they should appear. Some cards on the Bench don’t belong in the proof at all — leave those on the Bench. When you think the order is right, press <strong>Check</strong>.</p>",
+  "steps": [
+    {
+      "id": "claim",
+      "html": "<strong>Claim:</strong> √2 is irrational.",
+      "role": "claim"
+    },
+    {
+      "id": "assume",
+      "html": "Assume, for the sake of contradiction, that √2 is rational.",
+      "role": "assumption",
+      "dependsOn": ["claim"]
+    },
+    {
+      "id": "lowest-terms",
+      "html": "Then by the definition of rational, √2 = <em>p</em>/<em>q</em> for some integers <em>p</em>, <em>q</em> with gcd(<em>p</em>, <em>q</em>) = 1.",
+      "role": "assumption",
+      "dependsOn": ["assume"]
+    },
+    {
+      "id": "square",
+      "html": "Squaring both sides: 2 = <em>p</em>² / <em>q</em>², so <em>p</em>² = 2<em>q</em>².",
+      "role": "derivation",
+      "dependsOn": ["lowest-terms"]
+    },
+    {
+      "id": "p-even",
+      "html": "By the lemma “if <em>p</em>² is even then <em>p</em> is even”: since <em>p</em>² = 2<em>q</em>² is even, <em>p</em> is even. Write <em>p</em> = 2<em>k</em>.",
+      "role": "derivation",
+      "dependsOn": ["square"]
+    },
+    {
+      "id": "substitute",
+      "html": "Substitute <em>p</em> = 2<em>k</em> into <em>p</em>² = 2<em>q</em>²: 2<em>q</em>² = 4<em>k</em>², so <em>q</em>² = 2<em>k</em>².",
+      "role": "derivation",
+      "dependsOn": ["p-even"]
+    },
+    {
+      "id": "q-even",
+      "html": "By the same lemma: since <em>q</em>² = 2<em>k</em>² is even, <em>q</em> is even.",
+      "role": "derivation",
+      "dependsOn": ["substitute"]
+    },
+    {
+      "id": "contradicts-gcd",
+      "html": "Both <em>p</em> and <em>q</em> are even, so gcd(<em>p</em>, <em>q</em>) ≥ 2 — contradicting gcd(<em>p</em>, <em>q</em>) = 1.",
+      "role": "contradiction",
+      "dependsOn": ["q-even", "lowest-terms"]
+    },
+    {
+      "id": "conclude",
+      "html": "Therefore √2 is irrational. □",
+      "role": "contradiction",
+      "dependsOn": ["contradicts-gcd"]
+    }
+  ],
+  "distractors": [
+    {
+      "id": "def-rational",
+      "html": "A rational number is any number that can be written as <em>p</em>/<em>q</em> for integers <em>p</em>, <em>q</em> with <em>q</em> ≠ 0.",
+      "reason": "This is a definition the proof relies on, not a step of the proof itself. (The step that uses it cites it inline.)"
+    },
+    {
+      "id": "lemma-p-even",
+      "html": "If <em>p</em>² is even, then <em>p</em> is even.",
+      "reason": "This is a lemma the proof cites; the proof step that uses it cites it inline rather than restating it as its own step."
+    },
+    {
+      "id": "wrong-conclusion",
+      "html": "Therefore <em>p</em> = <em>q</em>.",
+      "reason": "This isn’t the contradiction we derived. The contradiction is that gcd(<em>p</em>, <em>q</em>) ≥ 2 — not that <em>p</em> equals <em>q</em>."
+    },
+    {
+      "id": "reverse-lemma",
+      "html": "We know that if <em>p</em> is even then <em>p</em>² is even. Since <em>p</em>² is even, <em>p</em> must be even. Write <em>p</em> = 2<em>k</em>.",
+      "reason": "The conclusion is right, but the lemma cited goes the wrong direction. To conclude <em>p</em> is even from <em>p</em>² being even, you need the converse: “if <em>p</em>² is even then <em>p</em> is even.”"
+    },
+    {
+      "id": "assume-claim-itself",
+      "html": "Assume, for the sake of contradiction, that √2 is irrational.",
+      "reason": "We’re trying to prove √2 is irrational, so for contradiction we assume the <em>opposite</em> — that √2 is rational. Assuming the claim itself doesn’t set up a contradiction."
+    },
+    {
+      "id": "decimal-handwave",
+      "html": "Since √2 ≈ 1.41421356... has no repeating decimal, √2 cannot be rational.",
+      "reason": "Appealing to a decimal expansion isn’t rigorous here: showing the expansion never repeats is essentially the thing we’re trying to prove. The proof has to use the algebraic structure of <em>p</em>/<em>q</em>."
+    }
+  ]
+}'></div>

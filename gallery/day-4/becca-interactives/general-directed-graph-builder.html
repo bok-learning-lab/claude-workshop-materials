@@ -1,0 +1,2256 @@
+<!--
+  GENERAL DIRECTED GRAPH BUILDER — Interactive Directed Graph Theory Explorer
+  ============================================================================
+
+  Extended version of the Directed Graph Builder that adds:
+  1. Self-loops (edges from a vertex to itself)
+  2. Relation properties: reflexive, irreflexive, symmetric, asymmetric,
+     anti-symmetric, transitive
+  3. Combined properties: equivalence relation, partial order,
+     strict partial order, total/linear order
+
+  Same "Botanical Field Notebook" aesthetic as the companion apps.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>General Directed Graph Builder — Field Notebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS VARIABLES ========== */
+:root {
+  --linen: #f4ede4;
+  --linen-dark: #e8ddd0;
+  --linen-darker: #d4c5b0;
+  --ink: #1a1612;
+  --ink-light: #3d342a;
+  --ink-faint: rgba(26, 22, 18, 0.12);
+  --ink-ghost: rgba(26, 22, 18, 0.06);
+  --green: #2d5a27;
+  --green-light: #3a7a32;
+  --green-dim: rgba(45, 90, 39, 0.15);
+  --green-glow: rgba(45, 90, 39, 0.3);
+  --rose: #c4506e;
+  --rose-light: #d4708a;
+  --rose-dim: rgba(196, 80, 110, 0.15);
+  --copper: #3a7d6e;
+  --copper-light: #4a9d8e;
+  --copper-dim: rgba(58, 125, 110, 0.15);
+  --sepia: #8b6914;
+  --sepia-dim: rgba(139, 105, 20, 0.15);
+  --violet: #7b4daa;
+  --violet-light: #9b6dca;
+  --violet-dim: rgba(155, 77, 202, 0.15);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Crimson Pro', 'Times New Roman', serif;
+  --font-mono: 'Fira Code', monospace;
+  --radius: 3px;
+  --transition: 0.25s ease;
+}
+
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--linen);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  overflow: hidden;
+}
+
+/* ========== PAGE LOAD ANIMATION ========== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.stagger-1 { animation: fadeInUp 0.5s ease 0.1s both; }
+.stagger-2 { animation: fadeInUp 0.5s ease 0.2s both; }
+.stagger-3 { animation: fadeInUp 0.5s ease 0.3s both; }
+.stagger-4 { animation: fadeInUp 0.5s ease 0.4s both; }
+.stagger-5 { animation: fadeInUp 0.5s ease 0.5s both; }
+.stagger-6 { animation: fadeInUp 0.5s ease 0.6s both; }
+.stagger-7 { animation: fadeInUp 0.5s ease 0.7s both; }
+.stagger-8 { animation: fadeInUp 0.5s ease 0.8s both; }
+.stagger-9 { animation: fadeInUp 0.5s ease 0.9s both; }
+.stagger-10 { animation: fadeInUp 0.5s ease 1.0s both; }
+
+/* ========== LAYOUT ========== */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ========== HEADER ========== */
+header {
+  background: var(--ink);
+  color: var(--linen);
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  z-index: 100;
+  border-bottom: 3px double var(--sepia);
+  animation: fadeIn 0.6s ease both;
+}
+
+header h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+header h1 .subtitle {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 13px;
+  opacity: 0.6;
+  margin-left: 12px;
+  letter-spacing: 0.04em;
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* ========== TOOLBAR BUTTONS ========== */
+.tool-btn {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--linen-dark);
+  border: 1px solid rgba(244, 237, 228, 0.2);
+  border-radius: var(--radius);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.tool-btn:hover {
+  background: rgba(244, 237, 228, 0.1);
+  border-color: rgba(244, 237, 228, 0.4);
+  color: var(--linen);
+}
+
+.tool-btn.active {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--linen);
+}
+
+.tool-btn.danger {
+  border-color: rgba(196, 80, 110, 0.4);
+  color: var(--rose-light);
+}
+
+.tool-btn.danger:hover {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: var(--linen);
+}
+
+.tool-btn .key-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  opacity: 0.5;
+  margin-left: 4px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 0 3px;
+  vertical-align: 1px;
+}
+
+.tool-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(244, 237, 228, 0.15);
+  margin: 0 6px;
+}
+
+/* ========== MAIN AREA ========== */
+.main-area {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ========== CANVAS CONTAINER ========== */
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 29px,
+      var(--ink-ghost) 29px,
+      var(--ink-ghost) 30px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 29px,
+      var(--ink-ghost) 29px,
+      var(--ink-ghost) 30px
+    ),
+    radial-gradient(ellipse at 20% 50%, rgba(45, 90, 39, 0.03), transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(196, 80, 110, 0.02), transparent 50%),
+    var(--linen);
+  animation: fadeIn 0.8s ease 0.2s both;
+}
+
+.canvas-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(139, 105, 20, 0.04), transparent 40%),
+    radial-gradient(circle at 75% 65%, rgba(58, 125, 110, 0.03), transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(139, 105, 20, 0.03), transparent 30%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Margin line like a field notebook */
+.canvas-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 48px;
+  width: 1px;
+  background: var(--rose-dim);
+  pointer-events: none;
+  z-index: 1;
+  animation: fadeIn 1s ease 0.5s both;
+}
+
+#graph-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.canvas-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-light);
+  opacity: 0.5;
+  z-index: 3;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.canvas-hint.hidden { opacity: 0; }
+
+.mode-indicator {
+  position: absolute;
+  top: 14px;
+  left: 64px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  z-index: 3;
+  padding: 4px 10px;
+  border: 1px solid var(--green-dim);
+  border-radius: var(--radius);
+  background: rgba(244, 237, 228, 0.9);
+  animation: fadeIn 0.5s ease 0.4s both;
+}
+
+.mode-indicator.edge-mode {
+  color: var(--copper);
+  border-color: var(--copper-dim);
+}
+
+.mode-indicator.delete-mode {
+  color: var(--rose);
+  border-color: var(--rose-dim);
+}
+
+.mode-indicator.label-mode {
+  color: var(--sepia);
+  border-color: var(--sepia-dim);
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+  width: 320px;
+  min-width: 320px;
+  background: var(--linen);
+  border-left: 2px solid var(--ink-faint);
+  overflow-y: auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      rgba(26, 22, 18, 0.06) 27px,
+      rgba(26, 22, 18, 0.06) 28px
+    ),
+    linear-gradient(135deg, #f4ede4, #f0e8dc);
+}
+
+.sidebar-header {
+  padding: 16px 20px 12px;
+  border-bottom: 2px solid var(--ink-faint);
+  background: rgba(26, 22, 18, 0.03);
+}
+
+.sidebar-header h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.sidebar-header .specimen-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-light);
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+/* ========== PROPERTY SECTIONS ========== */
+.prop-section {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--ink-ghost);
+  transition: background var(--transition);
+}
+
+.prop-section:hover {
+  background: rgba(26, 22, 18, 0.02);
+}
+
+.prop-section-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prop-section-title .section-marker {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  flex-shrink: 0;
+}
+
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3px 0;
+  margin-left: 16px;
+}
+
+.prop-label {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink-light);
+}
+
+.prop-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: right;
+}
+
+.prop-value.yes { color: var(--green); }
+.prop-value.no { color: var(--rose); }
+.prop-value.info { color: var(--copper); }
+
+.prop-tooltip {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-light);
+  opacity: 0.6;
+  margin: 4px 0 2px 16px;
+  line-height: 1.4;
+}
+
+/* ========== RELATION PROPERTIES ========== */
+.relation-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  margin-left: 16px;
+}
+
+.relation-label {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.relation-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.relation-badge.yes {
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(45, 90, 39, 0.2);
+}
+
+.relation-badge.no {
+  background: var(--rose-dim);
+  color: var(--rose);
+  border: 1px solid rgba(196, 80, 110, 0.2);
+}
+
+.relation-badge.muted {
+  background: rgba(26, 22, 18, 0.06);
+  color: var(--ink-light);
+  border: 1px solid rgba(26, 22, 18, 0.1);
+}
+
+/* Combined Properties Sub-section */
+.combined-divider {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sepia);
+  margin: 10px 0 6px 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ink-ghost);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.combined-divider .section-marker {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sepia);
+  flex-shrink: 0;
+}
+
+.combined-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 4px 0;
+  margin-left: 16px;
+}
+
+.combined-row.satisfied {
+  background: var(--green-dim);
+  margin-left: 12px;
+  margin-right: -4px;
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  border-left: 3px solid var(--green);
+}
+
+.combined-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.combined-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.combined-badge.yes {
+  background: var(--green);
+  color: var(--linen);
+}
+
+.combined-badge.no {
+  background: var(--rose-dim);
+  color: var(--rose);
+  border: 1px solid rgba(196, 80, 110, 0.2);
+  font-weight: 500;
+}
+
+.combined-badge.muted {
+  background: rgba(26, 22, 18, 0.06);
+  color: var(--ink-light);
+  border: 1px solid rgba(26, 22, 18, 0.1);
+  font-weight: 500;
+}
+
+.combined-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.combined-missing {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--rose);
+  opacity: 0.8;
+}
+
+/* ========== TOOLTIP (info icon) ========== */
+.info-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+}
+
+.info-tooltip .tip-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-faint);
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-light);
+  opacity: 0.5;
+  transition: opacity var(--transition);
+  flex-shrink: 0;
+}
+
+.info-tooltip:hover .tip-icon {
+  opacity: 1;
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.info-tooltip .tip-text {
+  display: none;
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 8px;
+  width: 200px;
+  padding: 8px 10px;
+  background: var(--ink);
+  color: var(--linen);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.4;
+  border-radius: var(--radius);
+  z-index: 1000;
+  box-shadow: 0 4px 16px rgba(26, 22, 18, 0.3);
+}
+
+.info-tooltip:hover .tip-text {
+  display: block;
+}
+
+/* ========== DEGREE LIST ========== */
+.degree-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.degree-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(45, 90, 39, 0.2);
+  white-space: nowrap;
+}
+
+.degree-badge.source {
+  background: var(--copper-dim);
+  color: var(--copper);
+  border-color: rgba(58, 125, 110, 0.2);
+}
+
+.degree-badge.sink {
+  background: var(--sepia-dim);
+  color: var(--sepia);
+  border-color: rgba(139, 105, 20, 0.2);
+}
+
+/* ========== SCC LIST ========== */
+.scc-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.scc-item {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--radius);
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(45, 90, 39, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scc-item .scc-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(26, 22, 18, 0.2);
+  flex-shrink: 0;
+}
+
+/* ========== TOPO ORDER ========== */
+.topo-order {
+  margin: 6px 0 2px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.topo-order .arrow {
+  color: var(--copper);
+  margin: 0 2px;
+}
+
+/* ========== VERTEX TAG LIST ========== */
+.vertex-tag-list {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.vertex-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.vertex-tag.source-tag {
+  background: var(--copper-dim);
+  color: var(--copper);
+  border: 1px solid rgba(58, 125, 110, 0.2);
+}
+
+.vertex-tag.sink-tag {
+  background: var(--sepia-dim);
+  color: var(--sepia);
+  border: 1px solid rgba(139, 105, 20, 0.2);
+}
+
+/* ========== SCC COLORING LEGEND ========== */
+.color-legend {
+  margin: 6px 0 2px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-light);
+}
+
+.color-swatch .swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(26, 22, 18, 0.2);
+}
+
+/* ========== NODE LABEL INPUT ========== */
+.node-label-input {
+  position: absolute;
+  z-index: 1000;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 2px solid var(--sepia);
+  border-radius: var(--radius);
+  background: var(--linen);
+  color: var(--ink);
+  outline: none;
+  text-align: center;
+  width: 80px;
+  box-shadow: 0 2px 8px rgba(26, 22, 18, 0.15);
+}
+
+/* ========== SCROLLBAR ========== */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--linen-darker); border-radius: 3px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .main-area { flex-direction: column; }
+  .sidebar {
+    width: 100%; min-width: 100%; max-height: 40vh;
+    border-left: none; border-top: 2px solid var(--ink-faint);
+  }
+  .canvas-container::after { display: none; }
+  header h1 .subtitle { display: none; }
+}
+
+@media (max-width: 600px) {
+  header { padding: 8px 14px; gap: 8px; flex-wrap: wrap; }
+  header h1 { font-size: 16px; }
+  .header-tools { gap: 4px; }
+  .tool-btn { font-size: 11px; padding: 4px 8px; }
+  .tool-btn .key-hint { display: none; }
+  .sidebar { width: 100%; min-width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- HEADER -->
+  <header>
+    <h1>
+      General Directed Graph Builder
+      <span class="subtitle">with self-loops &amp; relation properties</span>
+    </h1>
+    <div class="header-tools">
+      <button class="tool-btn active stagger-1" id="btn-node" title="Add Vertex mode">
+        + Vertex <span class="key-hint">V</span>
+      </button>
+      <button class="tool-btn stagger-2" id="btn-edge" title="Add Directed Edge mode (self-loops allowed)">
+        + Edge <span class="key-hint">E</span>
+      </button>
+      <div class="tool-divider"></div>
+      <button class="tool-btn stagger-3" id="btn-label" title="Label mode">
+        Label <span class="key-hint">L</span>
+      </button>
+      <button class="tool-btn stagger-4" id="btn-delete" title="Delete mode">
+        Delete <span class="key-hint">D</span>
+      </button>
+      <div class="tool-divider"></div>
+      <button class="tool-btn stagger-5" id="btn-scc-color" title="Toggle SCC coloring">
+        SCC Color <span class="key-hint">S</span>
+      </button>
+      <div class="tool-divider"></div>
+      <button class="tool-btn danger stagger-6" id="btn-reset" title="Clear entire graph">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <!-- CANVAS -->
+    <div class="canvas-container" id="canvas-container">
+      <canvas id="graph-canvas"></canvas>
+      <div class="mode-indicator" id="mode-indicator">Add Vertex</div>
+      <div class="canvas-hint" id="canvas-hint">Click anywhere on the canvas to place your first vertex</div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header stagger-2">
+        <h2>Field Observations</h2>
+        <div class="specimen-count" id="specimen-count">No specimens collected</div>
+      </div>
+
+      <!-- Summary -->
+      <div class="prop-section stagger-3" id="section-summary">
+        <div class="prop-section-title">
+          <span class="section-marker"></span> Summary
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Vertices</span>
+          <span class="prop-value info" id="prop-vertices">0</span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Directed Edges</span>
+          <span class="prop-value info" id="prop-edges">0</span>
+        </div>
+        <div class="prop-row" id="self-loop-row" style="display:none">
+          <span class="prop-label">Self-loops</span>
+          <span class="prop-value info" id="prop-self-loops">0</span>
+        </div>
+      </div>
+
+      <!-- Relation Properties -->
+      <div class="prop-section stagger-4" id="section-relations">
+        <div class="prop-section-title" style="color: var(--violet);">
+          <span class="section-marker" style="border-color: var(--violet)"></span>
+          Relation Properties
+          <span class="info-tooltip">
+            <span class="tip-icon">i</span>
+            <span class="tip-text">Properties of the edge set as a binary relation on the vertex set. Self-loops play a key role in reflexivity.</span>
+          </span>
+        </div>
+        <div id="relation-props-container"></div>
+        <div class="combined-divider">
+          <span class="section-marker"></span>
+          Combined Properties
+        </div>
+        <div id="combined-props-container"></div>
+      </div>
+
+      <!-- Strong Connectivity -->
+      <div class="prop-section stagger-5" id="section-strong">
+        <div class="prop-section-title" style="color: var(--copper);">
+          <span class="section-marker" style="border-color: var(--copper)"></span>
+          Strong Connectivity
+          <span class="info-tooltip">
+            <span class="tip-icon">i</span>
+            <span class="tip-text">A directed graph is strongly connected if there is a directed path from every vertex to every other vertex.</span>
+          </span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Strongly Connected</span>
+          <span class="prop-value" id="prop-strongly-connected">--</span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">SCCs</span>
+          <span class="prop-value info" id="prop-scc-count">--</span>
+        </div>
+        <div class="scc-list" id="scc-list">
+          <span class="prop-tooltip" style="margin:0;">No vertices yet</span>
+        </div>
+      </div>
+
+      <!-- Weak Connectivity -->
+      <div class="prop-section stagger-5">
+        <div class="prop-section-title" style="color: var(--green);">
+          <span class="section-marker" style="border-color: var(--green)"></span>
+          Weak Connectivity
+          <span class="info-tooltip">
+            <span class="tip-icon">i</span>
+            <span class="tip-text">A directed graph is weakly connected if replacing all directed edges with undirected edges produces a connected graph.</span>
+          </span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Weakly Connected</span>
+          <span class="prop-value" id="prop-weakly-connected">--</span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Weak Components</span>
+          <span class="prop-value info" id="prop-weak-components">--</span>
+        </div>
+      </div>
+
+      <!-- Cycles & DAG -->
+      <div class="prop-section stagger-6">
+        <div class="prop-section-title" style="color: var(--rose);">
+          <span class="section-marker" style="border-color: var(--rose)"></span>
+          Cycles &amp; DAG
+          <span class="info-tooltip">
+            <span class="tip-icon">i</span>
+            <span class="tip-text">A directed cycle follows edges to return to the start. Self-loops are cycles of length 1. A DAG has no directed cycles.</span>
+          </span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Contains Directed Cycles</span>
+          <span class="prop-value" id="prop-cycles">--</span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Is a DAG</span>
+          <span class="prop-value" id="prop-dag">--</span>
+        </div>
+      </div>
+
+      <!-- Topological Order -->
+      <div class="prop-section stagger-7">
+        <div class="prop-section-title" style="color: var(--sepia);">
+          <span class="section-marker" style="border-color: var(--sepia)"></span>
+          Topological Order
+          <span class="info-tooltip">
+            <span class="tip-icon">i</span>
+            <span class="tip-text">A topological ordering lists vertices so that for every directed edge u &rarr; v, u appears before v. Only DAGs have topological orderings.</span>
+          </span>
+        </div>
+        <div class="topo-order" id="topo-order">
+          <span class="prop-tooltip" style="margin:0;">No vertices yet</span>
+        </div>
+      </div>
+
+      <!-- Sources & Sinks -->
+      <div class="prop-section stagger-8">
+        <div class="prop-section-title" style="color: var(--copper);">
+          <span class="section-marker" style="border-color: var(--copper)"></span>
+          Sources &amp; Sinks
+          <span class="info-tooltip">
+            <span class="tip-icon">i</span>
+            <span class="tip-text">A source has in-degree 0. A sink has out-degree 0. A self-loop contributes to both in- and out-degree.</span>
+          </span>
+        </div>
+        <div class="prop-row">
+          <span class="prop-label">Sources (in-degree 0)</span>
+          <span class="prop-value info" id="prop-source-count">--</span>
+        </div>
+        <div class="vertex-tag-list" id="source-list"></div>
+        <div class="prop-row" style="margin-top:6px;">
+          <span class="prop-label">Sinks (out-degree 0)</span>
+          <span class="prop-value info" id="prop-sink-count">--</span>
+        </div>
+        <div class="vertex-tag-list" id="sink-list"></div>
+      </div>
+
+      <!-- Vertex Degrees -->
+      <div class="prop-section stagger-9">
+        <div class="prop-section-title" style="color: var(--sepia);">
+          <span class="section-marker" style="border-color: var(--sepia)"></span>
+          Vertex Degrees
+          <span class="info-tooltip">
+            <span class="tip-icon">i</span>
+            <span class="tip-text">In-degree counts incoming edges, out-degree counts outgoing edges. A self-loop adds 1 to both in- and out-degree.</span>
+          </span>
+        </div>
+        <div class="degree-list" id="degree-list">
+          <span class="prop-tooltip" style="margin:0;">No vertices yet</span>
+        </div>
+      </div>
+
+      <!-- SCC Coloring Legend -->
+      <div class="prop-section stagger-10" id="scc-legend-section" style="display:none;">
+        <div class="prop-section-title" style="color: var(--violet);">
+          <span class="section-marker" style="border-color: var(--violet)"></span>
+          SCC Coloring Legend
+        </div>
+        <div class="color-legend" id="color-legend"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// GENERAL DIRECTED GRAPH BUILDER — Core Logic
+// ============================================================
+
+(() => {
+  'use strict';
+
+  // ── Constants ──
+  const NODE_RADIUS = 18;
+  const NODE_HIT_RADIUS = 22;
+  const EDGE_HIT_DISTANCE = 10;
+  const ARROWHEAD_SIZE = 10;
+  const SELF_LOOP_RADIUS = 14;
+  const SELF_LOOP_OFFSET_Y = -(NODE_RADIUS + SELF_LOOP_RADIUS - 4);
+
+  const SCC_COLORS = [
+    '#2d5a27', '#c4506e', '#3a7d6e', '#8b6914', '#7b4daa',
+    '#c17817', '#2a6496', '#b5452a', '#5a8a3c', '#9c4568',
+  ];
+  const SCC_COLOR_NAMES = [
+    'Botanical Green', 'Herbarium Rose', 'Oxidized Copper', 'Sepia',
+    'Pressed Violet', 'Amber', 'Steel Blue', 'Burnt Sienna', 'Sage', 'Dusty Mauve'
+  ];
+
+  // ── State ──
+  let nodes = [];
+  let edges = [];
+  let nextNodeId = 1;
+  let nextEdgeId = 1;
+  let mode = 'node';
+  let edgeStart = null;
+  let showSCCColoring = false;
+  let sccAssignment = {};
+  let sccList = [];
+  let draggingNode = null;
+  let dragOffset = { x: 0, y: 0 };
+  let hoveredNode = null;
+  let hoveredEdge = null;
+  let mousePos = { x: 0, y: 0 };
+  let didDrag = false;
+
+  // ── DOM refs ──
+  const canvasContainer = document.getElementById('canvas-container');
+  const canvas = document.getElementById('graph-canvas');
+  const ctx = canvas.getContext('2d');
+  const modeIndicator = document.getElementById('mode-indicator');
+  const canvasHint = document.getElementById('canvas-hint');
+
+  const btnNode = document.getElementById('btn-node');
+  const btnEdge = document.getElementById('btn-edge');
+  const btnDelete = document.getElementById('btn-delete');
+  const btnLabel = document.getElementById('btn-label');
+  const btnSCCColor = document.getElementById('btn-scc-color');
+  const btnReset = document.getElementById('btn-reset');
+
+  // ── Canvas sizing ──
+  function resizeCanvas() {
+    const rect = canvasContainer.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    render();
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  // ── Mode switching ──
+  function setMode(newMode) {
+    mode = newMode;
+    edgeStart = null;
+    [btnNode, btnEdge, btnDelete, btnLabel].forEach(b => b.classList.remove('active'));
+    modeIndicator.className = 'mode-indicator';
+
+    switch (mode) {
+      case 'node':
+        btnNode.classList.add('active');
+        modeIndicator.textContent = 'Add Vertex';
+        break;
+      case 'edge':
+        btnEdge.classList.add('active');
+        modeIndicator.textContent = 'Add Directed Edge';
+        modeIndicator.classList.add('edge-mode');
+        break;
+      case 'delete':
+        btnDelete.classList.add('active');
+        modeIndicator.textContent = 'Delete';
+        modeIndicator.classList.add('delete-mode');
+        break;
+      case 'label':
+        btnLabel.classList.add('active');
+        modeIndicator.textContent = 'Label Vertex';
+        modeIndicator.classList.add('label-mode');
+        break;
+    }
+    render();
+  }
+
+  btnNode.addEventListener('click', () => setMode('node'));
+  btnEdge.addEventListener('click', () => setMode('edge'));
+  btnDelete.addEventListener('click', () => setMode('delete'));
+  btnLabel.addEventListener('click', () => setMode('label'));
+
+  btnSCCColor.addEventListener('click', () => {
+    showSCCColoring = !showSCCColoring;
+    btnSCCColor.classList.toggle('active', showSCCColoring);
+    if (showSCCColoring) computeSCCs();
+    render();
+    updateProperties();
+  });
+
+  btnReset.addEventListener('click', () => {
+    if (nodes.length === 0 && edges.length === 0) return;
+    nodes = [];
+    edges = [];
+    nextNodeId = 1;
+    nextEdgeId = 1;
+    edgeStart = null;
+    sccAssignment = {};
+    sccList = [];
+    draggingNode = null;
+    hoveredNode = null;
+    hoveredEdge = null;
+    render();
+    updateProperties();
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    switch (e.key.toLowerCase()) {
+      case 'v': setMode('node'); break;
+      case 'e': setMode('edge'); break;
+      case 'd': setMode('delete'); break;
+      case 'l': setMode('label'); break;
+      case 's':
+        showSCCColoring = !showSCCColoring;
+        btnSCCColor.classList.toggle('active', showSCCColoring);
+        if (showSCCColoring) computeSCCs();
+        render();
+        updateProperties();
+        break;
+      case 'escape':
+        edgeStart = null;
+        setMode('node');
+        break;
+    }
+  });
+
+  // ── Hit testing ──
+  function getNodeAt(x, y) {
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i];
+      const dx = n.x - x;
+      const dy = n.y - y;
+      if (dx * dx + dy * dy <= NODE_HIT_RADIUS * NODE_HIT_RADIUS) return n;
+    }
+    return null;
+  }
+
+  function getEdgeAt(x, y) {
+    for (let i = edges.length - 1; i >= 0; i--) {
+      const e = edges[i];
+      const a = nodes.find(n => n.id === e.from);
+      const b = nodes.find(n => n.id === e.to);
+      if (!a || !b) continue;
+
+      let dist;
+
+      if (e.from === e.to) {
+        // Self-loop hit test: distance to the loop circle
+        const cx = a.x;
+        const cy = a.y + SELF_LOOP_OFFSET_Y;
+        const distToCenter = Math.hypot(x - cx, y - cy);
+        dist = Math.abs(distToCenter - SELF_LOOP_RADIUS);
+      } else {
+        const hasReverse = edges.some(oe => oe.from === e.to && oe.to === e.from);
+        if (hasReverse) {
+          dist = pointToCurveDist(x, y, a.x, a.y, b.x, b.y, getCurveOffset(a, b));
+        } else {
+          dist = pointToSegmentDist(x, y, a.x, a.y, b.x, b.y);
+        }
+      }
+
+      if (dist <= EDGE_HIT_DISTANCE) return e;
+    }
+    return null;
+  }
+
+  function pointToSegmentDist(px, py, ax, ay, bx, by) {
+    const dx = bx - ax;
+    const dy = by - ay;
+    const lenSq = dx * dx + dy * dy;
+    if (lenSq === 0) return Math.hypot(px - ax, py - ay);
+    let t = ((px - ax) * dx + (py - ay) * dy) / lenSq;
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+  }
+
+  function getCurveOffset(fromNode, toNode) {
+    const dx = toNode.x - fromNode.x;
+    const dy = toNode.y - fromNode.y;
+    const len = Math.hypot(dx, dy) || 1;
+    return Math.min(30, len * 0.2);
+  }
+
+  function pointToCurveDist(px, py, ax, ay, bx, by, curveOffset) {
+    const mx = (ax + bx) / 2;
+    const my = (ay + by) / 2;
+    const dx = bx - ax;
+    const dy = by - ay;
+    const len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len;
+    const ny = dx / len;
+    const cpx = mx + nx * curveOffset;
+    const cpy = my + ny * curveOffset;
+
+    let minDist = Infinity;
+    const steps = 20;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const it = 1 - t;
+      const sx = it * it * ax + 2 * it * t * cpx + t * t * bx;
+      const sy = it * it * ay + 2 * it * t * cpy + t * t * by;
+      const d = Math.hypot(px - sx, py - sy);
+      if (d < minDist) minDist = d;
+    }
+    return minDist;
+  }
+
+  // ── Canvas interaction ──
+  function getCanvasPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    const pos = getCanvasPos(e);
+    const node = getNodeAt(pos.x, pos.y);
+    didDrag = false;
+
+    if (mode === 'node') {
+      if (node) {
+        draggingNode = node;
+        dragOffset.x = pos.x - node.x;
+        dragOffset.y = pos.y - node.y;
+        canvas.style.cursor = 'grabbing';
+      }
+    } else if (mode === 'edge') {
+      if (node) {
+        if (edgeStart === null) {
+          edgeStart = node.id;
+          render();
+        } else {
+          // Allow self-loops (edgeStart === node.id) AND normal edges
+          const exists = edges.some(ed =>
+            ed.from === edgeStart && ed.to === node.id
+          );
+          if (!exists) {
+            edges.push({ id: nextEdgeId++, from: edgeStart, to: node.id });
+            if (showSCCColoring) computeSCCs();
+            updateProperties();
+          }
+          edgeStart = null;
+          render();
+        }
+      } else {
+        edgeStart = null;
+        render();
+      }
+    } else if (mode === 'delete') {
+      if (node) {
+        deleteNode(node.id);
+      } else {
+        const edge = getEdgeAt(pos.x, pos.y);
+        if (edge) deleteEdge(edge.id);
+      }
+    } else if (mode === 'label') {
+      if (node) {
+        showLabelInput(node);
+      }
+    }
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    if (draggingNode) {
+      draggingNode = null;
+      canvas.style.cursor = '';
+      if (showSCCColoring) computeSCCs();
+      render();
+    }
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    const pos = getCanvasPos(e);
+    mousePos = pos;
+
+    if (draggingNode) {
+      draggingNode.x = pos.x - dragOffset.x;
+      draggingNode.y = pos.y - dragOffset.y;
+      didDrag = true;
+      render();
+      return;
+    }
+
+    const node = getNodeAt(pos.x, pos.y);
+    const edge = node ? null : getEdgeAt(pos.x, pos.y);
+
+    const oldHovered = hoveredNode;
+    const oldHoveredEdge = hoveredEdge;
+    hoveredNode = node;
+    hoveredEdge = edge;
+
+    if (hoveredNode !== oldHovered || hoveredEdge !== oldHoveredEdge) {
+      render();
+    }
+
+    if (mode === 'node') {
+      canvas.style.cursor = node ? 'grab' : 'crosshair';
+    } else if (mode === 'edge') {
+      canvas.style.cursor = node ? 'pointer' : 'default';
+    } else if (mode === 'delete') {
+      canvas.style.cursor = (node || edge) ? 'pointer' : 'default';
+    } else if (mode === 'label') {
+      canvas.style.cursor = node ? 'text' : 'default';
+    }
+  });
+
+  canvas.addEventListener('click', (e) => {
+    if (mode !== 'node') return;
+    if (didDrag) return;
+    const pos = getCanvasPos(e);
+    if (getNodeAt(pos.x, pos.y)) return;
+
+    const label = 'v' + nextNodeId;
+    nodes.push({ id: nextNodeId++, x: pos.x, y: pos.y, label });
+    if (showSCCColoring) computeSCCs();
+    render();
+    updateProperties();
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    hoveredNode = null;
+    hoveredEdge = null;
+    render();
+  });
+
+  // ── Delete operations ──
+  function deleteNode(id) {
+    nodes = nodes.filter(n => n.id !== id);
+    edges = edges.filter(e => e.from !== id && e.to !== id);
+    if (edgeStart === id) edgeStart = null;
+    hoveredNode = null;
+    if (showSCCColoring) computeSCCs();
+    render();
+    updateProperties();
+  }
+
+  function deleteEdge(id) {
+    edges = edges.filter(e => e.id !== id);
+    hoveredEdge = null;
+    if (showSCCColoring) computeSCCs();
+    render();
+    updateProperties();
+  }
+
+  // ── Label input ──
+  function showLabelInput(node) {
+    const existing = document.querySelector('.node-label-input');
+    if (existing) existing.remove();
+
+    const rect = canvas.getBoundingClientRect();
+    const input = document.createElement('input');
+    input.className = 'node-label-input';
+    input.type = 'text';
+    input.value = node.label;
+    input.maxLength = 8;
+    input.style.left = (rect.left + node.x - 40) + 'px';
+    input.style.top = (rect.top + node.y - 14) + 'px';
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        node.label = input.value || node.label;
+        input.remove();
+        render();
+        updateProperties();
+      } else if (e.key === 'Escape') {
+        input.remove();
+      }
+    });
+
+    input.addEventListener('blur', () => {
+      node.label = input.value || node.label;
+      input.remove();
+      render();
+      updateProperties();
+    });
+
+    document.body.appendChild(input);
+    input.focus();
+    input.select();
+  }
+
+  // ============================================================
+  // GRAPH ALGORITHMS
+  // ============================================================
+
+  function getOutAdj() {
+    const adj = {};
+    nodes.forEach(n => { adj[n.id] = []; });
+    edges.forEach(e => { adj[e.from].push(e.to); });
+    return adj;
+  }
+
+  function getUndirectedAdj() {
+    const adj = {};
+    nodes.forEach(n => { adj[n.id] = []; });
+    edges.forEach(e => {
+      if (e.from !== e.to) {
+        adj[e.from].push(e.to);
+        adj[e.to].push(e.from);
+      }
+    });
+    return adj;
+  }
+
+  function getDegrees() {
+    const inDeg = {};
+    const outDeg = {};
+    nodes.forEach(n => { inDeg[n.id] = 0; outDeg[n.id] = 0; });
+    edges.forEach(e => {
+      outDeg[e.from]++;
+      inDeg[e.to]++;
+    });
+    return { inDeg, outDeg };
+  }
+
+  function bfsUndirected(adj, startId) {
+    const visited = new Set();
+    const queue = [startId];
+    visited.add(startId);
+    while (queue.length > 0) {
+      const curr = queue.shift();
+      for (const neighbor of (adj[curr] || [])) {
+        if (!visited.has(neighbor)) {
+          visited.add(neighbor);
+          queue.push(neighbor);
+        }
+      }
+    }
+    return visited;
+  }
+
+  function getWeakComponents() {
+    const adj = getUndirectedAdj();
+    const visited = new Set();
+    const components = [];
+    for (const node of nodes) {
+      if (!visited.has(node.id)) {
+        const comp = bfsUndirected(adj, node.id);
+        comp.forEach(id => visited.add(id));
+        components.push(comp);
+      }
+    }
+    return components;
+  }
+
+  // Tarjan's SCC
+  function tarjanSCC() {
+    const outAdj = getOutAdj();
+    let index = 0;
+    const stack = [];
+    const onStack = new Set();
+    const indices = {};
+    const lowlinks = {};
+    const sccs = [];
+
+    function strongconnect(v) {
+      indices[v] = index;
+      lowlinks[v] = index;
+      index++;
+      stack.push(v);
+      onStack.add(v);
+
+      for (const w of (outAdj[v] || [])) {
+        if (indices[w] === undefined) {
+          strongconnect(w);
+          lowlinks[v] = Math.min(lowlinks[v], lowlinks[w]);
+        } else if (onStack.has(w)) {
+          lowlinks[v] = Math.min(lowlinks[v], indices[w]);
+        }
+      }
+
+      if (lowlinks[v] === indices[v]) {
+        const scc = [];
+        let w;
+        do {
+          w = stack.pop();
+          onStack.delete(w);
+          scc.push(w);
+        } while (w !== v);
+        sccs.push(scc);
+      }
+    }
+
+    for (const node of nodes) {
+      if (indices[node.id] === undefined) {
+        strongconnect(node.id);
+      }
+    }
+
+    return sccs;
+  }
+
+  function computeSCCs() {
+    sccList = tarjanSCC();
+    sccAssignment = {};
+    sccList.forEach((scc, idx) => {
+      scc.forEach(nodeId => { sccAssignment[nodeId] = idx; });
+    });
+    return sccList;
+  }
+
+  // Cycle detection (DFS 3-color)
+  function hasDirectedCycle() {
+    if (nodes.length === 0) return false;
+    // Self-loops are cycles
+    if (edges.some(e => e.from === e.to)) return true;
+
+    const outAdj = getOutAdj();
+    const WHITE = 0, GRAY = 1, BLACK = 2;
+    const color = {};
+    nodes.forEach(n => { color[n.id] = WHITE; });
+
+    function dfs(u) {
+      color[u] = GRAY;
+      for (const v of (outAdj[u] || [])) {
+        if (v === u) continue; // self-loops handled above
+        if (color[v] === GRAY) return true;
+        if (color[v] === WHITE && dfs(v)) return true;
+      }
+      color[u] = BLACK;
+      return false;
+    }
+
+    for (const node of nodes) {
+      if (color[node.id] === WHITE) {
+        if (dfs(node.id)) return true;
+      }
+    }
+    return false;
+  }
+
+  // Topological Sort (Kahn's)
+  function topologicalSort() {
+    if (nodes.length === 0) return null;
+    if (edges.some(e => e.from === e.to)) return null; // self-loops => not a DAG
+
+    const outAdj = getOutAdj();
+    const inDegree = {};
+    nodes.forEach(n => { inDegree[n.id] = 0; });
+    edges.forEach(e => { inDegree[e.to]++; });
+
+    const queue = [];
+    for (const node of nodes) {
+      if (inDegree[node.id] === 0) queue.push(node.id);
+    }
+
+    const order = [];
+    while (queue.length > 0) {
+      queue.sort((a, b) => {
+        const la = nodes.find(n => n.id === a).label;
+        const lb = nodes.find(n => n.id === b).label;
+        return la.localeCompare(lb, undefined, { numeric: true });
+      });
+      const u = queue.shift();
+      order.push(u);
+      for (const v of (outAdj[u] || [])) {
+        inDegree[v]--;
+        if (inDegree[v] === 0) queue.push(v);
+      }
+    }
+
+    if (order.length !== nodes.length) return null;
+    return order;
+  }
+
+  // ============================================================
+  // RELATION PROPERTIES
+  // ============================================================
+
+  function computeRelationProperties() {
+    if (nodes.length === 0) {
+      return {
+        reflexive: null, irreflexive: null, symmetric: null,
+        asymmetric: null, antisymmetric: null, transitive: null,
+        equivalence: null, partialOrder: null, strictPartialOrder: null, totalOrder: null,
+      };
+    }
+
+    const edgeSet = new Set();
+    for (const e of edges) {
+      edgeSet.add(e.from + ',' + e.to);
+    }
+    function hasEdge(a, b) { return edgeSet.has(a + ',' + b); }
+
+    // Reflexive: every vertex has a self-loop
+    let reflexive = true;
+    for (const v of nodes) {
+      if (!hasEdge(v.id, v.id)) { reflexive = false; break; }
+    }
+
+    // Irreflexive: no vertex has a self-loop
+    let irreflexive = true;
+    for (const v of nodes) {
+      if (hasEdge(v.id, v.id)) { irreflexive = false; break; }
+    }
+
+    // Symmetric: for every edge a->b, b->a also exists
+    let symmetric = true;
+    for (const e of edges) {
+      if (!hasEdge(e.to, e.from)) { symmetric = false; break; }
+    }
+
+    // Asymmetric: no self-loops AND for no edge a->b does b->a also exist
+    let asymmetric = true;
+    for (const e of edges) {
+      if (e.from === e.to) { asymmetric = false; break; }
+      if (hasEdge(e.to, e.from)) { asymmetric = false; break; }
+    }
+
+    // Anti-symmetric: if both a->b and b->a then a===b
+    let antisymmetric = true;
+    for (const e of edges) {
+      if (e.from !== e.to && hasEdge(e.to, e.from)) { antisymmetric = false; break; }
+    }
+
+    // Transitive: for every a->b and b->c, a->c exists
+    let transitive = true;
+    const outAdj = getOutAdj();
+    outerLoop:
+    for (const e of edges) {
+      const bNeighbors = outAdj[e.to] || [];
+      for (const c of bNeighbors) {
+        if (!hasEdge(e.from, c)) { transitive = false; break outerLoop; }
+      }
+    }
+
+    const equivalence = reflexive && symmetric && transitive;
+    const partialOrder = reflexive && antisymmetric && transitive;
+    const strictPartialOrder = irreflexive && asymmetric && transitive;
+
+    let connex = true;
+    if (partialOrder) {
+      for (let i = 0; i < nodes.length && connex; i++) {
+        for (let j = i + 1; j < nodes.length && connex; j++) {
+          const a = nodes[i].id, b = nodes[j].id;
+          if (!hasEdge(a, b) && !hasEdge(b, a)) connex = false;
+        }
+      }
+    } else {
+      connex = false;
+    }
+    const totalOrder = partialOrder && connex;
+
+    return {
+      reflexive, irreflexive, symmetric, asymmetric,
+      antisymmetric, transitive, equivalence, partialOrder,
+      strictPartialOrder, totalOrder,
+    };
+  }
+
+  // ============================================================
+  // RENDERING
+  // ============================================================
+
+  function drawArrowhead(fromX, fromY, toX, toY, size, ctx) {
+    const angle = Math.atan2(toY - fromY, toX - fromX);
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(
+      toX - size * Math.cos(angle - Math.PI / 7),
+      toY - size * Math.sin(angle - Math.PI / 7)
+    );
+    ctx.lineTo(
+      toX - size * Math.cos(angle + Math.PI / 7),
+      toY - size * Math.sin(angle + Math.PI / 7)
+    );
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawSelfLoop(node, strokeColor, isHovered, isDelMode) {
+    const cx = node.x;
+    const cy = node.y + SELF_LOOP_OFFSET_Y;
+
+    ctx.strokeStyle = strokeColor;
+    ctx.fillStyle = strokeColor;
+
+    if (isHovered && isDelMode) {
+      ctx.setLineDash([6, 4]);
+    }
+
+    // Draw the loop as a circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, SELF_LOOP_RADIUS, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Arrowhead at reconnection point (bottom-right of loop)
+    const reconnectAngle = Math.PI * 0.35;
+    const ax = cx + SELF_LOOP_RADIUS * Math.cos(reconnectAngle);
+    const ay = cy + SELF_LOOP_RADIUS * Math.sin(reconnectAngle);
+
+    // Tangent direction (clockwise along circle)
+    const tx = -Math.sin(reconnectAngle);
+    const ty = Math.cos(reconnectAngle);
+    const arrowLen = 8;
+    const arrowWidth = 4;
+
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(ax - arrowLen * tx + arrowWidth * ty, ay - arrowLen * ty - arrowWidth * tx);
+    ctx.lineTo(ax - arrowLen * tx - arrowWidth * ty, ay - arrowLen * ty + arrowWidth * tx);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function render() {
+    const rect = canvasContainer.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, rect.height);
+
+    // Draw edges
+    for (const edge of edges) {
+      const from = nodes.find(n => n.id === edge.from);
+      const to = nodes.find(n => n.id === edge.to);
+      if (!from || !to) continue;
+
+      const isHovered = hoveredEdge && hoveredEdge.id === edge.id;
+      const isDelMode = mode === 'delete';
+      const isSelfLoop = edge.from === edge.to;
+
+      let strokeColor, lineWidth;
+      if (isHovered && isDelMode) {
+        strokeColor = '#c4506e';
+        lineWidth = 3;
+      } else if (isHovered) {
+        strokeColor = 'rgba(26, 22, 18, 0.5)';
+        lineWidth = 2.5;
+      } else {
+        strokeColor = 'rgba(26, 22, 18, 0.35)';
+        lineWidth = 1.8;
+      }
+
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = lineWidth;
+      ctx.fillStyle = strokeColor;
+
+      if (isSelfLoop) {
+        drawSelfLoop(from, strokeColor, isHovered, isDelMode);
+      } else {
+        const hasReverse = edges.some(e => e.from === edge.to && e.to === edge.from);
+
+        if (hasReverse) {
+          // Curved edge for parallel pair
+          const dx = to.x - from.x;
+          const dy = to.y - from.y;
+          const len = Math.hypot(dx, dy) || 1;
+          const offset = getCurveOffset(from, to);
+          const nx = -dy / len;
+          const ny = dx / len;
+          const mx = (from.x + to.x) / 2;
+          const my = (from.y + to.y) / 2;
+          const cpx = mx + nx * offset;
+          const cpy = my + ny * offset;
+
+          const tangentX = 2 * (to.x - cpx);
+          const tangentY = 2 * (to.y - cpy);
+          const tangentLen = Math.hypot(tangentX, tangentY) || 1;
+          const arrowEndX = to.x - (tangentX / tangentLen) * NODE_RADIUS;
+          const arrowEndY = to.y - (tangentY / tangentLen) * NODE_RADIUS;
+
+          if (isHovered && isDelMode) {
+            ctx.setLineDash([6, 4]);
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(from.x, from.y);
+          ctx.quadraticCurveTo(cpx, cpy, arrowEndX, arrowEndY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          const arrowAngle = Math.atan2(tangentY, tangentX);
+          ctx.beginPath();
+          ctx.moveTo(arrowEndX, arrowEndY);
+          ctx.lineTo(
+            arrowEndX - ARROWHEAD_SIZE * Math.cos(arrowAngle - Math.PI / 7),
+            arrowEndY - ARROWHEAD_SIZE * Math.sin(arrowAngle - Math.PI / 7)
+          );
+          ctx.lineTo(
+            arrowEndX - ARROWHEAD_SIZE * Math.cos(arrowAngle + Math.PI / 7),
+            arrowEndY - ARROWHEAD_SIZE * Math.sin(arrowAngle + Math.PI / 7)
+          );
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          // Straight edge
+          const dx = to.x - from.x;
+          const dy = to.y - from.y;
+          const len = Math.hypot(dx, dy) || 1;
+          const arrowEndX = to.x - (dx / len) * NODE_RADIUS;
+          const arrowEndY = to.y - (dy / len) * NODE_RADIUS;
+
+          if (isHovered && isDelMode) {
+            ctx.setLineDash([6, 4]);
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(from.x, from.y);
+          ctx.lineTo(arrowEndX, arrowEndY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          drawArrowhead(from.x, from.y, arrowEndX, arrowEndY, ARROWHEAD_SIZE, ctx);
+        }
+      }
+    }
+
+    // Draw edge-in-progress
+    if (edgeStart !== null && mode === 'edge') {
+      const startNode = nodes.find(n => n.id === edgeStart);
+      if (startNode) {
+        ctx.beginPath();
+        ctx.moveTo(startNode.x, startNode.y);
+        ctx.lineTo(mousePos.x, mousePos.y);
+        ctx.strokeStyle = 'rgba(58, 125, 110, 0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = 'rgba(58, 125, 110, 0.5)';
+        const dx = mousePos.x - startNode.x;
+        const dy = mousePos.y - startNode.y;
+        if (Math.hypot(dx, dy) > 10) {
+          drawArrowhead(startNode.x, startNode.y, mousePos.x, mousePos.y, 8, ctx);
+        }
+      }
+    }
+
+    // Draw nodes
+    const degrees = getDegrees();
+    for (const node of nodes) {
+      const isHovered = hoveredNode && hoveredNode.id === node.id;
+      const isEdgeStart = edgeStart === node.id;
+      const isDelMode = mode === 'delete';
+      const sccIdx = showSCCColoring ? sccAssignment[node.id] : undefined;
+
+      // Registration crosshair marks
+      const crossSize = NODE_RADIUS + 6;
+      ctx.beginPath();
+      ctx.strokeStyle = isHovered ? 'rgba(26, 22, 18, 0.25)' : 'rgba(26, 22, 18, 0.1)';
+      ctx.lineWidth = 0.5;
+      ctx.moveTo(node.x - crossSize, node.y);
+      ctx.lineTo(node.x - crossSize + 5, node.y);
+      ctx.moveTo(node.x + crossSize, node.y);
+      ctx.lineTo(node.x + crossSize - 5, node.y);
+      ctx.moveTo(node.x, node.y - crossSize);
+      ctx.lineTo(node.x, node.y - crossSize + 5);
+      ctx.moveTo(node.x, node.y + crossSize);
+      ctx.lineTo(node.x, node.y + crossSize - 5);
+      ctx.stroke();
+
+      // Node circle
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2);
+
+      if (showSCCColoring && sccIdx !== undefined) {
+        ctx.fillStyle = SCC_COLORS[sccIdx % SCC_COLORS.length];
+      } else if (isHovered && isDelMode) {
+        ctx.fillStyle = '#c4506e';
+      } else if (isEdgeStart) {
+        ctx.fillStyle = '#3a7d6e';
+      } else {
+        ctx.fillStyle = '#2d5a27';
+      }
+      ctx.fill();
+
+      ctx.strokeStyle = isHovered ? 'rgba(26, 22, 18, 0.6)' : 'rgba(26, 22, 18, 0.3)';
+      ctx.lineWidth = isHovered ? 2 : 1.5;
+      ctx.stroke();
+
+      // Inner highlight
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, NODE_RADIUS - 3, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = '#f4ede4';
+      ctx.font = '500 12px "Fira Code", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(node.label, node.x, node.y + 0.5);
+
+      // Degree indicator
+      const inD = degrees.inDeg[node.id] || 0;
+      const outD = degrees.outDeg[node.id] || 0;
+      ctx.fillStyle = 'rgba(26, 22, 18, 0.4)';
+      ctx.font = '400 10px "Fira Code", monospace';
+      ctx.fillText('in:' + inD + ' out:' + outD, node.x, node.y + NODE_RADIUS + 14);
+    }
+
+    canvasHint.classList.toggle('hidden', nodes.length > 0);
+  }
+
+  // ============================================================
+  // PROPERTIES PANEL
+  // ============================================================
+
+  function makeTooltip(text) {
+    const tip = document.createElement('span');
+    tip.className = 'info-tooltip';
+    tip.innerHTML = `<span class="tip-icon">i</span><span class="tip-text">${text}</span>`;
+    return tip;
+  }
+
+  function updateProperties() {
+    const n = nodes.length;
+    const m = edges.length;
+    const degrees = getDegrees();
+    const sccs = computeSCCs();
+    const weakComps = getWeakComponents();
+    const hasCycle = hasDirectedCycle();
+    const isDAG = n > 0 && !hasCycle;
+    const topoOrder = isDAG ? topologicalSort() : null;
+    const stronglyConnected = n > 0 && sccs.length === 1;
+    const weaklyConnected = n > 0 && weakComps.length === 1;
+    const selfLoopCount = edges.filter(e => e.from === e.to).length;
+
+    // Summary
+    document.getElementById('prop-vertices').textContent = n;
+    document.getElementById('prop-edges').textContent = m;
+    document.getElementById('prop-self-loops').textContent = selfLoopCount;
+    document.getElementById('self-loop-row').style.display = selfLoopCount > 0 ? '' : 'none';
+
+    // Specimen count
+    const countEl = document.getElementById('specimen-count');
+    if (n === 0) {
+      countEl.textContent = 'No specimens collected';
+    } else {
+      countEl.textContent = `${n} ${n === 1 ? 'vertex' : 'vertices'}, ${m} directed ${m === 1 ? 'edge' : 'edges'} observed`;
+    }
+
+    // ── Relation Properties ──
+    updateRelationProperties();
+
+    // Strongly Connected
+    const scEl = document.getElementById('prop-strongly-connected');
+    if (n === 0) {
+      scEl.textContent = '--';
+      scEl.className = 'prop-value';
+    } else {
+      scEl.textContent = stronglyConnected ? 'Yes' : 'No';
+      scEl.className = 'prop-value ' + (stronglyConnected ? 'yes' : 'no');
+    }
+
+    // SCC count
+    document.getElementById('prop-scc-count').textContent = n === 0 ? '--' : sccs.length;
+
+    // SCC list
+    const sccListEl = document.getElementById('scc-list');
+    sccListEl.innerHTML = '';
+    if (n === 0) {
+      sccListEl.innerHTML = '<span class="prop-tooltip" style="margin:0;">No vertices yet</span>';
+    } else {
+      sccs.forEach((scc, idx) => {
+        const item = document.createElement('div');
+        item.className = 'scc-item';
+        const color = SCC_COLORS[idx % SCC_COLORS.length];
+        const labels = scc
+          .map(id => nodes.find(nd => nd.id === id))
+          .filter(Boolean)
+          .map(nd => nd.label)
+          .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+          .join(', ');
+        item.innerHTML = `<span class="scc-swatch" style="background:${color}"></span>{ ${labels} }`;
+        sccListEl.appendChild(item);
+      });
+    }
+
+    // Weakly Connected
+    const wcEl = document.getElementById('prop-weakly-connected');
+    if (n === 0) {
+      wcEl.textContent = '--';
+      wcEl.className = 'prop-value';
+    } else {
+      wcEl.textContent = weaklyConnected ? 'Yes' : 'No';
+      wcEl.className = 'prop-value ' + (weaklyConnected ? 'yes' : 'no');
+    }
+
+    document.getElementById('prop-weak-components').textContent = n === 0 ? '--' : weakComps.length;
+
+    // Cycles
+    const cycEl = document.getElementById('prop-cycles');
+    if (n === 0) {
+      cycEl.textContent = '--';
+      cycEl.className = 'prop-value';
+    } else {
+      cycEl.textContent = hasCycle ? 'Yes' : 'No';
+      cycEl.className = 'prop-value ' + (hasCycle ? 'no' : 'yes');
+    }
+
+    // DAG
+    const dagEl = document.getElementById('prop-dag');
+    if (n === 0) {
+      dagEl.textContent = '--';
+      dagEl.className = 'prop-value';
+    } else {
+      dagEl.textContent = isDAG ? 'Yes' : 'No';
+      dagEl.className = 'prop-value ' + (isDAG ? 'yes' : 'no');
+    }
+
+    // Topological order
+    const topoEl = document.getElementById('topo-order');
+    topoEl.innerHTML = '';
+    if (n === 0) {
+      topoEl.innerHTML = '<span class="prop-tooltip" style="margin:0;">No vertices yet</span>';
+    } else if (!isDAG) {
+      topoEl.innerHTML = '<span class="prop-tooltip" style="margin:0;">N/A (contains cycles)</span>';
+    } else if (topoOrder) {
+      const labels = topoOrder.map(id => {
+        const nd = nodes.find(nn => nn.id === id);
+        return nd ? nd.label : '?';
+      });
+      topoEl.innerHTML = labels.join('<span class="arrow"> &rarr; </span>');
+    }
+
+    // Sources & Sinks
+    const sources = nodes.filter(nd => degrees.inDeg[nd.id] === 0);
+    const sinks = nodes.filter(nd => degrees.outDeg[nd.id] === 0);
+
+    document.getElementById('prop-source-count').textContent = n === 0 ? '--' : sources.length;
+    document.getElementById('prop-sink-count').textContent = n === 0 ? '--' : sinks.length;
+
+    const sourceListEl = document.getElementById('source-list');
+    sourceListEl.innerHTML = '';
+    if (n > 0) {
+      if (sources.length === 0) {
+        sourceListEl.innerHTML = '<span class="prop-tooltip" style="margin:0;">None</span>';
+      } else {
+        sources.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
+          .forEach(nd => {
+            const tag = document.createElement('span');
+            tag.className = 'vertex-tag source-tag';
+            tag.textContent = nd.label;
+            sourceListEl.appendChild(tag);
+          });
+      }
+    }
+
+    const sinkListEl = document.getElementById('sink-list');
+    sinkListEl.innerHTML = '';
+    if (n > 0) {
+      if (sinks.length === 0) {
+        sinkListEl.innerHTML = '<span class="prop-tooltip" style="margin:0;">None</span>';
+      } else {
+        sinks.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
+          .forEach(nd => {
+            const tag = document.createElement('span');
+            tag.className = 'vertex-tag sink-tag';
+            tag.textContent = nd.label;
+            sinkListEl.appendChild(tag);
+          });
+      }
+    }
+
+    // Degree list
+    const degreeEl = document.getElementById('degree-list');
+    degreeEl.innerHTML = '';
+    if (n === 0) {
+      degreeEl.innerHTML = '<span class="prop-tooltip" style="margin:0;">No vertices yet</span>';
+    } else {
+      const sorted = [...nodes].sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
+      for (const node of sorted) {
+        const inD = degrees.inDeg[node.id] || 0;
+        const outD = degrees.outDeg[node.id] || 0;
+        const badge = document.createElement('span');
+        const isSource = inD === 0 && edges.length > 0;
+        const isSink = outD === 0 && edges.length > 0;
+        badge.className = 'degree-badge' + (isSource ? ' source' : '') + (isSink ? ' sink' : '');
+        badge.textContent = `${node.label}: in=${inD} out=${outD}`;
+        degreeEl.appendChild(badge);
+      }
+    }
+
+    // SCC legend
+    const sccLegendSection = document.getElementById('scc-legend-section');
+    const legendEl = document.getElementById('color-legend');
+    legendEl.innerHTML = '';
+    if (showSCCColoring && n > 0 && sccs.length > 0) {
+      sccLegendSection.style.display = '';
+      sccs.forEach((scc, idx) => {
+        const swatch = document.createElement('div');
+        swatch.className = 'color-swatch';
+        const color = SCC_COLORS[idx % SCC_COLORS.length];
+        const name = SCC_COLOR_NAMES[idx % SCC_COLOR_NAMES.length];
+        swatch.innerHTML = `<span class="swatch" style="background:${color}"></span>SCC ${idx + 1}: ${name}`;
+        legendEl.appendChild(swatch);
+      });
+    } else {
+      sccLegendSection.style.display = 'none';
+    }
+
+    if (showSCCColoring) render();
+  }
+
+  // ── Update Relation Properties ──
+  function updateRelationProperties() {
+    const props = computeRelationProperties();
+    const container = document.getElementById('relation-props-container');
+    const combinedContainer = document.getElementById('combined-props-container');
+    container.innerHTML = '';
+    combinedContainer.innerHTML = '';
+
+    const tooltips = {
+      reflexive: 'Every vertex has a self-loop: &forall;v, (v,v) &isin; E.',
+      irreflexive: 'No vertex has a self-loop: &forall;v, (v,v) &notin; E.',
+      symmetric: 'For every edge (a,b), the reverse (b,a) also exists.',
+      asymmetric: 'No self-loops, and for no edge (a,b) does (b,a) exist.',
+      antisymmetric: 'If both (a,b) and (b,a) exist, then a = b.',
+      transitive: 'For every (a,b) and (b,c), the edge (a,c) exists.',
+    };
+
+    const indivProps = [
+      { label: 'Reflexive', key: 'reflexive', value: props.reflexive },
+      { label: 'Irreflexive', key: 'irreflexive', value: props.irreflexive },
+      { label: 'Symmetric', key: 'symmetric', value: props.symmetric },
+      { label: 'Asymmetric', key: 'asymmetric', value: props.asymmetric },
+      { label: 'Anti-symmetric', key: 'antisymmetric', value: props.antisymmetric },
+      { label: 'Transitive', key: 'transitive', value: props.transitive },
+    ];
+
+    for (const p of indivProps) {
+      const row = document.createElement('div');
+      row.className = 'relation-row';
+
+      const label = document.createElement('span');
+      label.className = 'relation-label';
+      label.textContent = p.label + ' ';
+      label.appendChild(makeTooltip(tooltips[p.key]));
+      row.appendChild(label);
+
+      const badge = document.createElement('span');
+      badge.className = 'relation-badge';
+      if (p.value === null) {
+        badge.classList.add('muted');
+        badge.textContent = '--';
+      } else if (p.value) {
+        badge.classList.add('yes');
+        badge.textContent = 'Yes';
+      } else {
+        badge.classList.add('no');
+        badge.textContent = 'No';
+      }
+      row.appendChild(badge);
+      container.appendChild(row);
+    }
+
+    // Combined properties
+    const combinedDefs = [
+      {
+        label: 'Equivalence Relation',
+        value: props.equivalence,
+        tooltip: 'Reflexive + Symmetric + Transitive. Partitions vertices into equivalence classes.',
+        requires: ['Reflexive', 'Symmetric', 'Transitive'],
+        checks: [props.reflexive, props.symmetric, props.transitive],
+      },
+      {
+        label: 'Partial Order',
+        value: props.partialOrder,
+        tooltip: 'Reflexive + Anti-symmetric + Transitive. Defines a partial ordering on vertices.',
+        requires: ['Reflexive', 'Anti-symmetric', 'Transitive'],
+        checks: [props.reflexive, props.antisymmetric, props.transitive],
+      },
+      {
+        label: 'Strict Partial Order',
+        value: props.strictPartialOrder,
+        tooltip: 'Irreflexive + Asymmetric + Transitive. A strict (non-reflexive) ordering.',
+        requires: ['Irreflexive', 'Asymmetric', 'Transitive'],
+        checks: [props.irreflexive, props.asymmetric, props.transitive],
+      },
+      {
+        label: 'Total/Linear Order',
+        value: props.totalOrder,
+        tooltip: 'Partial Order where every pair of distinct vertices is comparable (connex).',
+        requires: ['Partial Order', 'Connex'],
+        checks: [props.partialOrder, props.totalOrder || (props.partialOrder ? null : false)],
+      },
+    ];
+
+    for (const c of combinedDefs) {
+      const row = document.createElement('div');
+      row.className = 'combined-row' + (c.value ? ' satisfied' : '');
+
+      const label = document.createElement('span');
+      label.className = 'combined-label';
+      label.textContent = c.label + ' ';
+      label.appendChild(makeTooltip(c.tooltip));
+      row.appendChild(label);
+
+      const detail = document.createElement('div');
+      detail.className = 'combined-detail';
+
+      const badge = document.createElement('span');
+      badge.className = 'combined-badge';
+      if (c.value === null) {
+        badge.classList.add('muted');
+        badge.textContent = '--';
+      } else if (c.value) {
+        badge.classList.add('yes');
+        badge.textContent = 'Yes';
+      } else {
+        badge.classList.add('no');
+        badge.textContent = 'No';
+      }
+      detail.appendChild(badge);
+
+      if (c.value === false) {
+        const missing = [];
+        for (let i = 0; i < c.requires.length; i++) {
+          if (c.checks[i] === false) missing.push(c.requires[i]);
+        }
+        if (missing.length > 0) {
+          const missingEl = document.createElement('div');
+          missingEl.className = 'combined-missing';
+          missingEl.textContent = 'Missing: ' + missing.join(', ');
+          detail.appendChild(missingEl);
+        }
+      }
+
+      row.appendChild(detail);
+      combinedContainer.appendChild(row);
+    }
+  }
+
+  // Initial state
+  updateProperties();
+
+  canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+})();
+</script>
+</body>
+</html>

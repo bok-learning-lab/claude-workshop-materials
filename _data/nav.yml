@@ -1,0 +1,93 @@
+encyclopedia:
+  - title: Get Started
+    url: /encyclopedia/get-started/
+    children:
+      - title: Claude.ai Setup
+        url: /encyclopedia/get-started/claude-ai-setup/
+      - title: Mac Setup (Claude Code)
+        url: /encyclopedia/get-started/claude-code-mac-setup/
+      - title: Windows Setup (Claude Code)
+        url: /encyclopedia/get-started/claude-code-windows-setup/
+      - title: Cowork Setup
+        url: /encyclopedia/get-started/claude-cowork-setup/
+  - title: Glossary
+    url: /encyclopedia/glossary/
+    children:
+      - title: agent
+        url: /encyclopedia/glossary/agent/
+      - title: API
+        url: /encyclopedia/glossary/api/
+      - title: artifact
+        url: /encyclopedia/glossary/artifact/
+      - title: Claude
+        url: /encyclopedia/glossary/claude/
+      - title: Claude Code
+        url: /encyclopedia/glossary/claude-code/
+      - title: CLAUDE.md
+        url: /encyclopedia/glossary/claude-md/
+      - title: context
+        url: /encyclopedia/glossary/context/
+      - title: context engineering
+        url: /encyclopedia/glossary/context-engineering/
+      - title: context rot
+        url: /encyclopedia/glossary/context-rot/
+      - title: context window
+        url: /encyclopedia/glossary/context-window/
+      - title: harness
+        url: /encyclopedia/glossary/harness/
+      - title: LLM
+        url: /encyclopedia/glossary/llm/
+      - title: markdown
+        url: /encyclopedia/glossary/markdown/
+      - title: memory
+        url: /encyclopedia/glossary/memory/
+      - title: model
+        url: /encyclopedia/glossary/model/
+      - title: prompt
+        url: /encyclopedia/glossary/prompt/
+      - title: skill.md
+        url: /encyclopedia/glossary/skill-md/
+      - title: system prompt
+        url: /encyclopedia/glossary/system-prompt/
+      - title: token
+        url: /encyclopedia/glossary/token/
+      - title: tool call
+        url: /encyclopedia/glossary/tool-call/
+      - title: Anthropic
+        url: /encyclopedia/glossary/anthropic/
+  - title: Cheatsheets
+    url: /encyclopedia/cheatsheets/
+    children:
+      - title: Markdown
+        url: /encyclopedia/cheatsheets/markdown/
+      - title: Claude Code Tools & Terms
+        url: /encyclopedia/cheatsheets/claude-code-tools/
+
+activities:
+  - title: Overview
+    url: /activities/
+  - title: 01 · Close Reading
+    url: /activities/01-close-reading/
+  - title: 02 · Population Pyramids
+    url: /activities/02-population-pyramids/
+  - title: 03 · Recipes
+    url: /activities/03-recipes/
+
+gallery:
+  - title: Overview
+    url: /gallery/
+  - title: 04 · Schedule Conflict
+    url: /gallery/04-schedule-conflict/
+  - title: 05 · Makeup Exams
+    url: /gallery/05-makeup-exams/
+  - title: 06 · Research Helper
+    url: /gallery/06-research-helper/
+  - title: Day 4 Projects
+    url: /gallery/day-4/
+    children:
+      - title: Physics Interactives
+        url: /gallery/day-4/becca-interactives/
+      - title: How to Build an MCP
+        url: /gallery/day-4/how-to-build-an-mcp/
+      - title: Project Overviews
+        url: /gallery/day-4/project-overviews/

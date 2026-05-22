@@ -1,0 +1,42 @@
+<!--
+  Graph Builder (W6) — embeddable widget.
+
+  Refactored from the single-file Interactives/graph-builder.html into a
+  platform-ready 3-file widget. Each <div class="gb-widget"> on the page
+  is mounted as an independent instance with its own canvas, state,
+  toolbar, and sidebar; multiple instances coexist without interference.
+
+  Pedagogy: an exploratory graph-theory sandbox. Students place vertices,
+  connect them with edges, optionally label/recolor, and watch a sidebar
+  of computed properties update live (vertex/edge counts, components,
+  connectivity, cycles, tree classification, bipartiteness, chromatic
+  number, vertex degrees). Used in segment 4.3 (open exploration +
+  chromatic-number practice). Phases 2 and 3 will add `mode: "bridges"`
+  (segment 4.5) and `mode: "tree-eq"` (segment 5.0).
+
+  data-problem JSON keys (all optional):
+    title       (string)  — bold heading; defaults to "Graph Builder."
+    intro       (HTML)    — short intro card above the widget.
+    viz         (object)  — visualization parameters.
+      mode      ("explore" | "bridges" | "tree-eq", default "explore")
+                Phases 2 and 3 will implement bridges and tree-eq.
+      sections  (object) — toggle visibility of property panels. All
+                default true. Keys: summary, connectivity, cycles, tree,
+                bipartite, chromatic, degrees.
+      tools     (object) — toggle visibility of toolbar buttons. All
+                default true. Keys: label, color.
+      initialGraph (object, optional) — pre-load a graph. Schema:
+                { vertices: [{ id, x, y, label }, ...],
+                  edges:    [{ from, to }, ...] }
+                Coordinates are in canvas pixels, with (0, 0) at the
+                top-left of the canvas area.
+
+  Keyboard shortcuts (V / E / L / D / C / Esc) work when the widget has
+  focus — click into the widget first to activate.
+
+  No document-wide IDs; everything scoped via root.querySelector.
+-->
+<div class="gb-widget" data-problem='{
+  "title": "Graph Builder",
+  "intro": "<p>Place vertices on the canvas, connect them with edges, and watch the sidebar tell you everything about the graph you built. Try to construct a tree, then a cycle, then a bipartite graph — and notice how the properties update.</p>"
+}'></div>

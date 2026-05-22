@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truth Table Widget — multi-instance test</title>
+  <link rel="stylesheet" href="truth-table.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 900px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; }
+    .gap { height: 32px; }
+  </style>
+</head>
+<body>
+
+  <h1>Truth-table widget — multi-instance test</h1>
+  <p class="hint">
+    Three independent widgets on one page. Open the browser console:
+    self-tests should run exactly once. Filling and clicking <em>Check</em> on
+    one widget must not affect the others.
+  </p>
+
+  <!-- Widget 1: equivalence problem with a middle column -->
+  <div class="tt-widget" data-problem='{
+    "title": "Widget 1 — Problem 1a",
+    "instructions": "Show using a truth table that P → Q is equivalent to ¬P ∨ Q.",
+    "variables": ["P", "Q"],
+    "firstColumn":  { "label": "P → Q",  "formula": "P -> Q" },
+    "middleColumns": [
+      { "label": "¬P", "formula": "!P" }
+    ],
+    "lastColumn":   { "label": "¬P ∨ Q", "formula": "!P | Q" }
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: a non-equivalence — verdict banner should turn red on Check -->
+  <div class="tt-widget" data-problem='{
+    "title": "Widget 2 — Problem 1b",
+    "instructions": "Is P → Q equivalent to Q → P? Fill the table and Check.",
+    "variables": ["P", "Q"],
+    "firstColumn": { "label": "P → Q", "formula": "P -> Q" },
+    "lastColumn":  { "label": "Q → P", "formula": "Q -> P" }
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: 3 variables, no equivalence claim — middle-only column. -->
+  <div class="tt-widget" data-problem='{
+    "title": "Widget 3 — fill the truth table",
+    "instructions": "Fill in the truth table for (P ∧ Q) ∨ ¬R.",
+    "variables": ["P", "Q", "R"],
+    "middleColumns": [
+      { "label": "(P ∧ Q) ∨ ¬R", "formula": "(P & Q) | !R" }
+    ]
+  }'></div>
+
+  <script src="truth-table.js"></script>
+
+</body>
+</html>

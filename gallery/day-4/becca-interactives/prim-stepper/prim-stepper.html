@@ -1,0 +1,41 @@
+<!--
+  Prim's Algorithm Stepper (W23) — embeddable widget.
+
+  Each <div class="prim-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students load a small weighted graph, click a vertex to choose
+  a starting point, then step through Prim's algorithm one edge at a time.
+  At each step:
+    - Vertices in the partial tree T are green.
+    - Edges in T are thick green.
+    - Frontier edges (one endpoint in T, one outside) are amber.
+    - The next edge Prim's would pick (minimum-weight frontier edge) gets
+      a heavier amber highlight.
+    - Non-frontier edges stay in the default ink color.
+  A sidebar shows the current step, running total weight, and an ordered
+  list of edges added so far. Used in segment 5.0 Activity 12.
+
+  data-problem JSON keys (all optional):
+    title          (string) — bold heading; defaults to "Prim's Algorithm
+                   Stepper."
+    intro          (HTML)   — short intro card above the widget.
+    defaultPreset  ("lecture" | "ties") — initial preset; default "lecture."
+
+  Presets are hardcoded in the JS:
+    "lecture" — the 6-vertex example from the 2018 trees lecture
+                (09:48–13:23). MST weight 1+2+1+4+3 = 11 starting from A.
+    "ties"    — a 4-vertex graph with several tied edge weights, useful
+                for exploring how different starting vertices and
+                tiebreaking can produce different (equally-good) MSTs.
+
+  Tiebreaking is deterministic (lower edge id wins among ties) so the
+  trace is reproducible per starting vertex.
+
+  No document-wide IDs; everything scoped via root.querySelector.
+-->
+<div class="prim-widget" data-problem='{
+  "title": "Prim&#39;s Algorithm Stepper",
+  "intro": "<p>Pick a starting vertex, then step through Prim&#39;s algorithm. At each step, the widget highlights the <em>frontier</em> (edges with one endpoint in the partial tree, one outside) and the minimum-weight frontier edge it will add next. Try different starting vertices and watch how Prim&#39;s sometimes produces the same MST — and sometimes different equally-good MSTs.</p>",
+  "defaultPreset": "lecture"
+}'></div>

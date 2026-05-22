@@ -1,0 +1,37 @@
+<!--
+  Tower of Hanoi Player (W26) — embeddable widget.
+
+  Each <div class="hanoi-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students play the puzzle by hand (click peg → click peg) on n
+  disks, watch their move count climb, and discover the recursive
+  "to do n disks, do (n-1) disks twice" structure before the lecture
+  explicitly names it. Used in segment 6.1 Activity 3b.
+
+  Interaction model: click-to-pick-up, click-to-place.
+   · Click a peg with at least one disk → that peg is selected; its top
+     disk is "in hand."
+   · Click any peg → the held disk is placed on the clicked peg if the
+     move is legal (target empty or has a larger disk on top); illegal
+     moves shake briefly and deselect.
+   · Click the same peg twice in a row → cancel the selection.
+
+  Status sidebar shows: disk count, move counter, optimal-move count
+  (2^n − 1), win indicator. A disk-count selector and a Reset button sit
+  at the top.
+
+  data-problem JSON keys (all optional):
+    title         (string)  — bold heading.
+    intro         (HTML)    — short intro card above the widget.
+    defaultN      (integer 3..8) — initial disk count; default 4.
+    minN          (integer ≥ 1)  — min disk count in the selector; default 3.
+    maxN          (integer ≤ 9)  — max disk count in the selector; default 8.
+-->
+<div class="hanoi-widget" data-problem='{
+  "title": "Tower of Hanoi",
+  "intro": "<p>Click a peg to pick up its top disk, then click another peg to place it. The bigger disks can&#39;t sit on smaller ones. Solve with 4 disks, then try 5 — and watch for a pattern in your own moves.</p>",
+  "defaultN": 4,
+  "minN": 3,
+  "maxN": 8
+}'></div>

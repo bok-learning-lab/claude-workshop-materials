@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Graph Builder — Narrow Column Test</title>
+  <link rel="stylesheet" href="graph-builder.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fafafa;
+    }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    .scenario {
+      margin: 0 0 36px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .scenario h2 {
+      font-size: 14px;
+      margin: 0 0 12px;
+      color: #555;
+    }
+    .col-800 { max-width: 800px; }
+    .col-600 { max-width: 600px; }
+    .col-480 { max-width: 480px; }
+    .col-360 { max-width: 360px; }
+  </style>
+</head>
+<body>
+  <h1>Graph Builder — Narrow-Column Responsive Test</h1>
+  <p>The widget should adapt to its container width (not the viewport width). At narrower widths, the sidebar should stack below the canvas, and at very narrow widths the toolbar should compact.</p>
+
+  <div class="scenario col-800">
+    <h2>800px column — desktop side-by-side layout expected</h2>
+    <div class="gb-widget" data-problem='{
+      "title": "Graph Builder (800px)",
+      "viz": {
+        "initialGraph": {
+          "vertices": [
+            { "id": 1, "x": 100, "y": 100, "label": "a" },
+            { "id": 2, "x": 250, "y": 100, "label": "b" },
+            { "id": 3, "x": 175, "y": 230, "label": "c" }
+          ],
+          "edges": [{ "from": 1, "to": 2 }, { "from": 2, "to": 3 }]
+        }
+      }
+    }'></div>
+  </div>
+
+  <div class="scenario col-600">
+    <h2>600px column — should stack (sidebar below canvas)</h2>
+    <div class="gb-widget" data-problem='{
+      "title": "Graph Builder (600px)",
+      "viz": {
+        "initialGraph": {
+          "vertices": [
+            { "id": 1, "x": 100, "y": 100, "label": "a" },
+            { "id": 2, "x": 250, "y": 100, "label": "b" },
+            { "id": 3, "x": 175, "y": 230, "label": "c" }
+          ],
+          "edges": [{ "from": 1, "to": 2 }, { "from": 2, "to": 3 }]
+        }
+      }
+    }'></div>
+  </div>
+
+  <div class="scenario col-480">
+    <h2>480px column — stacked + compact toolbar expected</h2>
+    <div class="gb-widget" data-problem='{
+      "title": "Graph Builder (480px)",
+      "viz": {
+        "initialGraph": {
+          "vertices": [
+            { "id": 1, "x": 100, "y": 100, "label": "a" },
+            { "id": 2, "x": 250, "y": 100, "label": "b" }
+          ],
+          "edges": [{ "from": 1, "to": 2 }]
+        }
+      }
+    }'></div>
+  </div>
+
+  <div class="scenario col-360">
+    <h2>360px column — fully compact</h2>
+    <div class="gb-widget" data-problem='{
+      "title": "Graph Builder (360px)",
+      "viz": {
+        "initialGraph": {
+          "vertices": [
+            { "id": 1, "x": 80,  "y": 100, "label": "a" },
+            { "id": 2, "x": 200, "y": 100, "label": "b" }
+          ],
+          "edges": [{ "from": 1, "to": 2 }]
+        }
+      }
+    }'></div>
+  </div>
+
+  <script src="graph-builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!--
+  Embed shape: a single self-contained <div class="logic-equiv-widget"> per
+  problem. Edit the JSON inside data-problem to author a new problem.
+  Multiple <div class="logic-equiv-widget"> blocks can coexist on the same page.
+
+  data-problem JSON keys:
+    start    (string, required) — starting formula (the LHS of the proof goal).
+    target   (string, required) — target formula (the RHS of the proof goal).
+
+  Formula syntax (used in start and target):
+    NOT     :  ¬, !, ~
+    AND     :  ∧, &, /\
+    OR      :  ∨, |, \/
+    XOR     :  ⊕, ^
+    IMPLIES :  →, ->
+    Parens  :  ( )
+    Atomic propositions: any identifier (P, Q, R, A1, foo).
+-->
+<div class="logic-equiv-widget"
+     data-problem='{"start": "¬(P ∧ Q)", "target": "¬P ∨ ¬Q"}'></div>

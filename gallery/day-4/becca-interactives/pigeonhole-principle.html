@@ -1,0 +1,2390 @@
+<!--
+  PIGEONHOLE PRINCIPLE — Interactive Practice Interface
+  =====================================================
+
+  DESIGN DECISIONS:
+
+  1. AESTHETIC DIRECTION: "Academic Chalkboard Meets Modern Proof Assistant"
+     Inspired by the visual language of a well-used mathematics classroom
+     chalkboard — warm dark surfaces, chalk-like annotations, and hand-drawn
+     diagram energy — but rendered with the precision of a modern proof
+     assistant. The interface feels like a mathematician's personal notebook
+     that has come alive. Warm charcoal backgrounds with cream/off-white
+     text evoke slate, while coral and teal accents mark important
+     mathematical structures.
+
+  2. TYPOGRAPHY:
+     - Display/Headers: "Playfair Display" — elegant serif with mathematical gravitas
+     - Body/UI: "Source Code Pro" — clear monospace for structured proof inputs
+     - Accent/Labels: "Crimson Pro" — refined serif for problem narrative text
+
+  3. COLOR PALETTE:
+     - Slate (#1e1e2e) — primary background, the chalkboard
+     - Chalk (#f5f0e8) — primary text, warm off-white
+     - Coral (#e8735a) — pigeons (domain), warm and attention-grabbing
+     - Teal (#3dbfa0) — pigeonholes (codomain), cool complement
+     - Gold (#e8c547) — mapping arrows, connections, highlights
+     - Dusty Violet (#7c6f9f) — hints, secondary information
+     - Soft Green (#6bc77a) — correct/success states
+
+  4. THE MEMORABLE THING:
+     The animated "pigeon flight" — when students submit a correct answer,
+     tiny pigeon silhouettes fly from the domain into the pigeonholes with
+     a satisfying cascade animation. The pigeons literally collide in the
+     holes that are overfull, creating a visual "aha!" moment for the
+     principle. Each problem also has a bespoke interactive visualization
+     canvas that makes the abstract concrete.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pigeonhole Principle — Interactive Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Code+Pro:wght@300;400;500;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS VARIABLES ========== */
+:root {
+  --slate: #1e1e2e;
+  --slate-light: #2a2a3d;
+  --slate-lighter: #35354d;
+  --chalk: #f5f0e8;
+  --chalk-dim: rgba(245, 240, 232, 0.6);
+  --chalk-faint: rgba(245, 240, 232, 0.12);
+  --coral: #e8735a;
+  --coral-dim: rgba(232, 115, 90, 0.15);
+  --coral-glow: rgba(232, 115, 90, 0.4);
+  --teal: #3dbfa0;
+  --teal-dim: rgba(61, 191, 160, 0.15);
+  --teal-glow: rgba(61, 191, 160, 0.4);
+  --gold: #e8c547;
+  --gold-dim: rgba(232, 197, 71, 0.15);
+  --gold-glow: rgba(232, 197, 71, 0.4);
+  --violet: #7c6f9f;
+  --violet-dim: rgba(124, 111, 159, 0.2);
+  --green: #6bc77a;
+  --green-dim: rgba(107, 199, 122, 0.15);
+  --red: #d94f4f;
+  --red-dim: rgba(217, 79, 79, 0.15);
+
+  --font-display: 'Playfair Display', serif;
+  --font-mono: 'Source Code Pro', monospace;
+  --font-body: 'Crimson Pro', serif;
+
+  --radius: 6px;
+  --radius-lg: 12px;
+  --transition: 0.25s ease;
+  --shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  background: var(--slate);
+  color: var(--chalk);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* Chalkboard texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(61,191,160,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(232,115,90,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(124,111,159,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--slate); }
+::-webkit-scrollbar-thumb { background: var(--slate-lighter); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--violet); }
+
+/* ========== HEADER ========== */
+.site-header {
+  position: relative;
+  z-index: 10;
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid var(--chalk-faint);
+  background: linear-gradient(180deg, rgba(30,30,46,1) 0%, rgba(30,30,46,0.95) 100%);
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--gold) 50%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.site-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--chalk-dim);
+  font-style: italic;
+}
+
+.principle-statement {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--slate-light);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--chalk-dim);
+  line-height: 1.7;
+}
+
+.principle-statement strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.math {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--chalk);
+  background: var(--chalk-faint);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+/* ========== NAVIGATION TABS ========== */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--slate);
+  border-bottom: 1px solid var(--chalk-faint);
+  padding: 0 2rem;
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav-inner::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  flex-shrink: 0;
+  padding: 0.85rem 1.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--chalk-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.nav-tab:hover {
+  color: var(--chalk);
+  background: var(--chalk-faint);
+}
+
+.nav-tab.active {
+  color: var(--coral);
+  border-bottom-color: var(--coral);
+}
+
+.nav-tab .tab-num {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--chalk-faint);
+  margin-right: 0.4em;
+  font-size: 0.75rem;
+}
+
+.nav-tab.active .tab-num {
+  background: var(--coral-dim);
+  color: var(--coral);
+}
+
+.nav-tab.completed .tab-num {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+.nav-tab.completed {
+  color: var(--green);
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ========== PROBLEM PANELS ========== */
+.problem-panel {
+  display: none;
+  animation: fadeSlideIn 0.4s ease;
+}
+
+.problem-panel.active {
+  display: block;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.problem-header {
+  margin-bottom: 1.5rem;
+}
+
+.problem-number {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--coral);
+  margin-bottom: 0.3rem;
+}
+
+.problem-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--chalk);
+  margin-bottom: 0.75rem;
+}
+
+.problem-statement {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--chalk-dim);
+  line-height: 1.75;
+  padding: 1.25rem 1.5rem;
+  background: var(--slate-light);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--chalk-faint);
+}
+
+/* ========== TWO-COLUMN LAYOUT ========== */
+.problem-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .problem-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== VISUALIZATION PANEL ========== */
+.viz-panel {
+  background: var(--slate-light);
+  border: 1px solid var(--chalk-faint);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  min-height: 350px;
+  position: relative;
+  overflow: hidden;
+}
+
+.viz-panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--violet);
+  margin-bottom: 0.75rem;
+}
+
+.viz-canvas {
+  width: 100%;
+  height: 300px;
+  border-radius: var(--radius);
+  cursor: crosshair;
+}
+
+.viz-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.viz-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--slate-lighter);
+  color: var(--chalk-dim);
+  border: 1px solid var(--chalk-faint);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.viz-btn:hover {
+  background: var(--chalk-faint);
+  color: var(--chalk);
+}
+
+.viz-btn.active {
+  background: var(--teal-dim);
+  color: var(--teal);
+  border-color: var(--teal);
+}
+
+/* ========== ARGUMENT FORM ========== */
+.argument-panel {
+  background: var(--slate-light);
+  border: 1px solid var(--chalk-faint);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.argument-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.arg-field {
+  margin-bottom: 1rem;
+}
+
+.arg-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  color: var(--chalk-dim);
+}
+
+.arg-label .pigeon-icon { color: var(--coral); }
+.arg-label .hole-icon { color: var(--teal); }
+.arg-label .map-icon { color: var(--gold); }
+.arg-label .count-icon { color: var(--violet); }
+
+.arg-input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--slate);
+  border: 1px solid var(--chalk-faint);
+  border-radius: var(--radius);
+  color: var(--chalk);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  transition: var(--transition);
+  resize: vertical;
+}
+
+.arg-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-dim);
+}
+
+.arg-input::placeholder {
+  color: var(--chalk-faint);
+  font-style: italic;
+}
+
+.arg-input.correct {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px var(--green-dim);
+}
+
+.arg-input.incorrect {
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px var(--red-dim);
+}
+
+.arg-number-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.arg-number-input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--slate);
+  border: 1px solid var(--chalk-faint);
+  border-radius: var(--radius);
+  color: var(--chalk);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.arg-number-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-dim);
+}
+
+.arg-number-input.correct {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px var(--green-dim);
+}
+
+.arg-number-input.incorrect {
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px var(--red-dim);
+}
+
+/* ========== BUTTONS ========== */
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.65rem 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: 0.03em;
+}
+
+.btn-check {
+  background: var(--coral);
+  color: #fff;
+}
+
+.btn-check:hover {
+  background: #d4624a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--coral-glow);
+}
+
+.btn-hint {
+  background: var(--violet-dim);
+  color: var(--violet);
+  border: 1px solid var(--violet);
+}
+
+.btn-hint:hover {
+  background: var(--violet);
+  color: #fff;
+}
+
+.btn-reset {
+  background: var(--chalk-faint);
+  color: var(--chalk-dim);
+}
+
+.btn-reset:hover {
+  background: var(--slate-lighter);
+  color: var(--chalk);
+}
+
+/* ========== FEEDBACK ========== */
+.feedback-area {
+  margin-top: 1rem;
+  padding: 0;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.feedback-area.visible {
+  max-height: 600px;
+  padding: 1rem;
+}
+
+.feedback-area.success {
+  background: var(--green-dim);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+
+.feedback-area.error {
+  background: var(--red-dim);
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+.feedback-area.partial {
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+.feedback-field {
+  margin-bottom: 0.5rem;
+}
+
+.feedback-field .field-status {
+  display: inline-block;
+  margin-right: 0.4em;
+}
+
+/* ========== HINTS ========== */
+.hints-area {
+  margin-top: 0.75rem;
+}
+
+.hint-box {
+  padding: 0.75rem 1rem;
+  background: var(--violet-dim);
+  border-left: 3px solid var(--violet);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-top: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--chalk-dim);
+  animation: fadeSlideIn 0.3s ease;
+}
+
+.hint-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--violet);
+  margin-bottom: 0.25rem;
+}
+
+/* ========== PIGEON FLIGHT ANIMATION ========== */
+.pigeon-flight-container {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.flying-pigeon {
+  position: absolute;
+  font-size: 1.5rem;
+  animation: pigeonFly 1.2s ease-in forwards;
+  filter: drop-shadow(0 0 6px var(--coral-glow));
+}
+
+@keyframes pigeonFly {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+  40% { transform: translate(var(--tx-mid), var(--ty-mid)) scale(1.3) rotate(-10deg); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0.6) rotate(5deg); opacity: 0; }
+}
+
+/* ========== STAGGERED LOAD ========== */
+.stagger-in {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: staggerFadeIn 0.5s ease forwards;
+}
+
+@keyframes staggerFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== LAZY SUSAN SPECIFIC ========== */
+.susan-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+}
+
+/* ========== PROBLEM 5 SPECIFIC ========== */
+.gpp-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.gpp-control-group label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--chalk-dim);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.gpp-control-group input[type="range"] {
+  width: 120px;
+  accent-color: var(--coral);
+}
+
+.gpp-value {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-left: 0.4rem;
+}
+
+/* ========== CONCLUSION TEXTAREA ========== */
+textarea.arg-input {
+  min-height: 60px;
+}
+
+/* ========== SUBPROBLEM TABS ========== */
+.sub-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1rem;
+}
+
+.sub-tab {
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: var(--slate);
+  color: var(--chalk-dim);
+  border: 1px solid var(--chalk-faint);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sub-tab:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.sub-tab:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+
+.sub-tab.active {
+  background: var(--teal-dim);
+  color: var(--teal);
+  border-color: var(--teal);
+}
+
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* ========== VIZ HELPERS ========== */
+.viz-info {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--chalk-dim);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.number-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 0.5rem;
+}
+
+.number-cell {
+  width: 36px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: var(--slate);
+  border: 1px solid var(--chalk-faint);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+}
+
+.number-cell:hover {
+  border-color: var(--chalk-dim);
+}
+
+.number-cell.selected {
+  background: var(--coral-dim);
+  border-color: var(--coral);
+  color: var(--coral);
+  font-weight: 600;
+}
+
+.number-cell.coprime-highlight {
+  background: var(--teal-dim);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+/* ========== SUBSET VIZ ========== */
+.subset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 0.5rem;
+}
+
+.subset-cell {
+  padding: 0.3rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  background: var(--slate);
+  border: 1px solid var(--chalk-faint);
+  border-radius: 3px;
+  color: var(--chalk-dim);
+}
+
+.subset-cell.filled {
+  background: var(--teal-dim);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.subset-cell.overflow {
+  background: var(--coral-dim);
+  border-color: var(--coral);
+  color: var(--coral);
+}
+
+/* ========== GOAL BAR CHART ========== */
+.goal-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 180px;
+  padding: 0 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.goal-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.goal-bar {
+  width: 100%;
+  background: var(--teal);
+  border-radius: 2px 2px 0 0;
+  transition: background 0.2s, height 0.3s;
+  cursor: pointer;
+  min-height: 4px;
+}
+
+.goal-bar.in-range {
+  background: var(--coral);
+}
+
+.goal-bar.range-start {
+  background: var(--gold);
+}
+
+.goal-bar-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--chalk-dim);
+  margin-top: 2px;
+}
+
+.goal-bar-value {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--chalk);
+  margin-bottom: 2px;
+}
+
+/* ========== RANGE SELECTOR ========== */
+.range-info {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+  margin-top: 0.5rem;
+  min-height: 1.5em;
+}
+
+/* ========== BIRTHDAY CALCULATOR ========== */
+.birthday-calculator {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--slate);
+  border-radius: var(--radius);
+  border: 1px solid var(--chalk-faint);
+}
+
+.birthday-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.birthday-row label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--chalk-dim);
+  white-space: nowrap;
+}
+
+.birthday-row input {
+  width: 80px;
+  padding: 0.4rem;
+  background: var(--slate-light);
+  border: 1px solid var(--chalk-faint);
+  border-radius: var(--radius);
+  color: var(--chalk);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.birthday-row input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.birthday-result {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--teal);
+  margin-top: 0.5rem;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 700px) {
+  .site-title { font-size: 1.3rem; }
+  .problem-title { font-size: 1.2rem; }
+  .main-content { padding: 1rem; }
+  .nav-tab { padding: 0.7rem 0.8rem; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="site-header">
+  <div class="header-inner">
+    <h1 class="site-title stagger-in" style="animation-delay: 0.1s">The Pigeonhole Principle</h1>
+    <span class="site-subtitle stagger-in" style="animation-delay: 0.2s">CS20 — Interactive Practice</span>
+  </div>
+  <div class="principle-statement stagger-in" style="animation-delay: 0.3s">
+    <strong>The Pigeonhole Principle:</strong> Let <span class="math">f : A &rarr; B</span> where <span class="math">A</span> and <span class="math">B</span> are finite sets and <span class="math">|A| &gt; |B|</span>. Then there exist distinct elements <span class="math">x, y &isin; A</span> such that <span class="math">f(x) = f(y)</span>. In other words, if you put more pigeons into fewer pigeonholes, at least one hole must contain more than one pigeon.
+  </div>
+</header>
+
+<!-- ========== NAV TABS ========== -->
+<nav class="nav-bar stagger-in" style="animation-delay: 0.4s">
+  <div class="nav-inner" id="navInner">
+    <button class="nav-tab active" data-problem="1"><span class="tab-num">1</span>Unit Square</button>
+    <button class="nav-tab" data-problem="2"><span class="tab-num">2</span>Lazy Susan</button>
+    <button class="nav-tab" data-problem="3"><span class="tab-num">3</span>Consecutive #s</button>
+    <button class="nav-tab" data-problem="4"><span class="tab-num">4</span>Prime Divisibility</button>
+    <button class="nav-tab" data-problem="5"><span class="tab-num">5</span>Generalized PHP</button>
+    <button class="nav-tab" data-problem="6"><span class="tab-num">6</span>Hockey Goals</button>
+  </div>
+</nav>
+
+<!-- ========== MAIN ========== -->
+<main class="main-content">
+
+<!-- ==================== PROBLEM 1: UNIT SQUARE ==================== -->
+<section class="problem-panel active" id="problem1">
+  <div class="problem-header">
+    <div class="problem-number">Problem 1</div>
+    <h2 class="problem-title">Points in the Unit Square</h2>
+    <div class="problem-statement">
+      Choose any five points inside the unit square (a 1&times;1 square). <strong>Prove</strong> that there is at least one pair of points for which the distance between them is at most <span class="math">1/&radic;2 &approx; 0.707</span>.<br><br>
+      <em>Hint: Think about splitting the square into equal-sized regions.</em>
+    </div>
+  </div>
+  <div class="problem-body">
+    <!-- Visualization -->
+    <div class="viz-panel">
+      <div class="viz-panel-title">Interactive Visualization</div>
+      <canvas class="viz-canvas" id="canvas1" width="560" height="400"></canvas>
+      <div class="viz-controls">
+        <button class="viz-btn" onclick="toggleGrid1()">Show/Hide Grid</button>
+        <button class="viz-btn" onclick="toggleDistances1()">Show/Hide Distances</button>
+        <button class="viz-btn" onclick="clearPoints1()">Clear Points</button>
+        <button class="viz-btn" onclick="randomPoints1()">Random 5 Points</button>
+      </div>
+      <div class="viz-info">Click inside the square to place up to 5 points. The grid divides it into 4 equal quadrants — the pigeonholes.</div>
+    </div>
+    <!-- Argument Form -->
+    <div class="argument-panel">
+      <div class="argument-title">Construct Your Pigeonhole Argument</div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="pigeon-icon">&#9654;</span> What are the pigeons? (Domain set A)</label>
+        <input type="text" class="arg-input" id="p1-pigeons" placeholder='e.g., "The 5 chosen points"'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="hole-icon">&#9632;</span> What are the pigeonholes? (Codomain set B)</label>
+        <input type="text" class="arg-input" id="p1-holes" placeholder='e.g., "The 4 quadrants of the square"'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="map-icon">&#10140;</span> What is the mapping?</label>
+        <input type="text" class="arg-input" id="p1-mapping" placeholder='e.g., "Each point maps to the quadrant it lies in"'>
+      </div>
+      <div class="arg-field">
+        <div class="arg-number-row">
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeons?</label>
+            <input type="number" class="arg-number-input" id="p1-pigeon-count" placeholder="?">
+          </div>
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeonholes?</label>
+            <input type="number" class="arg-number-input" id="p1-hole-count" placeholder="?">
+          </div>
+        </div>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label">Therefore, by the Pigeonhole Principle&hellip;</label>
+        <textarea class="arg-input" id="p1-conclusion" placeholder="State why the principle guarantees the result and why the distance bound holds."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkAnswer(1)">Check Answer</button>
+        <button class="btn btn-hint" onclick="showHint(1)">Show Hint</button>
+        <button class="btn btn-reset" onclick="resetForm(1)">Reset</button>
+      </div>
+      <div class="feedback-area" id="feedback1"></div>
+      <div class="hints-area" id="hints1"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROBLEM 2: LAZY SUSAN ==================== -->
+<section class="problem-panel" id="problem2">
+  <div class="problem-header">
+    <div class="problem-number">Problem 2</div>
+    <h2 class="problem-title">The Lazy Susan</h2>
+    <div class="problem-statement">
+      Eleven people go to lunch and sit evenly spaced at a circular table with a lazy Susan. Each person orders a different dish. The dishes are placed on the lazy Susan but entirely mismatched — no one has their correct dish. <strong>Prove</strong> that there is a rotation of the lazy Susan so that at least two people have their correct dish in front of them.<br><br>
+      <em>Hint: Think about the number of possible non-identity rotations and how many "matches" each rotation produces in total.</em>
+    </div>
+  </div>
+  <div class="problem-body">
+    <!-- Visualization -->
+    <div class="viz-panel">
+      <div class="viz-panel-title">Interactive Visualization</div>
+      <canvas class="viz-canvas" id="canvas2" width="560" height="400"></canvas>
+      <div class="viz-controls">
+        <button class="viz-btn" onclick="rotateSusan(-1)">&#8634; Rotate Left</button>
+        <button class="viz-btn" onclick="rotateSusan(1)">Rotate Right &#8635;</button>
+        <button class="viz-btn" onclick="resetSusan()">Reset</button>
+        <button class="viz-btn" onclick="randomizeDishes()">Randomize Dishes</button>
+      </div>
+      <div class="viz-info" id="susan-info">Rotation: 0 steps. Matches: 0. Click rotate to spin the lazy Susan and count matches.</div>
+    </div>
+    <!-- Argument Form -->
+    <div class="argument-panel">
+      <div class="argument-title">Construct Your Pigeonhole Argument</div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="pigeon-icon">&#9654;</span> What are the pigeons?</label>
+        <input type="text" class="arg-input" id="p2-pigeons" placeholder='Think about what you are distributing...'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="hole-icon">&#9632;</span> What are the pigeonholes?</label>
+        <input type="text" class="arg-input" id="p2-holes" placeholder='Think about where they go...'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="map-icon">&#10140;</span> What is the mapping?</label>
+        <input type="text" class="arg-input" id="p2-mapping" placeholder='How do pigeons get assigned to holes?'>
+      </div>
+      <div class="arg-field">
+        <div class="arg-number-row">
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeons?</label>
+            <input type="number" class="arg-number-input" id="p2-pigeon-count" placeholder="?">
+          </div>
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeonholes?</label>
+            <input type="number" class="arg-number-input" id="p2-hole-count" placeholder="?">
+          </div>
+        </div>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label">Therefore, by the Pigeonhole Principle&hellip;</label>
+        <textarea class="arg-input" id="p2-conclusion" placeholder="State the conclusion."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkAnswer(2)">Check Answer</button>
+        <button class="btn btn-hint" onclick="showHint(2)">Show Hint</button>
+        <button class="btn btn-reset" onclick="resetForm(2)">Reset</button>
+      </div>
+      <div class="feedback-area" id="feedback2"></div>
+      <div class="hints-area" id="hints2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROBLEM 3: CONSECUTIVE NUMBERS ==================== -->
+<section class="problem-panel" id="problem3">
+  <div class="problem-header">
+    <div class="problem-number">Problem 3</div>
+    <h2 class="problem-title">Coprime Consecutive Numbers</h2>
+    <div class="problem-statement">
+      Show that if we take <span class="math">n+1</span> numbers from the set <span class="math">{2, 3, &hellip;, 2n, 2n+1}</span>, then some pair of the chosen numbers will have no prime factors in common (i.e., they are coprime).<br><br>
+      <em>Hint: Consider pairing up the numbers in a clever way.</em>
+    </div>
+  </div>
+  <div class="problem-body">
+    <!-- Visualization -->
+    <div class="viz-panel">
+      <div class="viz-panel-title">Interactive Visualization (n = <span id="n-value">5</span>)</div>
+      <div class="viz-controls" style="margin-bottom: 0.75rem;">
+        <label style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--chalk-dim);">
+          n = <input type="range" min="3" max="10" value="5" id="n-slider" oninput="updateN()" style="width: 100px; accent-color: var(--coral); vertical-align: middle;">
+        </label>
+      </div>
+      <div class="number-grid" id="number-grid-3"></div>
+      <div class="viz-info" style="margin-top: 0.75rem;">
+        <div id="pairs-display">Consecutive pairs: {2,3}, {4,5}, {6,7}, {8,9}, {10,11}. Select n+1 = 6 numbers to see that you must pick both from some pair.</div>
+      </div>
+      <div class="viz-controls">
+        <button class="viz-btn" onclick="clearSelection3()">Clear Selection</button>
+        <button class="viz-btn" onclick="randomSelection3()">Random Selection</button>
+      </div>
+    </div>
+    <!-- Argument Form -->
+    <div class="argument-panel">
+      <div class="argument-title">Construct Your Pigeonhole Argument</div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="pigeon-icon">&#9654;</span> What are the pigeons?</label>
+        <input type="text" class="arg-input" id="p3-pigeons" placeholder='The elements you are choosing...'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="hole-icon">&#9632;</span> What are the pigeonholes?</label>
+        <input type="text" class="arg-input" id="p3-holes" placeholder='How do you partition the numbers?'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="map-icon">&#10140;</span> What is the mapping?</label>
+        <input type="text" class="arg-input" id="p3-mapping" placeholder='How does each number map to a pigeonhole?'>
+      </div>
+      <div class="arg-field">
+        <div class="arg-number-row">
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeons?</label>
+            <input type="number" class="arg-number-input" id="p3-pigeon-count" placeholder="?">
+          </div>
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeonholes?</label>
+            <input type="number" class="arg-number-input" id="p3-hole-count" placeholder="?">
+          </div>
+        </div>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label">Therefore, by the Pigeonhole Principle&hellip;</label>
+        <textarea class="arg-input" id="p3-conclusion" placeholder="Why must some pair be coprime?"></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkAnswer(3)">Check Answer</button>
+        <button class="btn btn-hint" onclick="showHint(3)">Show Hint</button>
+        <button class="btn btn-reset" onclick="resetForm(3)">Reset</button>
+      </div>
+      <div class="feedback-area" id="feedback3"></div>
+      <div class="hints-area" id="hints3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROBLEM 4: PRIME DIVISIBILITY ==================== -->
+<section class="problem-panel" id="problem4">
+  <div class="problem-header">
+    <div class="problem-number">Problem 4</div>
+    <h2 class="problem-title">Divisibility by Primes</h2>
+    <div class="problem-statement">
+      Show that in any set of 17 positive integers, some two of them are divisible by the same subset of <span class="math">{2, 3, 5, 7}</span>. Clearly identify the pigeons, pigeonholes, and the mapping.<br><br>
+      <em>Hint: How many subsets does {2, 3, 5, 7} have?</em>
+    </div>
+  </div>
+  <div class="problem-body">
+    <!-- Visualization -->
+    <div class="viz-panel">
+      <div class="viz-panel-title">Interactive Visualization</div>
+      <div class="viz-info" style="margin-bottom: 0.5rem;">Enter up to 17 positive integers (comma-separated) to see which subset of {2,3,5,7} divides each:</div>
+      <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem;">
+        <input type="text" id="p4-numbers-input" class="arg-input" style="flex:1" placeholder="e.g., 12, 35, 49, 100, 7, 15, 8, 21, 50, 14, 75, 9, 16, 25, 42, 11, 30" value="12, 35, 49, 100, 7, 15, 8, 21, 50, 14, 75, 9, 16, 25, 42, 11, 30">
+        <button class="viz-btn" onclick="analyzeP4Numbers()">Analyze</button>
+      </div>
+      <div id="p4-analysis" style="overflow-y:auto; max-height:220px;"></div>
+      <div id="p4-collision" style="margin-top:0.5rem;"></div>
+    </div>
+    <!-- Argument Form -->
+    <div class="argument-panel">
+      <div class="argument-title">Construct Your Pigeonhole Argument</div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="pigeon-icon">&#9654;</span> What are the pigeons?</label>
+        <input type="text" class="arg-input" id="p4-pigeons" placeholder='What is the domain?'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="hole-icon">&#9632;</span> What are the pigeonholes?</label>
+        <input type="text" class="arg-input" id="p4-holes" placeholder='What is the codomain?'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="map-icon">&#10140;</span> What is the mapping?</label>
+        <input type="text" class="arg-input" id="p4-mapping" placeholder='How does each integer map to a pigeonhole?'>
+      </div>
+      <div class="arg-field">
+        <div class="arg-number-row">
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeons?</label>
+            <input type="number" class="arg-number-input" id="p4-pigeon-count" placeholder="?">
+          </div>
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeonholes?</label>
+            <input type="number" class="arg-number-input" id="p4-hole-count" placeholder="?">
+          </div>
+        </div>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label">Therefore, by the Pigeonhole Principle&hellip;</label>
+        <textarea class="arg-input" id="p4-conclusion" placeholder="State the conclusion."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkAnswer(4)">Check Answer</button>
+        <button class="btn btn-hint" onclick="showHint(4)">Show Hint</button>
+        <button class="btn btn-reset" onclick="resetForm(4)">Reset</button>
+      </div>
+      <div class="feedback-area" id="feedback4"></div>
+      <div class="hints-area" id="hints4"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROBLEM 5: GENERALIZED PHP ==================== -->
+<section class="problem-panel" id="problem5">
+  <div class="problem-header">
+    <div class="problem-number">Problem 5</div>
+    <h2 class="problem-title">The Generalized Pigeonhole Principle</h2>
+    <div class="problem-statement">
+      <strong>(A)</strong> Prove the Generalized Pigeonhole Principle by contradiction: if <span class="math">|A| &gt; k&middot;|B|</span>, then some pigeonhole contains more than <span class="math">k</span> pigeons.<br><br>
+      <strong>(B)</strong> There are 366 possible birthdays (including Feb 29). How many people must be in a group to guarantee at least <span class="math">n</span> people share a birthday?
+    </div>
+  </div>
+  <div class="problem-body">
+    <!-- Visualization -->
+    <div class="viz-panel">
+      <div class="viz-panel-title">Interactive Visualization</div>
+      <div class="sub-tabs">
+        <button class="sub-tab active" onclick="switchSub5('a')">Part (A): Generalized PHP</button>
+        <button class="sub-tab" onclick="switchSub5('b')">Part (B): Birthdays</button>
+      </div>
+
+      <!-- Part A visualization -->
+      <div class="sub-panel active" id="sub5a">
+        <div class="gpp-controls">
+          <div class="gpp-control-group">
+            <label>Pigeons |A|: <span class="gpp-value" id="gpp-a-val">10</span></label>
+            <input type="range" min="1" max="30" value="10" id="gpp-a-slider" oninput="updateGPP()">
+          </div>
+          <div class="gpp-control-group">
+            <label>Holes |B|: <span class="gpp-value" id="gpp-b-val">3</span></label>
+            <input type="range" min="1" max="10" value="3" id="gpp-b-slider" oninput="updateGPP()">
+          </div>
+          <div class="gpp-control-group">
+            <label>k: <span class="gpp-value" id="gpp-k-val">3</span></label>
+            <input type="range" min="1" max="10" value="3" id="gpp-k-slider" oninput="updateGPP()">
+          </div>
+        </div>
+        <canvas class="viz-canvas" id="canvas5a" width="560" height="250"></canvas>
+        <div class="viz-info" id="gpp-info">|A| = 10 > 3 × 3 = 9 = k|B|. So some hole has > 3 pigeons.</div>
+      </div>
+
+      <!-- Part B visualization -->
+      <div class="sub-panel" id="sub5b">
+        <div class="birthday-calculator">
+          <div class="birthday-row">
+            <label>Guarantee at least n = </label>
+            <input type="number" id="birthday-n" value="2" min="1" max="100" oninput="calcBirthday()">
+            <label>people share a birthday</label>
+          </div>
+          <div class="birthday-result" id="birthday-result">
+            You need at least <strong>367</strong> people in the group.
+          </div>
+          <div class="viz-info" style="margin-top: 0.75rem;">
+            Formula: You need <span class="math">(n-1) &times; 366 + 1</span> people.<br>
+            With <span class="math">k = n-1</span> and <span class="math">|B| = 366</span>, if <span class="math">|A| &gt; k &middot; |B|</span> then some birthday has &gt; k = n-1 pigeons, i.e., at least n.
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Argument Form -->
+    <div class="argument-panel">
+      <div class="argument-title">Construct Your Argument (Part A)</div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="pigeon-icon">&#9654;</span> Assume for contradiction: every pigeonhole has at most &hellip;</label>
+        <input type="text" class="arg-input" id="p5-pigeons" placeholder='At most how many pigeons per hole?'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="hole-icon">&#9632;</span> Then the total number of pigeons is at most &hellip;</label>
+        <input type="text" class="arg-input" id="p5-holes" placeholder='Express upper bound on |A| in terms of k and |B|'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="map-icon">&#10140;</span> But we know that |A| is &hellip;</label>
+        <input type="text" class="arg-input" id="p5-mapping" placeholder='What is the actual size of |A|?'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label">This is a contradiction because &hellip;</label>
+        <textarea class="arg-input" id="p5-conclusion" placeholder="Explain the contradiction."></textarea>
+      </div>
+      <div class="arg-field" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--chalk-faint);">
+        <label class="arg-label" style="color:var(--teal);">Part (B): For n shared birthdays, how many people needed?</label>
+        <input type="text" class="arg-input" id="p5-birthday-answer" placeholder='Express using the formula from Part A'>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkAnswer(5)">Check Answer</button>
+        <button class="btn btn-hint" onclick="showHint(5)">Show Hint</button>
+        <button class="btn btn-reset" onclick="resetForm(5)">Reset</button>
+      </div>
+      <div class="feedback-area" id="feedback5"></div>
+      <div class="hints-area" id="hints5"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROBLEM 6: HOCKEY GOALS ==================== -->
+<section class="problem-panel" id="problem6">
+  <div class="problem-header">
+    <div class="problem-number">Problem 6 — Challenge</div>
+    <h2 class="problem-title">Harvard Hockey Goals</h2>
+    <div class="problem-statement">
+      The Harvard hockey team scores at least 1 goal in each of 20 consecutive games, with 30 goals total. <strong>Prove</strong> that there is some sequence of consecutive games in which the team scores exactly 9 goals.<br><br>
+      <em>Hint: Let <span class="math">s<sub>i</sub></span> = total goals in games 1 through i. Consider the set <span class="math">{s<sub>1</sub>, &hellip;, s<sub>20</sub>, s<sub>1</sub>+9, &hellip;, s<sub>20</sub>+9}</span>.</em>
+    </div>
+  </div>
+  <div class="problem-body">
+    <!-- Visualization -->
+    <div class="viz-panel">
+      <div class="viz-panel-title">Interactive Visualization</div>
+      <div class="viz-info" style="margin-bottom:0.5rem;">Adjust goals per game (total must be 30, each game &ge; 1). Click bars to select a range start, then click another bar for range end.</div>
+      <div id="goals-input-row" style="display:flex; gap:3px; margin-bottom:0.75rem; flex-wrap:wrap;"></div>
+      <div class="viz-controls" style="margin-bottom:0.5rem;">
+        <button class="viz-btn" onclick="randomGoals6()">Random Distribution</button>
+        <button class="viz-btn" onclick="clearRange6()">Clear Selection</button>
+        <button class="viz-btn" onclick="findExact9()">Find Exact 9 Sequence</button>
+      </div>
+      <div class="goal-bars" id="goal-bars-6"></div>
+      <div style="display:flex; gap:3px; padding: 0 0.5rem; margin-top:2px;">
+        <div id="game-labels-6" style="display:flex; gap:3px; flex:1;"></div>
+      </div>
+      <div class="range-info" id="range-info-6"></div>
+      <div class="viz-info" id="cumsum-info-6" style="margin-top:0.5rem;"></div>
+    </div>
+    <!-- Argument Form -->
+    <div class="argument-panel">
+      <div class="argument-title">Construct Your Pigeonhole Argument</div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="pigeon-icon">&#9654;</span> What are the pigeons?</label>
+        <input type="text" class="arg-input" id="p6-pigeons" placeholder='Hint: consider s_1,...,s_20 and s_1+9,...,s_20+9'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="hole-icon">&#9632;</span> What are the pigeonholes?</label>
+        <input type="text" class="arg-input" id="p6-holes" placeholder='What values can these 40 numbers take?'>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label"><span class="map-icon">&#10140;</span> What is the mapping?</label>
+        <input type="text" class="arg-input" id="p6-mapping" placeholder='How does each element map to a value?'>
+      </div>
+      <div class="arg-field">
+        <div class="arg-number-row">
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeons?</label>
+            <input type="number" class="arg-number-input" id="p6-pigeon-count" placeholder="?">
+          </div>
+          <div>
+            <label class="arg-label"><span class="count-icon">#</span> How many pigeonholes?</label>
+            <input type="number" class="arg-number-input" id="p6-hole-count" placeholder="?">
+          </div>
+        </div>
+      </div>
+      <div class="arg-field">
+        <label class="arg-label">Therefore, by the Pigeonhole Principle&hellip;</label>
+        <textarea class="arg-input" id="p6-conclusion" placeholder="What does a collision mean? Why does s_i = s_j + 9 imply consecutive games summing to 9?"></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkAnswer(6)">Check Answer</button>
+        <button class="btn btn-hint" onclick="showHint(6)">Show Hint</button>
+        <button class="btn btn-reset" onclick="resetForm(6)">Reset</button>
+      </div>
+      <div class="feedback-area" id="feedback6"></div>
+      <div class="hints-area" id="hints6"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Pigeon flight container -->
+<div class="pigeon-flight-container" id="pigeonFlightContainer"></div>
+
+<script>
+// ====================================================================
+// GLOBAL STATE
+// ====================================================================
+const state = {
+  hintCounts: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
+  completed: new Set(),
+};
+
+// ====================================================================
+// NAVIGATION
+// ====================================================================
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const num = tab.dataset.problem;
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.problem-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('problem' + num).classList.add('active');
+  });
+});
+
+// ====================================================================
+// HINTS DATA
+// ====================================================================
+const hints = {
+  1: [
+    "Hint 1: Divide the unit square into 4 equal smaller squares (each 0.5 x 0.5).",
+    "Hint 2: The 4 smaller squares are the pigeonholes. The 5 points are the pigeons.",
+    "Hint 3: By PHP, at least 2 points lie in the same 0.5 x 0.5 square. The maximum distance between two points in a 0.5 x 0.5 square is the diagonal = sqrt(0.5^2 + 0.5^2) = sqrt(0.5) = 1/sqrt(2)."
+  ],
+  2: [
+    "Hint 1: There are 10 non-identity rotations (rotate by 1, 2, ..., 10 positions). Count the total number of matches across ALL rotations.",
+    "Hint 2: For any person, across all 10 non-identity rotations, their correct dish passes in front of them exactly once (since exactly one rotation aligns it). So the total matches across all rotations is 11.",
+    "Hint 3: The pigeons are the 11 total matches. The pigeonholes are the 10 non-identity rotations. By PHP, some rotation has at least 2 matches."
+  ],
+  3: [
+    "Hint 1: Pair up the numbers: {2,3}, {4,5}, {6,7}, ..., {2n, 2n+1}. That gives n pairs.",
+    "Hint 2: The n pairs are the pigeonholes. The n+1 chosen numbers are the pigeons. Each number maps to its pair.",
+    "Hint 3: By PHP, two chosen numbers share a pair, meaning they are consecutive integers. Consecutive integers are always coprime (their GCD is 1)."
+  ],
+  4: [
+    "Hint 1: For each positive integer, look at which elements of {2,3,5,7} divide it. This gives a subset of {2,3,5,7}.",
+    "Hint 2: The set {2,3,5,7} has 2^4 = 16 subsets (including the empty set).",
+    "Hint 3: The 17 integers are the pigeons. The 16 subsets of {2,3,5,7} are the pigeonholes. By PHP, two integers map to the same subset."
+  ],
+  5: [
+    "Hint 1 (Part A): Assume for contradiction that every pigeonhole has at most k pigeons.",
+    "Hint 2 (Part A): Then the total number of pigeons is at most k * |B|, but |A| > k * |B|, contradiction.",
+    "Hint 3 (Part B): Apply the generalized PHP with |B| = 366, k = n-1. You need |A| > (n-1) * 366, so |A| = (n-1)*366 + 1 = 366n - 365."
+  ],
+  6: [
+    "Hint 1: Define s_i = goals in games 1 through i. Then 1 <= s_1 < s_2 < ... < s_20 = 30.",
+    "Hint 2: Consider the 40 numbers: s_1, s_2, ..., s_20 and s_1+9, s_2+9, ..., s_20+9. These range from 1 to 39.",
+    "Hint 3: 40 pigeons (the numbers) in 39 pigeonholes (values 1..39). A collision s_i = s_j + 9 means goals in games j+1 through i total exactly 9."
+  ]
+};
+
+function showHint(problemNum) {
+  const hintIdx = state.hintCounts[problemNum];
+  const hintList = hints[problemNum];
+  if (hintIdx >= hintList.length) return;
+  const container = document.getElementById('hints' + problemNum);
+  const box = document.createElement('div');
+  box.className = 'hint-box';
+  box.innerHTML = `<div class="hint-label">Hint ${hintIdx + 1} of ${hintList.length}</div>${hintList[hintIdx]}`;
+  container.appendChild(box);
+  state.hintCounts[problemNum]++;
+}
+
+// ====================================================================
+// ANSWER CHECKING
+// ====================================================================
+const answers = {
+  1: {
+    pigeons: ['5 points', 'five points', 'chosen points', 'the 5 points', 'the five points', '5 chosen points', 'the points'],
+    holes: ['4 quadrants', 'four quadrants', '4 squares', 'four squares', '4 smaller squares', '4 sub-squares', '4 subsquares', '4 regions', 'four regions', 'the 4 quadrants', 'the four quadrants', 'quadrants'],
+    mapping: ['point', 'quadrant', 'lies in', 'contained in', 'belongs to', 'falls in', 'located in', 'maps to the quadrant', 'maps to the square'],
+    pigeonCount: 5,
+    holeCount: 4,
+    conclusion: ['two points', 'same quadrant', 'same square', 'same region', 'diagonal', '1/sqrt(2)', '1/√2', 'at most', 'sqrt(2)', '0.707']
+  },
+  2: {
+    pigeons: ['11 matches', 'matches', 'correct dishes', '11 total matches', 'the 11 matches', 'total matches across all rotations'],
+    holes: ['10 rotations', 'ten rotations', '10 non-identity rotations', 'non-identity rotations', 'the 10 rotations', '10 possible rotations', 'rotations'],
+    mapping: ['rotation', 'match', 'which rotation', 'produced by', 'occurs in', 'belongs to', 'associated with'],
+    pigeonCount: 11,
+    holeCount: 10,
+    conclusion: ['at least 2', 'at least two', 'some rotation', '2 matches', 'two matches', 'two people', '2 people', 'correct dish']
+  },
+  3: {
+    pigeons: ['n+1 numbers', 'n+1 chosen numbers', 'the n+1 numbers', 'chosen numbers', 'selected numbers'],
+    holes: ['n pairs', 'n consecutive pairs', 'pairs', 'the n pairs', 'consecutive pairs', '{2,3},{4,5}', '{2k, 2k+1}'],
+    mapping: ['pair', 'consecutive', 'belongs to', 'contained in', 'maps to its pair', 'falls in'],
+    pigeonCount: null, // varies with n
+    holeCount: null,
+    conclusion: ['consecutive', 'coprime', 'gcd', 'no prime factors', 'same pair', 'share a pair']
+  },
+  4: {
+    pigeons: ['17 integers', '17 positive integers', 'the 17 integers', '17 numbers', 'the 17 numbers'],
+    holes: ['16 subsets', 'subsets of {2,3,5,7}', '2^4 = 16 subsets', '16 possible subsets', 'subsets', 'the 16 subsets'],
+    mapping: ['divisible', 'divides', 'subset of {2,3,5,7} that divides', 'which primes divide', 'prime divisors', 'maps to the subset'],
+    pigeonCount: 17,
+    holeCount: 16,
+    conclusion: ['same subset', 'two integers', 'two numbers', 'divisible by the same', 'same primes', 'share the same subset']
+  },
+  5: {
+    pigeons: ['k', 'at most k'],
+    holes: ['k * |B|', 'k|B|', 'k times |B|', 'k · |B|'],
+    mapping: ['greater than k|B|', 'greater than k * |B|', '> k|B|', '> k*|B|', 'more than k|B|'],
+    conclusion: ['contradiction', 'at most k|B|', 'but |A| > k|B|', 'cannot be', 'exceeds'],
+    birthdayAnswer: ['366(n-1) + 1', '366n - 365', '(n-1)*366 + 1', '(n-1)×366 + 1', '365n + 1', '366(n-1)+1']
+  },
+  6: {
+    pigeons: ['40 numbers', 's_1,...,s_20, s_1+9,...,s_20+9', '40 values', 'the 40 numbers', '40 elements'],
+    holes: ['39 values', 'values 1 to 39', '{1,2,...,39}', '39 possible values', 'integers 1 through 39', '39 integers'],
+    mapping: ['value', 'identity', 'itself', 'the number', 'maps to its value', 'numerical value'],
+    pigeonCount: 40,
+    holeCount: 39,
+    conclusion: ['collision', 's_i = s_j + 9', 'consecutive games', 'exactly 9', 'sum to 9', 'goals in games j+1 through i']
+  }
+};
+
+function normalize(s) {
+  return s.toLowerCase().replace(/[^a-z0-9+*/=<>√]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function fieldMatch(input, acceptedList) {
+  const norm = normalize(input);
+  if (norm.length === 0) return false;
+  return acceptedList.some(a => norm.includes(normalize(a)));
+}
+
+function checkAnswer(num) {
+  const ans = answers[num];
+  const fb = document.getElementById('feedback' + num);
+  let results = [];
+  let allCorrect = true;
+
+  // Check text fields
+  if (num === 5) {
+    // Special handling for problem 5
+    const fields = [
+      { id: 'p5-pigeons', label: 'Assumption', accepted: ans.pigeons },
+      { id: 'p5-holes', label: 'Upper bound', accepted: ans.holes },
+      { id: 'p5-mapping', label: '|A| condition', accepted: ans.mapping },
+      { id: 'p5-conclusion', label: 'Contradiction', accepted: ans.conclusion },
+      { id: 'p5-birthday-answer', label: 'Birthday formula', accepted: ans.birthdayAnswer },
+    ];
+    fields.forEach(f => {
+      const el = document.getElementById(f.id);
+      const val = el.value.trim();
+      const ok = val.length > 0 && fieldMatch(val, f.accepted);
+      el.classList.remove('correct', 'incorrect');
+      if (val.length > 0) el.classList.add(ok ? 'correct' : 'incorrect');
+      results.push({ label: f.label, ok });
+      if (!ok) allCorrect = false;
+    });
+  } else {
+    const prefix = 'p' + num + '-';
+    const textFields = [
+      { id: prefix + 'pigeons', label: 'Pigeons', accepted: ans.pigeons },
+      { id: prefix + 'holes', label: 'Pigeonholes', accepted: ans.holes },
+      { id: prefix + 'mapping', label: 'Mapping', accepted: ans.mapping },
+    ];
+    textFields.forEach(f => {
+      const el = document.getElementById(f.id);
+      const val = el.value.trim();
+      const ok = val.length > 0 && fieldMatch(val, f.accepted);
+      el.classList.remove('correct', 'incorrect');
+      if (val.length > 0) el.classList.add(ok ? 'correct' : 'incorrect');
+      results.push({ label: f.label, ok });
+      if (!ok) allCorrect = false;
+    });
+
+    // Check counts
+    if (ans.pigeonCount !== null) {
+      const pcEl = document.getElementById(prefix + 'pigeon-count');
+      const pcVal = parseInt(pcEl.value);
+      const pcOk = pcVal === ans.pigeonCount;
+      pcEl.classList.remove('correct', 'incorrect');
+      if (pcEl.value.trim() !== '') pcEl.classList.add(pcOk ? 'correct' : 'incorrect');
+      results.push({ label: 'Pigeon count', ok: pcOk });
+      if (!pcOk) allCorrect = false;
+    }
+    if (ans.holeCount !== null) {
+      const hcEl = document.getElementById(prefix + 'hole-count');
+      const hcVal = parseInt(hcEl.value);
+      const hcOk = hcVal === ans.holeCount;
+      hcEl.classList.remove('correct', 'incorrect');
+      if (hcEl.value.trim() !== '') hcEl.classList.add(hcOk ? 'correct' : 'incorrect');
+      results.push({ label: 'Hole count', ok: hcOk });
+      if (!hcOk) allCorrect = false;
+    }
+
+    // Check conclusion
+    const concEl = document.getElementById(prefix + 'conclusion');
+    const concVal = concEl.value.trim();
+    const concOk = concVal.length > 0 && fieldMatch(concVal, ans.conclusion);
+    concEl.classList.remove('correct', 'incorrect');
+    if (concVal.length > 0) concEl.classList.add(concOk ? 'correct' : 'incorrect');
+    results.push({ label: 'Conclusion', ok: concOk });
+    if (!concOk) allCorrect = false;
+  }
+
+  // Build feedback HTML
+  const correctCount = results.filter(r => r.ok).length;
+  let feedbackClass = allCorrect ? 'success' : (correctCount > 0 ? 'partial' : 'error');
+  let html = results.map(r =>
+    `<div class="feedback-field"><span class="field-status">${r.ok ? '&#10003;' : '&#10007;'}</span> ${r.label}: ${r.ok ? 'Correct!' : 'Not quite — check this field.'}</div>`
+  ).join('');
+
+  if (allCorrect) {
+    html = '<strong>Excellent! Your pigeonhole argument is complete and correct.</strong><br>' + html;
+    state.completed.add(num);
+    // Mark tab as completed
+    document.querySelector(`.nav-tab[data-problem="${num}"]`).classList.add('completed');
+    // Trigger pigeon flight animation
+    triggerPigeonFlight();
+  }
+
+  fb.innerHTML = html;
+  fb.className = 'feedback-area visible ' + feedbackClass;
+}
+
+function resetForm(num) {
+  const prefix = 'p' + num + '-';
+  if (num === 5) {
+    ['p5-pigeons','p5-holes','p5-mapping','p5-conclusion','p5-birthday-answer'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('correct', 'incorrect');
+    });
+  } else {
+    [prefix+'pigeons', prefix+'holes', prefix+'mapping', prefix+'conclusion', prefix+'pigeon-count', prefix+'hole-count'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('correct', 'incorrect'); }
+    });
+  }
+  const fb = document.getElementById('feedback' + num);
+  fb.innerHTML = '';
+  fb.className = 'feedback-area';
+  const hints = document.getElementById('hints' + num);
+  hints.innerHTML = '';
+  state.hintCounts[num] = 0;
+}
+
+// ====================================================================
+// PIGEON FLIGHT ANIMATION
+// ====================================================================
+function triggerPigeonFlight() {
+  const container = document.getElementById('pigeonFlightContainer');
+  const pigeonSymbols = ['🐦', '🕊️', '🐤'];
+  for (let i = 0; i < 12; i++) {
+    const pigeon = document.createElement('div');
+    pigeon.className = 'flying-pigeon';
+    pigeon.textContent = pigeonSymbols[i % pigeonSymbols.length];
+    const startX = Math.random() * window.innerWidth;
+    const startY = window.innerHeight + 20;
+    pigeon.style.left = startX + 'px';
+    pigeon.style.top = startY + 'px';
+    const endX = (Math.random() - 0.5) * 400;
+    const endY = -(window.innerHeight + 100);
+    const midX = endX * 0.4 + (Math.random() - 0.5) * 200;
+    const midY = endY * 0.5;
+    pigeon.style.setProperty('--tx', endX + 'px');
+    pigeon.style.setProperty('--ty', endY + 'px');
+    pigeon.style.setProperty('--tx-mid', midX + 'px');
+    pigeon.style.setProperty('--ty-mid', midY + 'px');
+    pigeon.style.animationDelay = (i * 0.08) + 's';
+    container.appendChild(pigeon);
+    setTimeout(() => pigeon.remove(), 2000);
+  }
+}
+
+// ====================================================================
+// PROBLEM 1: UNIT SQUARE VISUALIZATION
+// ====================================================================
+let p1Points = [];
+let p1ShowGrid = true;
+let p1ShowDistances = false;
+
+function drawP1() {
+  const canvas = document.getElementById('canvas1');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  // Calculate square dimensions
+  const margin = 40;
+  const sqSize = Math.min(w - margin*2, h - margin*2);
+  const ox = (w - sqSize) / 2;
+  const oy = (h - sqSize) / 2;
+
+  // Draw background square
+  ctx.fillStyle = 'rgba(245, 240, 232, 0.04)';
+  ctx.fillRect(ox, oy, sqSize, sqSize);
+
+  // Draw border
+  ctx.strokeStyle = 'rgba(245, 240, 232, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ox, oy, sqSize, sqSize);
+
+  // Draw grid
+  if (p1ShowGrid) {
+    ctx.strokeStyle = 'rgba(232, 197, 71, 0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(ox + sqSize/2, oy);
+    ctx.lineTo(ox + sqSize/2, oy + sqSize);
+    ctx.moveTo(ox, oy + sqSize/2);
+    ctx.lineTo(ox + sqSize, oy + sqSize/2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label quadrants
+    ctx.font = '14px Source Code Pro';
+    ctx.fillStyle = 'rgba(232, 197, 71, 0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('Q1', ox + sqSize/4, oy + sqSize/4 + 5);
+    ctx.fillText('Q2', ox + 3*sqSize/4, oy + sqSize/4 + 5);
+    ctx.fillText('Q3', ox + sqSize/4, oy + 3*sqSize/4 + 5);
+    ctx.fillText('Q4', ox + 3*sqSize/4, oy + 3*sqSize/4 + 5);
+  }
+
+  // Axis labels
+  ctx.font = '13px Source Code Pro';
+  ctx.fillStyle = 'rgba(245, 240, 232, 0.5)';
+  ctx.textAlign = 'center';
+  ctx.fillText('0', ox - 14, oy + sqSize + 5);
+  ctx.fillText('1', ox + sqSize + 14, oy + sqSize + 5);
+  ctx.fillText('0', ox - 14, oy + 5);
+  ctx.fillText('1', ox + sqSize + 14, oy + 5);
+
+  // Draw distances between points in same quadrant
+  if (p1ShowDistances && p1Points.length >= 2) {
+    for (let i = 0; i < p1Points.length; i++) {
+      for (let j = i+1; j < p1Points.length; j++) {
+        const dx = p1Points[i].x - p1Points[j].x;
+        const dy = p1Points[i].y - p1Points[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        const px1 = ox + p1Points[i].x * sqSize;
+        const py1 = oy + (1 - p1Points[i].y) * sqSize;
+        const px2 = ox + p1Points[j].x * sqSize;
+        const py2 = oy + (1 - p1Points[j].y) * sqSize;
+
+        const isClose = dist <= 1/Math.sqrt(2) + 0.001;
+        ctx.strokeStyle = isClose ? 'rgba(232, 115, 90, 0.6)' : 'rgba(245, 240, 232, 0.15)';
+        ctx.lineWidth = isClose ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(px1, py1);
+        ctx.lineTo(px2, py2);
+        ctx.stroke();
+
+        // Distance label
+        const mx = (px1 + px2)/2;
+        const my = (py1 + py2)/2;
+        ctx.font = 'bold 13px Source Code Pro';
+        ctx.fillStyle = isClose ? 'rgba(232, 115, 90, 1)' : 'rgba(245, 240, 232, 0.5)';
+        ctx.textAlign = 'center';
+        ctx.fillText(dist.toFixed(3), mx, my - 7);
+      }
+    }
+  }
+
+  // Draw points
+  p1Points.forEach((pt, idx) => {
+    const px = ox + pt.x * sqSize;
+    const py = oy + (1 - pt.y) * sqSize;
+
+    // Glow
+    const grad = ctx.createRadialGradient(px, py, 0, px, py, 15);
+    grad.addColorStop(0, 'rgba(232, 115, 90, 0.4)');
+    grad.addColorStop(1, 'rgba(232, 115, 90, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(px, py, 15, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Point
+    ctx.fillStyle = '#e8735a';
+    ctx.beginPath();
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Label
+    ctx.font = 'bold 13px Source Code Pro';
+    ctx.fillStyle = '#f5f0e8';
+    ctx.textAlign = 'center';
+    ctx.fillText(`P${idx+1}`, px, py - 12);
+    ctx.font = '12px Source Code Pro';
+    ctx.fillText(`(${pt.x.toFixed(2)}, ${pt.y.toFixed(2)})`, px, py + 20);
+  });
+
+  // Max diagonal label
+  if (p1ShowGrid) {
+    ctx.font = '13px Source Code Pro';
+    ctx.fillStyle = 'rgba(61, 191, 160, 0.8)';
+    ctx.textAlign = 'left';
+    ctx.fillText('Max dist in quadrant = 1/√2 ≈ 0.707', ox + 5, oy + sqSize + 22);
+  }
+}
+
+document.getElementById('canvas1').addEventListener('click', function(e) {
+  if (p1Points.length >= 5) return;
+  const rect = this.getBoundingClientRect();
+  const scaleX = this.width / rect.width;
+  const scaleY = this.height / rect.height;
+  const cx = (e.clientX - rect.left) * scaleX;
+  const cy = (e.clientY - rect.top) * scaleY;
+
+  const margin = 40;
+  const sqSize = Math.min(this.width - margin*2, this.height - margin*2);
+  const ox = (this.width - sqSize) / 2;
+  const oy = (this.height - sqSize) / 2;
+
+  if (cx >= ox && cx <= ox + sqSize && cy >= oy && cy <= oy + sqSize) {
+    const x = (cx - ox) / sqSize;
+    const y = 1 - (cy - oy) / sqSize;
+    p1Points.push({ x: Math.max(0.01, Math.min(0.99, x)), y: Math.max(0.01, Math.min(0.99, y)) });
+    drawP1();
+  }
+});
+
+function toggleGrid1() { p1ShowGrid = !p1ShowGrid; drawP1(); }
+function toggleDistances1() { p1ShowDistances = !p1ShowDistances; drawP1(); }
+function clearPoints1() { p1Points = []; drawP1(); }
+function randomPoints1() {
+  p1Points = [];
+  for (let i = 0; i < 5; i++) {
+    p1Points.push({ x: 0.05 + Math.random()*0.9, y: 0.05 + Math.random()*0.9 });
+  }
+  drawP1();
+}
+
+// ====================================================================
+// PROBLEM 2: LAZY SUSAN VISUALIZATION
+// ====================================================================
+let susanRotation = 0; // number of positions rotated
+let dishAssignment = []; // dishAssignment[i] = which dish is at position i of the lazy susan
+
+function initSusan() {
+  // Create a derangement (no dish in its correct position)
+  dishAssignment = derangement(11);
+  susanRotation = 0;
+  drawSusan();
+}
+
+function derangement(n) {
+  while (true) {
+    let arr = Array.from({length: n}, (_, i) => i);
+    // Fisher-Yates shuffle
+    for (let i = n-1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    // Check it's a derangement
+    if (arr.every((v, i) => v !== i)) return arr;
+  }
+}
+
+function countMatches() {
+  let matches = 0;
+  for (let i = 0; i < 11; i++) {
+    const dishPos = (dishAssignment.indexOf(i) + susanRotation) % 11;
+    if (dishPos === i) matches++;
+  }
+  return matches;
+}
+
+function drawSusan() {
+  const canvas = document.getElementById('canvas2');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const cx = w/2;
+  const cy = h/2;
+  const outerR = 160;
+  const innerR = 110;
+  const personR = outerR + 25;
+
+  // Draw outer ring (people positions)
+  ctx.strokeStyle = 'rgba(245, 240, 232, 0.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Draw lazy susan circle
+  ctx.strokeStyle = 'rgba(232, 197, 71, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Susan fill
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, innerR);
+  grad.addColorStop(0, 'rgba(232, 197, 71, 0.05)');
+  grad.addColorStop(1, 'rgba(232, 197, 71, 0.02)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Label
+  ctx.font = 'bold 14px Source Code Pro';
+  ctx.fillStyle = 'rgba(232, 197, 71, 0.5)';
+  ctx.textAlign = 'center';
+  ctx.fillText('LAZY SUSAN', cx, cy - 8);
+  ctx.font = '13px Source Code Pro';
+  ctx.fillText(`rotation: ${susanRotation}`, cx, cy + 10);
+
+  const dishColors = [
+    '#e8735a','#3dbfa0','#e8c547','#7c6f9f','#6bc77a',
+    '#d94f4f','#5a9de8','#e89f5a','#9f5ae8','#5ae8c5','#e85a8c'
+  ];
+
+  for (let i = 0; i < 11; i++) {
+    const angle = (i / 11) * Math.PI * 2 - Math.PI/2;
+
+    // Person position (fixed)
+    const px = cx + personR * Math.cos(angle);
+    const py = cy + personR * Math.sin(angle);
+
+    // Draw person
+    ctx.fillStyle = 'rgba(245, 240, 232, 0.7)';
+    ctx.beginPath();
+    ctx.arc(px, py, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 12px Source Code Pro';
+    ctx.fillStyle = '#1e1e2e';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(i + 1, px, py);
+
+    // Dish position on the lazy susan (rotated)
+    const dishIndex = dishAssignment.indexOf(i); // position of dish i on the original susan
+    const rotatedPos = (dishIndex + susanRotation) % 11; // where dish i now sits
+    const dishAngle = (rotatedPos / 11) * Math.PI * 2 - Math.PI/2;
+    const dx = cx + innerR * 0.7 * Math.cos(dishAngle);
+    const dy = cy + innerR * 0.7 * Math.sin(dishAngle);
+
+    // Draw dish
+    ctx.fillStyle = dishColors[i];
+    ctx.beginPath();
+    ctx.arc(dx, dy, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Check if this dish is in front of the right person
+    if (rotatedPos === i) {
+      // Match! Draw connection line
+      ctx.strokeStyle = 'rgba(107, 199, 122, 0.6)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(dx, dy);
+      ctx.stroke();
+
+      // Highlight
+      ctx.strokeStyle = '#6bc77a';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(dx, dy, 16, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Dish label
+    ctx.font = 'bold 11px Source Code Pro';
+    ctx.fillStyle = '#1e1e2e';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(i+1, dx, dy);
+  }
+
+  ctx.textBaseline = 'alphabetic';
+
+  // Update info
+  const matches = countMatches();
+  document.getElementById('susan-info').innerHTML =
+    `Rotation: <strong>${susanRotation}</strong> steps. Matches: <strong style="color:${matches >= 2 ? 'var(--green)' : 'var(--chalk)'}">${matches}</strong>. ` +
+    (matches >= 2 ? '<span style="color:var(--green)">Found 2+ matches!</span>' : 'Try rotating to find 2+ matches.');
+}
+
+function rotateSusan(dir) {
+  susanRotation = ((susanRotation + dir) % 11 + 11) % 11;
+  drawSusan();
+}
+
+function resetSusan() {
+  susanRotation = 0;
+  drawSusan();
+}
+
+function randomizeDishes() {
+  initSusan();
+}
+
+// ====================================================================
+// PROBLEM 3: CONSECUTIVE NUMBERS VISUALIZATION
+// ====================================================================
+let p3n = 5;
+let p3Selected = new Set();
+
+function updateN() {
+  p3n = parseInt(document.getElementById('n-slider').value);
+  document.getElementById('n-value').textContent = p3n;
+  p3Selected.clear();
+  drawP3();
+}
+
+function drawP3() {
+  const grid = document.getElementById('number-grid-3');
+  grid.innerHTML = '';
+
+  // Generate pairs
+  const pairs = [];
+  for (let k = 1; k <= p3n; k++) {
+    pairs.push([2*k, 2*k + 1]);
+  }
+
+  // Draw pair brackets and numbers
+  pairs.forEach((pair, pairIdx) => {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display:flex; gap:2px; margin-right:8px; margin-bottom:4px; padding:3px; border:1px solid rgba(232,197,71,0.2); border-radius:4px; background:rgba(232,197,71,0.03);';
+
+    pair.forEach(num => {
+      const cell = document.createElement('div');
+      cell.className = 'number-cell' + (p3Selected.has(num) ? ' selected' : '');
+      cell.textContent = num;
+      cell.onclick = () => toggleNumber3(num);
+      wrapper.appendChild(cell);
+    });
+
+    grid.appendChild(wrapper);
+  });
+
+  // Check for coprime pair in selection
+  const selected = [...p3Selected].sort((a,b) => a-b);
+  let coprimeFound = false;
+  for (let i = 0; i < selected.length && !coprimeFound; i++) {
+    for (let j = i+1; j < selected.length; j++) {
+      if (selected[j] === selected[i] + 1) {
+        coprimeFound = true;
+        break;
+      }
+    }
+  }
+
+  const pairsStr = pairs.map(p => `{${p[0]},${p[1]}}`).join(', ');
+  const needed = p3n + 1;
+  document.getElementById('pairs-display').innerHTML =
+    `Consecutive pairs: ${pairsStr}. <br>Select <strong>${needed}</strong> numbers (n+1 = ${p3n}+1). ` +
+    `Currently selected: ${p3Selected.size}/${needed}. ` +
+    (coprimeFound ? '<span style="color:var(--green)">Consecutive (coprime) pair found in selection!</span>' : '');
+}
+
+function toggleNumber3(num) {
+  if (p3Selected.has(num)) {
+    p3Selected.delete(num);
+  } else {
+    if (p3Selected.size < p3n + 1) {
+      p3Selected.add(num);
+    }
+  }
+  drawP3();
+}
+
+function clearSelection3() { p3Selected.clear(); drawP3(); }
+
+function randomSelection3() {
+  p3Selected.clear();
+  const nums = [];
+  for (let i = 2; i <= 2*p3n + 1; i++) nums.push(i);
+  // Shuffle and pick n+1
+  for (let i = nums.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [nums[i], nums[j]] = [nums[j], nums[i]];
+  }
+  for (let i = 0; i <= p3n; i++) p3Selected.add(nums[i]);
+  drawP3();
+}
+
+// ====================================================================
+// PROBLEM 4: PRIME DIVISIBILITY VISUALIZATION
+// ====================================================================
+function analyzeP4Numbers() {
+  const input = document.getElementById('p4-numbers-input').value;
+  const nums = input.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n) && n > 0);
+  if (nums.length === 0) return;
+
+  const primes = [2, 3, 5, 7];
+  const analysis = document.getElementById('p4-analysis');
+  const collision = document.getElementById('p4-collision');
+
+  // Map each number to its subset
+  const subsetMap = {};
+  const rows = [];
+
+  nums.forEach((num, idx) => {
+    const subset = primes.filter(p => num % p === 0);
+    const key = subset.length === 0 ? '{}' : '{' + subset.join(',') + '}';
+    if (!subsetMap[key]) subsetMap[key] = [];
+    subsetMap[key].push(num);
+
+    rows.push(`<div style="display:flex; align-items:center; gap:0.5rem; padding:0.3rem 0.5rem; background:${idx%2===0 ? 'var(--slate)' : 'transparent'}; border-radius:3px;">
+      <span style="font-family:var(--font-mono); font-size:0.8rem; color:var(--coral); min-width:40px;">${num}</span>
+      <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--chalk-dim);">&rarr;</span>
+      <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--teal);">${key}</span>
+      <span style="font-family:var(--font-mono); font-size:0.65rem; color:var(--chalk-faint); margin-left:auto;">${primes.map(p => num % p === 0 ? `<span style="color:var(--gold)">${p}</span>` : `<span style="opacity:0.3">${p}</span>`).join(' ')}</span>
+    </div>`);
+  });
+
+  analysis.innerHTML = rows.join('');
+
+  // Find collisions
+  const collisions = Object.entries(subsetMap).filter(([k, v]) => v.length >= 2);
+  if (collisions.length > 0) {
+    collision.innerHTML = collisions.map(([key, vals]) =>
+      `<div style="font-family:var(--font-mono); font-size:0.78rem; color:var(--coral); margin-top:0.25rem;">
+        Collision at subset <span style="color:var(--teal)">${key}</span>: numbers ${vals.join(', ')} all map here
+      </div>`
+    ).join('');
+  } else {
+    collision.innerHTML = `<div style="font-family:var(--font-mono); font-size:0.78rem; color:var(--chalk-dim);">No collisions yet (need more than 16 numbers).</div>`;
+  }
+}
+
+// ====================================================================
+// PROBLEM 5: GENERALIZED PHP VISUALIZATION
+// ====================================================================
+function updateGPP() {
+  const a = parseInt(document.getElementById('gpp-a-slider').value);
+  const b = parseInt(document.getElementById('gpp-b-slider').value);
+  const k = parseInt(document.getElementById('gpp-k-slider').value);
+
+  document.getElementById('gpp-a-val').textContent = a;
+  document.getElementById('gpp-b-val').textContent = b;
+  document.getElementById('gpp-k-val').textContent = k;
+
+  drawGPP(a, b, k);
+
+  const product = k * b;
+  const satisfies = a > product;
+  document.getElementById('gpp-info').innerHTML = satisfies
+    ? `|A| = ${a} > ${k} &times; ${b} = ${product} = k|B|. <span style="color:var(--green)">Generalized PHP applies: some hole has > ${k} pigeons.</span>`
+    : `|A| = ${a} &le; ${k} &times; ${b} = ${product} = k|B|. <span style="color:var(--chalk-dim)">Condition not met — cannot guarantee more than ${k} per hole.</span>`;
+}
+
+function drawGPP(numPigeons, numHoles, k) {
+  const canvas = document.getElementById('canvas5a');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  // Distribute pigeons as evenly as possible
+  const perHole = new Array(numHoles).fill(0);
+  for (let i = 0; i < numPigeons; i++) {
+    perHole[i % numHoles]++;
+  }
+
+  const holeWidth = Math.min(60, (w - 40) / numHoles - 4);
+  const totalWidth = numHoles * (holeWidth + 4) - 4;
+  const startX = (w - totalWidth) / 2;
+  const baseY = h - 30;
+  const maxBarH = h - 60;
+
+  // Draw k threshold line
+  const maxCount = Math.max(...perHole, k + 1);
+  const kLineY = baseY - (k / maxCount) * maxBarH;
+  ctx.strokeStyle = 'rgba(232, 197, 71, 0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(startX - 10, kLineY);
+  ctx.lineTo(startX + totalWidth + 10, kLineY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font = '9px Source Code Pro';
+  ctx.fillStyle = 'var(--gold)';
+  ctx.textAlign = 'right';
+  ctx.fillText(`k = ${k}`, startX - 14, kLineY + 3);
+
+  // Draw holes
+  perHole.forEach((count, i) => {
+    const x = startX + i * (holeWidth + 4);
+    const barH = (count / maxCount) * maxBarH;
+    const overK = count > k;
+
+    // Bar
+    ctx.fillStyle = overK ? 'rgba(232, 115, 90, 0.7)' : 'rgba(61, 191, 160, 0.5)';
+    ctx.fillRect(x, baseY - barH, holeWidth, barH);
+
+    // Border
+    ctx.strokeStyle = overK ? 'var(--coral)' : 'var(--teal)';
+    ctx.lineWidth = overK ? 2 : 1;
+    ctx.strokeRect(x, baseY - barH, holeWidth, barH);
+
+    // Hole label
+    ctx.font = '8px Source Code Pro';
+    ctx.fillStyle = 'var(--chalk-dim)';
+    ctx.textAlign = 'center';
+    ctx.fillText(`B${i+1}`, x + holeWidth/2, baseY + 12);
+
+    // Count
+    ctx.font = 'bold 10px Source Code Pro';
+    ctx.fillStyle = overK ? 'var(--coral)' : 'var(--chalk)';
+    ctx.fillText(count, x + holeWidth/2, baseY - barH - 5);
+
+    // Draw pigeon dots
+    for (let p = 0; p < count; p++) {
+      const py = baseY - 8 - p * Math.min(14, (barH - 8) / count);
+      const px = x + holeWidth / 2;
+      ctx.fillStyle = overK ? 'rgba(232, 115, 90, 0.9)' : 'rgba(245, 240, 232, 0.6)';
+      ctx.beginPath();
+      ctx.arc(px, py, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+}
+
+function switchSub5(part) {
+  document.querySelectorAll('#problem5 .sub-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#problem5 .sub-panel').forEach(p => p.classList.remove('active'));
+  if (part === 'a') {
+    document.querySelector('#problem5 .sub-tab:first-child').classList.add('active');
+    document.getElementById('sub5a').classList.add('active');
+  } else {
+    document.querySelector('#problem5 .sub-tab:last-child').classList.add('active');
+    document.getElementById('sub5b').classList.add('active');
+  }
+}
+
+function calcBirthday() {
+  const n = parseInt(document.getElementById('birthday-n').value);
+  if (isNaN(n) || n < 1) return;
+  const people = (n - 1) * 366 + 1;
+  document.getElementById('birthday-result').innerHTML =
+    `You need at least <strong style="color:var(--gold)">${people}</strong> people in the group.`;
+}
+
+// ====================================================================
+// PROBLEM 6: HOCKEY GOALS VISUALIZATION
+// ====================================================================
+let goals = [2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,2]; // total 30
+let rangeStart = -1;
+let rangeEnd = -1;
+
+function initGoals() {
+  // Generate a valid random distribution
+  randomGoals6();
+  buildGoalInputs();
+  drawGoals6();
+}
+
+function buildGoalInputs() {
+  const row = document.getElementById('goals-input-row');
+  row.innerHTML = '';
+  for (let i = 0; i < 20; i++) {
+    const inp = document.createElement('input');
+    inp.type = 'number';
+    inp.min = '1';
+    inp.max = '20';
+    inp.value = goals[i];
+    inp.style.cssText = 'width:36px; padding:2px 4px; background:var(--slate-light); border:1px solid var(--chalk-faint); border-radius:3px; color:var(--chalk); font-family:var(--font-mono); font-size:0.72rem; text-align:center;';
+    inp.oninput = function() {
+      goals[i] = Math.max(1, parseInt(this.value) || 1);
+      drawGoals6();
+    };
+    row.appendChild(inp);
+  }
+}
+
+function randomGoals6() {
+  // Distribute 30 goals among 20 games, each >= 1
+  goals = new Array(20).fill(1); // 20 goals assigned
+  let remaining = 10; // 30 - 20
+  while (remaining > 0) {
+    const idx = Math.floor(Math.random() * 20);
+    const add = Math.min(remaining, Math.floor(Math.random() * 3) + 1);
+    goals[idx] += add;
+    remaining -= add;
+  }
+  buildGoalInputs();
+  rangeStart = -1;
+  rangeEnd = -1;
+  drawGoals6();
+}
+
+function clearRange6() {
+  rangeStart = -1;
+  rangeEnd = -1;
+  drawGoals6();
+}
+
+function findExact9() {
+  // Find a consecutive sequence summing to exactly 9
+  const cumsum = [0];
+  for (let i = 0; i < 20; i++) cumsum.push(cumsum[i] + goals[i]);
+
+  for (let i = 0; i < 20; i++) {
+    for (let j = i + 1; j <= 20; j++) {
+      if (cumsum[j] - cumsum[i] === 9) {
+        rangeStart = i;
+        rangeEnd = j - 1;
+        drawGoals6();
+        return;
+      }
+    }
+  }
+  document.getElementById('range-info-6').innerHTML = '<span style="color:var(--red)">No exact-9 sequence found with this distribution.</span>';
+}
+
+function drawGoals6() {
+  const barsContainer = document.getElementById('goal-bars-6');
+  const labelsContainer = document.getElementById('game-labels-6');
+  barsContainer.innerHTML = '';
+  labelsContainer.innerHTML = '';
+
+  const maxGoal = Math.max(...goals);
+  const total = goals.reduce((a,b) => a+b, 0);
+
+  // Cumulative sums
+  const cumsum = [0];
+  for (let i = 0; i < 20; i++) cumsum.push(cumsum[i] + goals[i]);
+
+  goals.forEach((g, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'goal-bar-wrapper';
+
+    const value = document.createElement('div');
+    value.className = 'goal-bar-value';
+    value.textContent = g;
+
+    const bar = document.createElement('div');
+    bar.className = 'goal-bar';
+    bar.style.height = (g / maxGoal * 100) + '%';
+
+    const inRange = rangeStart >= 0 && rangeEnd >= 0 && i >= rangeStart && i <= rangeEnd;
+    if (inRange) bar.classList.add('in-range');
+
+    bar.onclick = () => {
+      if (rangeStart < 0) {
+        rangeStart = i;
+        rangeEnd = -1;
+      } else if (rangeEnd < 0) {
+        if (i >= rangeStart) {
+          rangeEnd = i;
+        } else {
+          rangeStart = i;
+        }
+      } else {
+        rangeStart = i;
+        rangeEnd = -1;
+      }
+      drawGoals6();
+    };
+
+    wrapper.appendChild(value);
+    wrapper.appendChild(bar);
+    barsContainer.appendChild(wrapper);
+
+    const label = document.createElement('div');
+    label.style.cssText = 'flex:1; text-align:center; font-family:var(--font-mono); font-size:0.55rem; color:var(--chalk-faint);';
+    label.textContent = i + 1;
+    labelsContainer.appendChild(label);
+  });
+
+  // Range info
+  const rangeInfo = document.getElementById('range-info-6');
+  if (rangeStart >= 0 && rangeEnd >= 0) {
+    let rangeSum = 0;
+    for (let i = rangeStart; i <= rangeEnd; i++) rangeSum += goals[i];
+    rangeInfo.innerHTML = `Games ${rangeStart+1} to ${rangeEnd+1}: sum = <strong>${rangeSum}</strong> goals` +
+      (rangeSum === 9 ? ' <span style="color:var(--green)">= 9! Found it!</span>' : '');
+  } else if (rangeStart >= 0) {
+    rangeInfo.innerHTML = `Selected start: game ${rangeStart+1}. Click another bar to set the end.`;
+  } else {
+    rangeInfo.innerHTML = '';
+  }
+
+  // Cumulative sum display
+  const cumsumInfo = document.getElementById('cumsum-info-6');
+  const sVals = cumsum.slice(1).map((s,i) => `s<sub>${i+1}</sub>=${s}`).join(', ');
+  const sPlusVals = cumsum.slice(1).map((s,i) => `s<sub>${i+1}</sub>+9=${s+9}`).join(', ');
+
+  cumsumInfo.innerHTML =
+    `<div style="margin-bottom:0.3rem">Total: ${total} goals. Cumulative sums:</div>` +
+    `<div style="font-size:0.65rem; line-height:1.4;">${sVals}</div>` +
+    `<div style="font-size:0.65rem; line-height:1.4; margin-top:0.2rem; color:var(--coral);">${sPlusVals}</div>` +
+    `<div style="font-size:0.65rem; margin-top:0.3rem;">These ${20*2} values range from 1 to ${cumsum[20]+9}. Since s<sub>20</sub>=30, max is 39. So 40 values in {1,...,39} — pigeonhole!</div>`;
+}
+
+// ====================================================================
+// INITIALIZATION
+// ====================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Problem 1
+  drawP1();
+
+  // Problem 2
+  initSusan();
+
+  // Problem 3
+  drawP3();
+
+  // Problem 4
+  analyzeP4Numbers();
+
+  // Problem 5
+  updateGPP();
+  calcBirthday();
+
+  // Problem 6
+  initGoals();
+});
+</script>
+</body>
+</html>

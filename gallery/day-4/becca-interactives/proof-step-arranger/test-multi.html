@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proof-Step Arranger — multi-instance test</title>
+  <link rel="stylesheet" href="proof-step-arranger.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 900px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Proof-Step Arranger — multi-instance test</h1>
+  <p class="hint">
+    Two independent widgets on one page (√2 and √3 irrationality proofs).
+    Each must keep its own state: dragging a card in one widget must not
+    move cards in the other; pressing Check or Reset in one must not
+    affect the other; feedback messages and the success banner must be
+    scoped per-widget. Verify the cards on each widget are scrambled
+    differently (different seeds because the id sets differ).
+  </p>
+
+  <!-- Widget 1: canonical √2 problem from segment 3.1, Activity 4. -->
+  <div class="psa-widget" data-problem='{
+    "title": "Widget 1 — √2 is irrational",
+    "intro": "<p>Drag the cards from the <strong>Bench</strong> into the <strong>Proof</strong> in the order they should appear. Some cards on the Bench don’t belong in the proof at all — leave those on the Bench. When you think the order is right, press <strong>Check</strong>.</p>",
+    "steps": [
+      {
+        "id": "claim",
+        "html": "<strong>Claim:</strong> √2 is irrational.",
+        "role": "claim"
+      },
+      {
+        "id": "assume",
+        "html": "Assume, for the sake of contradiction, that √2 is rational.",
+        "role": "assumption",
+        "dependsOn": ["claim"]
+      },
+      {
+        "id": "lowest-terms",
+        "html": "Then by the definition of rational, √2 = <em>p</em>/<em>q</em> for some integers <em>p</em>, <em>q</em> with gcd(<em>p</em>, <em>q</em>) = 1.",
+        "role": "assumption",
+        "dependsOn": ["assume"]
+      },
+      {
+        "id": "square",
+        "html": "Squaring both sides: 2 = <em>p</em>² / <em>q</em>², so <em>p</em>² = 2<em>q</em>².",
+        "role": "derivation",
+        "dependsOn": ["lowest-terms"]
+      },
+      {
+        "id": "p-even",
+        "html": "By the lemma “if <em>p</em>² is even then <em>p</em> is even”: since <em>p</em>² = 2<em>q</em>² is even, <em>p</em> is even. Write <em>p</em> = 2<em>k</em>.",
+        "role": "derivation",
+        "dependsOn": ["square"]
+      },
+      {
+        "id": "substitute",
+        "html": "Substitute <em>p</em> = 2<em>k</em> into <em>p</em>² = 2<em>q</em>²: 2<em>q</em>² = 4<em>k</em>², so <em>q</em>² = 2<em>k</em>².",
+        "role": "derivation",
+        "dependsOn": ["p-even"]
+      },
+      {
+        "id": "q-even",
+        "html": "By the same lemma: since <em>q</em>² = 2<em>k</em>² is even, <em>q</em> is even.",
+        "role": "derivation",
+        "dependsOn": ["substitute"]
+      },
+      {
+        "id": "contradicts-gcd",
+        "html": "Both <em>p</em> and <em>q</em> are even, so gcd(<em>p</em>, <em>q</em>) ≥ 2 — contradicting gcd(<em>p</em>, <em>q</em>) = 1.",
+        "role": "contradiction",
+        "dependsOn": ["q-even", "lowest-terms"]
+      },
+      {
+        "id": "conclude",
+        "html": "Therefore √2 is irrational. □",
+        "role": "contradiction",
+        "dependsOn": ["contradicts-gcd"]
+      }
+    ],
+    "distractors": [
+      {
+        "id": "def-rational",
+        "html": "A rational number is any number that can be written as <em>p</em>/<em>q</em> for integers <em>p</em>, <em>q</em> with <em>q</em> ≠ 0.",
+        "reason": "This is a definition the proof relies on, not a step of the proof itself."
+      },
+      {
+        "id": "lemma-p-even",
+        "html": "If <em>p</em>² is even, then <em>p</em> is even.",
+        "reason": "This is a lemma the proof cites; the proof step that uses it cites it inline rather than restating it."
+      },
+      {
+        "id": "wrong-conclusion",
+        "html": "Therefore <em>p</em> = <em>q</em>.",
+        "reason": "This isn’t the contradiction we derived. The contradiction is that gcd(p, q) ≥ 2 — not that p equals q."
+      },
+      {
+        "id": "reverse-lemma",
+        "html": "We know that if <em>p</em> is even then <em>p</em>² is even. Since <em>p</em>² is even, <em>p</em> must be even. Write <em>p</em> = 2<em>k</em>.",
+        "reason": "The conclusion is right, but the lemma cited goes the wrong direction. To conclude p is even from p² being even, you need the converse: “if p² is even then p is even.”"
+      },
+      {
+        "id": "assume-claim-itself",
+        "html": "Assume, for the sake of contradiction, that √2 is irrational.",
+        "reason": "We’re trying to prove √2 is irrational, so for contradiction we assume the opposite — that √2 is rational. Assuming the claim itself doesn’t set up a contradiction."
+      },
+      {
+        "id": "decimal-handwave",
+        "html": "Since √2 ≈ 1.41421356... has no repeating decimal, √2 cannot be rational.",
+        "reason": "Appealing to a decimal expansion isn’t rigorous: showing the expansion never repeats is essentially the thing we’re trying to prove. The proof has to use the algebraic structure of p/q."
+      }
+    ]
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: √3 irrationality (segment 3.1, Activity 11/12). Exercises
+       the "reusable for other proofs" goal — same widget code, different
+       data. Note the lemma here is also a distractor (3 | n² ⇒ 3 | n). -->
+  <div class="psa-widget" data-problem='{
+    "title": "Widget 2 — √3 is irrational",
+    "intro": "<p>Same shape, different proof. You may use the lemma “if 3 divides <em>n</em>², then 3 divides <em>n</em>” without proving it — but the lemma itself isn’t a step of <em>this</em> proof.</p>",
+    "steps": [
+      {
+        "id": "claim",
+        "html": "<strong>Claim:</strong> √3 is irrational.",
+        "role": "claim"
+      },
+      {
+        "id": "assume",
+        "html": "Assume, for the sake of contradiction, that √3 is rational.",
+        "role": "assumption",
+        "dependsOn": ["claim"]
+      },
+      {
+        "id": "lowest-terms",
+        "html": "Then by the definition of rational, √3 = <em>p</em>/<em>q</em> for some integers <em>p</em>, <em>q</em> with gcd(<em>p</em>, <em>q</em>) = 1.",
+        "role": "assumption",
+        "dependsOn": ["assume"]
+      },
+      {
+        "id": "square",
+        "html": "Squaring both sides: 3 = <em>p</em>² / <em>q</em>², so <em>p</em>² = 3<em>q</em>².",
+        "role": "derivation",
+        "dependsOn": ["lowest-terms"]
+      },
+      {
+        "id": "p-div-3",
+        "html": "By the lemma “if 3 divides <em>n</em>² then 3 divides <em>n</em>”: since 3 divides <em>p</em>² = 3<em>q</em>², 3 divides <em>p</em>. Write <em>p</em> = 3<em>k</em>.",
+        "role": "derivation",
+        "dependsOn": ["square"]
+      },
+      {
+        "id": "substitute",
+        "html": "Substitute <em>p</em> = 3<em>k</em>: 3<em>q</em>² = 9<em>k</em>², so <em>q</em>² = 3<em>k</em>².",
+        "role": "derivation",
+        "dependsOn": ["p-div-3"]
+      },
+      {
+        "id": "q-div-3",
+        "html": "By the same lemma: since 3 divides <em>q</em>² = 3<em>k</em>², 3 divides <em>q</em>.",
+        "role": "derivation",
+        "dependsOn": ["substitute"]
+      },
+      {
+        "id": "contradicts-gcd",
+        "html": "Both <em>p</em> and <em>q</em> are divisible by 3, so gcd(<em>p</em>, <em>q</em>) ≥ 3 — contradicting gcd(<em>p</em>, <em>q</em>) = 1.",
+        "role": "contradiction",
+        "dependsOn": ["q-div-3", "lowest-terms"]
+      },
+      {
+        "id": "conclude",
+        "html": "Therefore √3 is irrational. □",
+        "role": "contradiction",
+        "dependsOn": ["contradicts-gcd"]
+      }
+    ],
+    "distractors": [
+      {
+        "id": "lemma-3",
+        "html": "If 3 divides <em>n</em>², then 3 divides <em>n</em>.",
+        "reason": "This lemma is cited by the proof but isn’t one of its steps; the steps that use it cite it inline."
+      },
+      {
+        "id": "ftc-mention",
+        "html": "By the fundamental theorem of arithmetic, <em>p</em> has a unique prime factorisation.",
+        "reason": "True, but irrelevant — this proof works through divisibility, not unique factorisation."
+      },
+      {
+        "id": "reverse-lemma",
+        "html": "We know that if 3 divides <em>p</em> then 3 divides <em>p</em>². Since 3 divides <em>p</em>², 3 divides <em>p</em>. Write <em>p</em> = 3<em>k</em>.",
+        "reason": "The conclusion is right, but the lemma cited goes the wrong direction. To conclude 3 divides p from 3 dividing p², you need the converse: “if 3 divides p² then 3 divides p.”"
+      },
+      {
+        "id": "parity-carryover",
+        "html": "Since 3 divides <em>p</em>², <em>p</em> must be even.",
+        "reason": "This mechanically copies the √2 proof and forgets to swap “even” for “divisible by 3.” Divisibility by 3 has nothing to do with parity."
+      },
+      {
+        "id": "skip-contradiction",
+        "html": "Both <em>p</em> and <em>q</em> are divisible by 3, so √3 is irrational.",
+        "reason": "“Both divisible by 3” isn’t a conclusion on its own. It’s the thing that <em>contradicts</em> our gcd(p, q) = 1 assumption — and that contradiction is what proves √3 is irrational. The proof needs the explicit contradiction step."
+      },
+      {
+        "id": "assume-claim-itself",
+        "html": "Assume, for the sake of contradiction, that √3 is irrational.",
+        "reason": "We’re trying to prove √3 is irrational, so for contradiction we assume the opposite — that √3 is rational."
+      }
+    ]
+  }'></div>
+
+  <script src="proof-step-arranger.js"></script>
+
+</body>
+</html>

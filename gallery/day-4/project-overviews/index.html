@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Three projects: teaching and research in the age of AI — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>Three projects: teaching and research in the age of AI</h1>
+      <p class="subtitle">Day 4 of the Bok Center workshop &ldquo;Claude for Teaching, Course Development, and Research.&rdquo;</p>
+
+      <p>The fourth day of the workshop demonstrated three projects, each built with Claude Code, each grounded in a distinct academic tradition: qualitative interview coding in the social sciences, interactive-simulation design for STEM teaching, and close work with primary texts in languages other than English. The three projects sit at very different points on the map of academic labor, and each carries its own well-developed methodological tradition that long predates the arrival of large language models. The point of running the three demonstrations side by side is to ask whether the same authoring move &mdash; a faculty member, Claude Code, an afternoon &mdash; is now available across disciplines that would otherwise be hard to compare.</p>
+
+      <p>These overviews are written for three readers in mind. The first is a workshop attendee who wants a reflective pass at the project they saw demonstrated, separate from the live session. The second is a colleague of an attendee &mdash; a department chair, a dean, a fellow faculty member &mdash; who could not attend but wants to understand what was shown and why it matters in their own discipline. The third is any faculty member, anywhere, who is considering whether to take the workshop's approach back to their own department.</p>
+
+      <p>Each project is documented in three short essays:</p>
+
+      <ul>
+        <li><strong><code>summary.md</code></strong> &mdash; what the project is concretely, and what a workshop attendee sees in the demo session.</li>
+        <li><strong><code>tradition.md</code></strong> &mdash; the academic, pedagogical, or scholarly lineage the project sits inside, treated on its own terms before any AI conversation begins.</li>
+        <li><strong><code>affordance.md</code></strong> &mdash; what generative AI in general, and Claude Code in particular, opens up for that lineage; what it does <em>not</em> change; what should not be over-claimed.</li>
+      </ul>
+
+      <hr>
+
+      <h2>The three projects</h2>
+
+      <h3><a href="interview-coding/summary.html">Interview coding</a></h3>
+
+      <p>Mary Waters' &ldquo;flexible coding&rdquo; approach to qualitative interview research, scaled with Claude Code skills that index transcripts to a protocol, surface negative cases against a working claim, and generate transparent methods paragraphs. Built around the framework set out in Deterding &amp; Waters (2018, <em>Sociological Methods &amp; Research</em>). Mary Waters is herself a workshop participant; the design choices align with her methodological view rather than with grounded theory.</p>
+
+      <p><a href="interview-coding/summary.html">Summary</a> &middot; <a href="interview-coding/tradition.html">Tradition</a> &middot; <a href="interview-coding/affordance.html">Affordance</a> &middot; <a href="interview-coding/walkthrough.html">How we built it</a> &middot; <a href="../projects/interview-coding/research-result.html">Research basis</a></p>
+
+      <h3><a href="physics-interactives/summary.html">Physics interactives</a></h3>
+
+      <p>PhET-style interactive simulations as single-file HTML pages, authored by faculty themselves with the <code>/phet-sim</code> skill, paired with <code>/phet-activity</code>, which produces Wieman-style classroom lesson plans around each simulation. The lineage runs from Carl Wieman's PhET Interactive Simulations project at the University of Colorado Boulder; the new affordance is that the kind of artifact that historically required a development team is now available to a faculty member with an afternoon.</p>
+
+      <p><a href="physics-interactives/summary.html">Summary</a> &middot; <a href="physics-interactives/tradition.html">Tradition</a> &middot; <a href="physics-interactives/affordance.html">Affordance</a></p>
+
+      <h3><a href="texts-and-translation/summary.html">Texts and translation</a></h3>
+
+      <p>LLM-assisted close textual work across languages. Two corpora in place at the time of the workshop: fourteen English, Spanish, French, Latin, Swedish, and Greek translations of Homer's <em>Odyssey</em>, and a 17th-century Sanskrit treatise on poetics by Jagann&#257;tha Pa&#7751;&#7693;itar&#257;ja. Skills are sketched but not yet built; this overview reflects on what they could be, and on what trained philologists will and will not delegate to LLMs.</p>
+
+      <p><a href="texts-and-translation-v0/summary.html">Summary</a> &middot; <a href="texts-and-translation-v0/tradition.html">Tradition</a> &middot; <a href="texts-and-translation-v0/affordance.html">Affordance</a></p>
+
+      <hr>
+
+      <p>The three projects are deliberately not arranged in a hierarchy. They sit alongside each other because the workshop's claim is that the same authoring move is now genuinely available across all three of these traditions &mdash; even though the traditions themselves could not look more different.</p>
+
+      <p>For the workshop's overall description and per-day overview, see <a href="../../about-this-workshop/">../about-this-workshop/</a>.</p>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># Three projects: teaching and research in the age of AI
+
+*Day 4 of the Bok Center workshop "Claude for Teaching, Course Development, and Research."*
+
+The fourth day of the workshop demonstrated three projects, each built with Claude Code, each grounded in a distinct academic tradition: qualitative interview coding in the social sciences, interactive-simulation design for STEM teaching, and close work with primary texts in languages other than English. The three projects sit at very different points on the map of academic labor, and each carries its own well-developed methodological tradition that long predates the arrival of large language models. The point of running the three demonstrations side by side is to ask whether the same authoring move — a faculty member, Claude Code, an afternoon — is now available across disciplines that would otherwise be hard to compare.
+
+These overviews are written for three readers in mind. The first is a workshop attendee who wants a reflective pass at the project they saw demonstrated, separate from the live session. The second is a colleague of an attendee — a department chair, a dean, a fellow faculty member — who could not attend but wants to understand what was shown and why it matters in their own discipline. The third is any faculty member, anywhere, who is considering whether to take the workshop's approach back to their own department.
+
+Each project is documented in three short essays:
+
+- **`summary.md`** — what the project is concretely, and what a workshop attendee sees in the demo session.
+- **`tradition.md`** — the academic, pedagogical, or scholarly lineage the project sits inside, treated on its own terms before any AI conversation begins.
+- **`affordance.md`** — what generative AI in general, and Claude Code in particular, opens up for that lineage; what it does *not* change; what should not be over-claimed.
+
+---
+
+## The three projects
+
+### [Interview coding](interview-coding/summary.md)
+
+Mary Waters' "flexible coding" approach to qualitative interview research, scaled with Claude Code skills that index transcripts to a protocol, surface negative cases against a working claim, and generate transparent methods paragraphs. Built around the framework set out in Deterding & Waters (2018, *Sociological Methods & Research*). Mary Waters is herself a workshop participant; the design choices align with her methodological view rather than with grounded theory.
+
+[Summary](interview-coding/summary.md) · [Tradition](interview-coding/tradition.md) · [Affordance](interview-coding/affordance.md) · [How we built it](interview-coding/walkthrough.md)
+
+### [Physics interactives](physics-interactives/summary.md)
+
+PhET-style interactive simulations as single-file HTML pages, authored by faculty themselves with the `/phet-sim` skill, paired with `/phet-activity`, which produces Wieman-style classroom lesson plans around each simulation. The lineage runs from Carl Wieman's PhET Interactive Simulations project at the University of Colorado Boulder; the new affordance is that the kind of artifact that historically required a development team is now available to a faculty member with an afternoon.
+
+[Summary](physics-interactives/summary.md) · [Tradition](physics-interactives/tradition.md) · [Affordance](physics-interactives/affordance.md)
+
+### [Texts and translation](texts-and-translation/summary.md)
+
+LLM-assisted close textual work across languages. Two corpora in place at the time of the workshop: fourteen English, Spanish, French, Latin, Swedish, and Greek translations of Homer's *Odyssey*, and a 17th-century Sanskrit treatise on poetics by Jagannātha Paṇḍitarāja. Skills are sketched but not yet built; this overview reflects on what they could be, and on what trained philologists will and will not delegate to LLMs.
+
+[Summary](texts-and-translation/summary.md) · [Tradition](texts-and-translation/tradition.md) · [Affordance](texts-and-translation/affordance.md)
+
+---
+
+The three projects are deliberately not arranged in a hierarchy. They sit alongside each other because the workshop's claim is that the same authoring move is now genuinely available across all three of these traditions — even though the traditions themselves could not look more different.
+
+For the workshop's overall description and per-day overview, see [../about-this-workshop/](../../about-this-workshop/).
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

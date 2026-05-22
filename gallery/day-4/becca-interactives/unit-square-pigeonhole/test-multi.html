@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit Square Pigeonhole Visualizer — multi-instance test</title>
+  <link rel="stylesheet" href="unit-square-pigeonhole.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 960px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Unit Square Pigeonhole Visualizer — multi-instance test (segment 3.2 Activity 4)</h1>
+  <p class="hint">
+    Two independent widgets on one page. Each must keep its own state:
+    placing/clearing points in one widget must not affect the other,
+    selecting different pigeonholes options must not affect the other,
+    and pressing Check or Reset must scope to its own widget. The
+    pigeonholes dropdown selection drives the partition shown — try
+    selecting different pigeonholes options to see each partition.
+  </p>
+
+  <!-- Widget 1: canonical 5-points-in-unit-square problem from segment 3.2 Activity 4. -->
+  <div class="usq-widget" data-problem='{
+    "title": "Widget 1 — Five Points in a Unit Square",
+    "statement": "<p>Choose any five points inside a 1×1 unit square. Prove that there is at least one pair of points whose distance is at most <span class=\"usq-math\">1/√2 ≈ 0.707</span>.</p>",
+    "hint": "<p><em>Try splitting the square into equal-sized regions.</em> Each pigeonholes option below shows a different partition on the square — try a few to see which trigger PHP and which give a useful distance bound.</p>",
+    "viz": {
+      "pointCap": 5
+    },
+    "components": {
+      "pigeons": {
+        "options": [
+          { "id": "pts-5", "text": "The 5 chosen points.", "correct": true },
+          { "id": "corners-4", "text": "The 4 corners of the unit square.", "feedback": "The corners are fixed by the square — they aren’t what we’re placing or distributing. The pigeons should be the things we have 5 of: the chosen points." },
+          { "id": "regions", "text": "The 4 regions of the partition.", "feedback": "Regions are the pigeonholes — each point gets sorted into one. The 5 points themselves are what get sorted." }
+        ]
+      },
+      "pigeonholes": {
+        "options": [
+          { "id": "quad4", "text": "The 4 quadrants (each 1/2 × 1/2).", "correct": true },
+          { "id": "diag4", "text": "The 4 triangles formed by the two diagonals.", "feedback": "PHP applies (5 > 4 holes — same as quadrants), but the longest distance inside one of these triangles is the full side of the square (length 1) — far bigger than 1/√2. Same hole count as quadrants, much worse bound." },
+          { "id": "strip5", "text": "5 vertical strips of width 1/5.", "feedback": "5 strips for 5 points doesn’t trigger PHP (we need *strictly more* pigeons than pigeonholes). Try a partition with fewer regions." },
+          { "id": "strip2", "text": "2 vertical halves (each 1/2 × 1).", "feedback": "PHP applies (5 > 2), but the diagonal of a 1/2×1 strip is √(1/4 + 1) = √(5)/2 ≈ 1.118 — much bigger than 1/√2. Two points sharing a strip aren’t guaranteed close enough." },
+          { "id": "sq9", "text": "9 small squares (3×3 grid, each 1/3 × 1/3).", "feedback": "9 holes for 5 points — PHP doesn’t apply. With more holes than pigeons, two points needn’t share a region at all." }
+        ]
+      },
+      "mapping": {
+        "options": [
+          { "id": "pt-to-region", "text": "Each point → the region of the partition it lies in.", "correct": true },
+          { "id": "region-to-diag", "text": "Each region → its diagonal length.", "feedback": "This maps regions to numbers, not points to regions. The mapping has to send pigeons (points) to pigeonholes (regions)." },
+          { "id": "pair-to-dist", "text": "Each pair of points → the distance between them.", "feedback": "PHP needs a single pigeon mapping to a single hole. Pairs as inputs would mean pairs are pigeons (and they aren’t)." }
+        ]
+      },
+      "conclusion": {
+        "options": [
+          { "id": "two-share-quad", "text": "Two of the 5 points share a quadrant; their distance is at most the quadrant’s diagonal = 1/√2.", "correct": true },
+          { "id": "all-same", "text": "All 5 points lie in the same quadrant.", "feedback": "PHP only forces *some* quadrant to contain at least 2 points — not all 5. The other quadrants can still hold the rest." },
+          { "id": "regular-pentagon", "text": "The 5 points form a regular pentagon.", "feedback": "PHP says nothing about the geometric arrangement — only about a pair sharing a region. Any arrangement of 5 points works for the bound." }
+        ]
+      }
+    },
+    "success": {
+      "banner": "<strong>Correct setup.</strong> 5 points in 4 quadrants → some quadrant has ≥ 2 points. The diagonal of a 1/2 × 1/2 quadrant is √((1/2)² + (1/2)²) = 1/√2 — the largest distance possible inside one quadrant. So those two points are within 1/√2 of each other."
+    }
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: variant with smaller point cap and a restricted partition set,
+       to verify viz config flexibility. Same conceptual problem but with 3 points
+       in 2 regions; the canonical "good" partition here is 2 strips, and the
+       distance bound is the strip diagonal √(1/4 + 1) = √(5)/2. Distractor options
+       reflect the smaller setup. -->
+  <div class="usq-widget" data-problem='{
+    "title": "Widget 2 — Three Points, Two Halves (illustrative variant)",
+    "statement": "<p>Choose any three points inside a 1×1 unit square. Prove that there is at least one pair of points whose distance is at most <span class=\"usq-math\">√(5)/2 ≈ 1.118</span>.</p>",
+    "hint": "<p>Try splitting the square into two halves.</p>",
+    "viz": {
+      "pointCap": 3
+    },
+    "components": {
+      "pigeons": {
+        "options": [
+          { "id": "pts-3", "text": "The 3 chosen points.", "correct": true },
+          { "id": "halves-2", "text": "The 2 halves of the unit square.", "feedback": "The halves are the pigeonholes (the things points get sorted into), not the pigeons." }
+        ]
+      },
+      "pigeonholes": {
+        "options": [
+          { "id": "strip2", "text": "The 2 vertical halves (each 1/2 × 1).", "correct": true },
+          { "id": "quad4", "text": "The 4 quadrants.", "feedback": "4 holes for 3 points — PHP doesn’t apply. Use a coarser partition with fewer than 3 regions." },
+          { "id": "strip5", "text": "5 vertical strips.", "feedback": "5 holes for 3 points — way too many; PHP doesn’t apply." }
+        ]
+      },
+      "mapping": {
+        "options": [
+          { "id": "pt-to-region", "text": "Each point → the half it lies in.", "correct": true },
+          { "id": "region-to-diag", "text": "Each half → its diagonal length.", "feedback": "Wrong direction: pigeons map to pigeonholes (points to halves), not pigeonholes to numbers." }
+        ]
+      },
+      "conclusion": {
+        "options": [
+          { "id": "two-share", "text": "Two of the 3 points share a half; their distance is at most the half’s diagonal = √(5)/2.", "correct": true },
+          { "id": "wrong-bound", "text": "Two of the 3 points are within 1/√2 of each other.", "feedback": "1/√2 is the bound for the *quadrant* partition — but quadrants don’t give PHP here (4 holes ≥ 3 points). The 2-half partition only guarantees distance ≤ √(5)/2." }
+        ]
+      }
+    },
+    "success": {
+      "banner": "<strong>Correct setup.</strong> 3 points in 2 halves → some half has ≥ 2 points; their distance is at most the half’s diagonal √(5)/2. Note this bound is much weaker than 1/√2."
+    }
+  }'></div>
+
+  <script src="unit-square-pigeonhole.js"></script>
+
+</body>
+</html>

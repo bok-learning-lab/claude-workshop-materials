@@ -1,0 +1,65 @@
+<!--
+  Stars-and-Bars Distribution Builder (W28) — embeddable widget.
+
+  Each <div class="sb-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students set k (number of objects) and n (number of types)
+  and rearrange n−1 bars among k+n−1 slots to form a multiset selection.
+  The same bar configuration is rendered three different ways:
+
+    Scooper   — stars are colored ice-cream scoops, bars are wash gaps;
+                downstream a stacked cone shows the selected scoops.
+    Slushy    — stars are filled cups, bars are advance arrows; downstream
+                n colored stations show how many cups went to each color.
+    Bijection — stars are *, bars are |; downstream the literal string +
+                a length-(k+n−1) annotation.
+
+  Prev / Next walk lex-ordered configurations, exposing the count
+  C(k+n−1, n−1) by enumeration. "Show count" reveals the formula.
+  Used in segment 7.1 Activity 11.
+
+  Inputs (sliders):
+    k — number of objects, 0 ≤ k ≤ 12 (default 3; max raised to 12 to
+        support the canonical 2018 donut example k=12, n=5).
+    n — number of types,   1 ≤ n ≤ 10 (default 5).
+
+  Edge cases:
+    k = 0 — empty selection: 0 stars, n−1 bars, 1 configuration.
+    n = 1 — single-type selection: k stars, 0 bars, 1 configuration.
+
+  Practice mode (optional):
+    Provide a non-empty `practiceProblems` array to expose a Watch / Practice
+    learn-mode toggle. In Practice the sliders are relabeled "stars" and
+    "bars" (where bars = n − 1) so students must work with the abstraction
+    layer themselves rather than being given k/n labels directly. The view
+    defaults to bijection (generic stars-and-bars graphics) unless the
+    problem opts into scooper / slushy via `viewMode`. Live feedback flags
+    wrong values, swapped values, or partial answers; Hint reveals what
+    stars and bars represent. The slot row + visualization unlock once
+    stars and bars are both correct.
+
+  data-problem JSON keys (all optional):
+    title       (string) — bold heading.
+    intro       (HTML)   — short intro card above the controls.
+    defaultK    (int)    — initial k; default 3.
+    defaultN    (int)    — initial n; default 5.
+    defaultMode ("scooper" | "slushy" | "bijection") — initial view; default "scooper".
+    defaultLearnMode ("watch" | "practice") — initial learn mode; default
+                  "practice" if practiceProblems are supplied, else "watch".
+    minK, maxK, minN, maxN — slider bounds (default 0/12/1/10).
+    practiceProblems  — array of { statement, k, n, objectsLabel?, typesLabel?, viewMode? }
+                  to enable Practice mode. statement is the scenario text;
+                  k and n are the expected internal values (the student
+                  manipulates them via "stars" = k and "bars" = n − 1
+                  sliders); the labels are woven into the success message
+                  and the Hint; viewMode picks the visualization shown
+                  once the student is correct (default "bijection").
+-->
+<div class="sb-widget" data-problem='{
+  "title": "Stars-and-Bars Distribution Builder",
+  "intro": "<p>Set <i>k</i> (objects) and <i>n</i> (types). Drag the bars to rearrange. Watch the same configuration under three framings — ice-cream scooper, slushy machine, and binary-string bijection.</p>",
+  "defaultK": 3,
+  "defaultN": 5,
+  "defaultMode": "scooper"
+}'></div>

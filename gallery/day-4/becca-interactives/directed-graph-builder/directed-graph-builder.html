@@ -1,0 +1,38 @@
+<!--
+  Directed Graph Builder (W7) — embeddable widget.
+
+  Refactored from the single-file Interactives/directed-graph-builder.html.
+  Each <div class="dgb-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs and no
+  shared globals.
+
+  Pedagogy: open-ended directed-graph construction with a property sidebar
+  reporting strong/weak connectivity, SCCs (with optional color overlay),
+  cycle detection, DAG status, topological ordering (Kahn's algorithm),
+  sources, sinks, and per-vertex in/out-degrees. Used in segment 5.1
+  Activity 10 (Topological Sort Sandbox) and as a sandbox in segment 5.2.
+
+  data-problem JSON keys (all optional):
+    title       (string)  — bold heading; defaults to "Directed Graph Builder."
+    intro       (HTML)    — short intro card above the widget.
+    viz         (object)  — visualization parameters.
+      sections  (object) — toggle visibility of property panels. All default
+                true. Keys: summary, strong, weak, dag, topo, sourcesSinks,
+                degrees.
+      tools     (object) — toggle visibility of optional toolbar buttons.
+                Keys: label, sccColor (both default true).
+      initialGraph (object, optional) — pre-load a graph. Schema:
+                { vertices: [{ id, x, y, label }, ...],
+                  edges:    [{ from, to }, ...] }
+                Edges are directed: from → to. Coordinates are in canvas
+                pixels with (0, 0) at the top-left of the canvas area.
+
+  Keyboard shortcuts (V / E / L / D / S / Esc) work when the widget has
+  focus — click into the widget first to activate.
+
+  No document-wide IDs; everything scoped via root.querySelector.
+-->
+<div class="dgb-widget" data-problem='{
+  "title": "Directed Graph Builder",
+  "intro": "<p>Place vertices on the canvas and connect them with directed edges (click source vertex first, then target). The sidebar reports strong/weak connectivity, SCCs, cycle detection, DAG status, and a topological ordering (Kahn’s algorithm) live as you build.</p>"
+}'></div>

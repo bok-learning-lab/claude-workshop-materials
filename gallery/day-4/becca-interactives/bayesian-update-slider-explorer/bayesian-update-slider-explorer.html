@@ -1,0 +1,18 @@
+<!--
+  Bayesian Update Slider Explorer (W30) — embeddable widget snippet.
+
+  Drop the widget root anywhere on a Canvas page and load the matching
+  CSS / JS files. Each instance is configured via JSON in `data-problem`:
+
+    {
+      "title":          (string, optional)  shown in the widget header
+      "intro":          (string, optional)  HTML rendered above the controls
+      "defaultPreset":  (string, optional)  one of "laura", "mammogram", "lowPrior"
+                                            (overrides URL params for this instance)
+    }
+
+  URL parameters (read once at mount time): ?prior=…&sens=…&fpr=… prefill
+  the sliders. Useful for cross-references from problem sets and other
+  activities.
+-->
+<div class="bus-widget" data-problem='{}'></div>

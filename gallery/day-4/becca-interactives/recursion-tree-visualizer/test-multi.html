@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recursion Tree Visualizer — multi-instance test</title>
+  <link rel="stylesheet" href="recursion-tree-visualizer.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1200px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Recursion Tree Visualizer — multi-instance test (segment 6.1 Activity 18)</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own form
+    selection, mode, parameters, built tree, and edit/highlight state.
+    Pressing Build, Run, or Reveal on one widget must not affect the others.
+  </p>
+
+  <!-- Widget 1: divide-and-conquer, Watch mode (default) -->
+  <div class="rt-widget" data-problem='{
+    "title": "Widget 1 — Watch · divide and conquer",
+    "defaultForm": "dnc",
+    "defaultMode": "watch"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: n-1 form, Watch mode -->
+  <div class="rt-widget" data-problem='{
+    "title": "Widget 2 — Watch · n − 1 form (try Hanoi: a=2, f(n)=1, n=5)",
+    "defaultForm": "nminus1",
+    "defaultMode": "watch"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: Practice mode default -->
+  <div class="rt-widget" data-problem='{
+    "title": "Widget 3 — Practice · fill in each size and work",
+    "defaultForm": "dnc",
+    "defaultMode": "practice"
+  }'></div>
+
+  <script src="recursion-tree-visualizer.js"></script>
+
+</body>
+</html>

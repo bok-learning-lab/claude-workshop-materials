@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truth Table Widget — Problem 1b</title>
+  <style>
+    /* ---- Page ---- */
+    body {
+      font-family: sans-serif;
+      margin: 24px;
+      color: #1a1a1a;
+    }
+
+    #widget {
+      max-width: 860px;
+    }
+
+    /* ---- Table shell ---- */
+    table {
+      border-collapse: collapse;
+      font-family: monospace;
+      font-size: 1rem;
+    }
+
+    th, td {
+      border: 1px solid #aaa;
+      padding: 6px 14px;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    /* Variable column headers — neutral gray */
+    thead th {
+      background: #e8e8e8;
+      color: #333;
+    }
+
+    /* Fixed (instructor) formula column headers — blue tint */
+    thead th.col-fixed {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    /* Auto-filled variable cells */
+    td.var-cell {
+      background: #f5f5f5;
+      color: #444;
+    }
+
+    /* Formula cells — blank */
+    td.formula-cell {
+      background: #e4e4e4;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    /* Hover hint on unlocked cells */
+    td.formula-cell:not([data-locked]):hover {
+      background: #d0d8e8;
+    }
+
+    /* Formula cells — filled */
+    td.formula-cell[data-value="T"],
+    td.formula-cell[data-value="F"] {
+      background: #ffffff;
+      font-weight: bold;
+    }
+
+    /* Thick left border: first formula col and last formula col */
+    th.col-section-start,
+    td.col-section-start {
+      border-left: 3px solid #555;
+    }
+
+    th.col-section-end,
+    td.col-section-end {
+      border-left: 3px solid #555;
+    }
+
+    /* Student-added column header — light lavender, distinct from fixed cols */
+    th[data-student] {
+      white-space: nowrap;
+      background: #f0f4ff;
+    }
+
+    .col-label-input {
+      font-family: monospace;
+      font-size: 0.9rem;
+      width: 9ch;
+      border: 1px solid #aaa;
+      border-radius: 3px;
+      padding: 2px 4px;
+      text-align: center;
+    }
+
+    .remove-col-btn {
+      margin-left: 4px;
+      padding: 1px 5px;
+      font-size: 0.75rem;
+      line-height: 1;
+      cursor: pointer;
+      border: 1px solid #aaa;
+      border-radius: 3px;
+      background: #f5f5f5;
+      color: #555;
+    }
+
+    .remove-col-btn:hover {
+      background: #fdd;
+      border-color: #c00;
+      color: #c00;
+    }
+
+    /* ---- Controls bar ---- */
+    #controls {
+      margin-top: 12px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    #add-col-btn {
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 1px solid #888;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    #add-col-btn:hover { background: #e0e0e0; }
+
+    #check-btn {
+      padding: 5px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 1px solid #2a7a2a;
+      border-radius: 4px;
+      background: #d4edda;
+      color: #155724;
+      font-weight: 600;
+    }
+
+    #check-btn:hover { background: #b8dfc4; }
+
+    #reset-btn {
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 1px solid #888;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    #reset-btn:hover { background: #e0e0e0; }
+
+    /* Symbol insert buttons */
+    .sym-btn {
+      padding: 3px 7px;
+      font-size: 0.85rem;
+      font-family: monospace;
+      cursor: pointer;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      background: #f8f8f8;
+      color: #333;
+    }
+
+    .sym-btn:hover {
+      background: #eef;
+      border-color: #99a;
+    }
+
+    /* Thin vertical separator between control groups */
+    .controls-sep {
+      display: inline-block;
+      width: 1px;
+      height: 1.5em;
+      background: #ccc;
+      margin: 0 2px;
+      align-self: center;
+    }
+
+    /* ---- Per-cell feedback after Check ----
+       High-specificity selectors + !important beat td.formula-cell[data-value=…] */
+    td.formula-cell.cell-correct,
+    td.formula-cell.cell-correct[data-value="T"],
+    td.formula-cell.cell-correct[data-value="F"],
+    td.formula-cell.cell-correct[data-value=""] {
+      background: #d4edda !important;
+      outline: 2px solid #28a745;
+      outline-offset: -2px;
+    }
+
+    td.formula-cell.cell-incorrect,
+    td.formula-cell.cell-incorrect[data-value="T"],
+    td.formula-cell.cell-incorrect[data-value="F"],
+    td.formula-cell.cell-incorrect[data-value=""] {
+      background: #f8d7da !important;
+      outline: 2px solid #dc3545;
+      outline-offset: -2px;
+    }
+
+    /* Locked cells shouldn't suggest interactivity */
+    td.formula-cell[data-locked] {
+      cursor: default;
+    }
+
+    /* ---- Equivalence verdict banner ---- */
+    #verdict {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    #verdict.verdict-equivalent {
+      display: block;
+      background: #d4edda;
+      border: 2px solid #28a745;
+      color: #155724;
+    }
+
+    #verdict.verdict-not-equivalent {
+      display: block;
+      background: #f8d7da;
+      border: 2px solid #dc3545;
+      color: #721c24;
+    }
+
+    /* Counterexample rows — amber on all cells.
+       Formula-cell feedback rules use !important so they still win. */
+    tr.row-counterexample td {
+      background: #fff3cd;
+    }
+
+    /* ---- Problem header ---- */
+    #problem-header {
+      margin-bottom: 14px;
+    }
+
+    #problem-header h2 {
+      margin: 0 0 4px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    #problem-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="widget"></div>
+
+  <script>
+    // =========================================================================
+    // PROBLEM CONFIGURATION
+    // Instructors: edit only this object to create a new problem.
+    //
+    //   title         (string, optional)
+    //                 Displayed as a bold heading above the table.
+    //                 Example: "Problem 1b"
+    //
+    //   instructions  (string, optional)
+    //                 Displayed as a paragraph below the title.
+    //                 Example: "Is P → Q equivalent to Q → P?"
+    //
+    //   variables     (string[])
+    //                 Propositional variables shown as auto-filled columns on
+    //                 the left.  Order determines column order and
+    //                 bit-significance in the truth assignment
+    //                 (first variable = most-significant bit, so a 2-variable
+    //                 table produces rows TT, TF, FT, FF top-to-bottom).
+    //                 Example: ["P", "Q"]
+    //
+    //   firstColumn   { label: string, formula: string }
+    //                 The leftmost formula column — left-hand side of the
+    //                 equivalence claim.  The widget compares firstColumn
+    //                 against lastColumn to decide equivalence.
+    //
+    //   lastColumn    { label: string, formula: string }
+    //                 The rightmost formula column — right-hand side of the
+    //                 equivalence claim.
+    //
+    //   middleColumns (Array<{ label, formula }>, optional)
+    //                 Zero or more instructor-provided columns placed between
+    //                 firstColumn and lastColumn.  Students fill in T/F values;
+    //                 Check grades them.  These columns are NOT included in the
+    //                 equivalence comparison — only firstColumn vs. lastColumn
+    //                 is compared.
+    //
+    //   Formula syntax accepted in any formula field:
+    //     NOT     :  !, ~, ¬, NOT
+    //     AND     :  &, &&, ∧, AND
+    //     OR      :  |, ||, ∨, OR
+    //     IMPLIES :  ->, =>, →
+    //     IFF     :  <->, <=>, ↔, IFF
+    //     XOR     :  ⊕, XOR
+    //     NAND    :  ↑, NAND
+    //     NOR     :  ↓, NOR
+    //     Parens  :  ( )
+    //     Vars    :  any identifier [A-Za-z][A-Za-z0-9_]*
+    //                (case-insensitive; stored uppercase internally)
+    // =========================================================================
+
+    const PROBLEM = {
+      title: "Problem 1b",
+      instructions: "Is P → Q equivalent to Q → P? Fill in the truth table and use Check to find out.",
+      variables: ["P", "Q"],
+      firstColumn: { label: "P → Q", formula: "P -> Q" },
+      lastColumn:  { label: "Q → P", formula: "Q -> P" },
+    };
+
+    // -------------------------------------------------------------------------
+    // Formula evaluator
+    // assignment keys must be uppercase, e.g. { P: true, Q: false }
+    // -------------------------------------------------------------------------
+
+    function tokenize(formula) {
+      const tokens = [];
+      let i = 0;
+      while (i < formula.length) {
+        // skip whitespace
+        if (/\s/.test(formula[i])) { i++; continue; }
+
+        const rest = formula.slice(i);
+
+        // multi-char operators — try longest match first
+        if (rest.startsWith('<->') || rest.startsWith('<=>')) { tokens.push({ type: 'IFF'     }); i += 3; continue; }
+        if (rest.startsWith('->') || rest.startsWith('=>'))  { tokens.push({ type: 'IMPLIES' }); i += 2; continue; }
+        if (rest.startsWith('&&'))                           { tokens.push({ type: 'AND'     }); i += 2; continue; }
+        if (rest.startsWith('||'))                           { tokens.push({ type: 'OR'      }); i += 2; continue; }
+
+        // single Unicode operators
+        const unicodeOp = { '¬':'NOT','∧':'AND','∨':'OR','→':'IMPLIES','↔':'IFF','⊕':'XOR','↑':'NAND','↓':'NOR' }[formula[i]];
+        if (unicodeOp) { tokens.push({ type: unicodeOp }); i++; continue; }
+
+        // single ASCII operators
+        const asciiOp = { '!':'NOT','~':'NOT','&':'AND','|':'OR','(':'LPAREN',')':'RPAREN' }[formula[i]];
+        if (asciiOp) { tokens.push({ type: asciiOp }); i++; continue; }
+
+        // word: keyword or variable name
+        const wordMatch = rest.match(/^[A-Za-z_][A-Za-z0-9_]*/);
+        if (wordMatch) {
+          const raw = wordMatch[0];
+          const up  = raw.toUpperCase();
+          const keyword = { NOT:'NOT', AND:'AND', OR:'OR', NAND:'NAND', NOR:'NOR', XOR:'XOR', IFF:'IFF' }[up];
+          tokens.push(keyword ? { type: keyword } : { type: 'VAR', name: up });
+          i += raw.length;
+          continue;
+        }
+
+        throw new Error(`Unexpected character: "${formula[i]}" at position ${i}`);
+      }
+      return tokens;
+    }
+
+    function evaluate(formula, assignment) {
+      const tokens = tokenize(formula);
+      let pos = 0;
+
+      const peek    = ()  => tokens[pos];
+      const consume = ()  => tokens[pos++];
+      const expect  = (type) => {
+        const t = consume();
+        if (!t || t.type !== type) throw new Error(`Expected ${type}`);
+        return t;
+      };
+
+      // Recursive descent — lowest precedence first (NOR → NAND → IFF/XOR → IMPLIES → OR → AND → NOT → atom)
+
+      function parseNor() {
+        let v = parseNand();
+        while (peek()?.type === 'NOR') {
+          consume();
+          const r = parseNand(); // always consume RHS tokens before combining
+          v = !(v || r);
+        }
+        return v;
+      }
+
+      function parseNand() {
+        let v = parseIffXor();
+        while (peek()?.type === 'NAND') {
+          consume();
+          const r = parseIffXor(); // always consume RHS tokens before combining
+          v = !(v && r);
+        }
+        return v;
+      }
+
+      function parseIffXor() {
+        let v = parseImplies();
+        while (peek()?.type === 'IFF' || peek()?.type === 'XOR') {
+          const op = consume().type;
+          const r = parseImplies();
+          v = (op === 'IFF') ? (v === r) : (v !== r);
+        }
+        return v;
+      }
+
+      function parseImplies() {
+        const v = parseOr();
+        if (peek()?.type === 'IMPLIES') {
+          consume();
+          const r = parseImplies(); // always consume RHS tokens before combining (right-assoc)
+          return !v || r;
+        }
+        return v;
+      }
+
+      function parseOr() {
+        let v = parseAnd();
+        while (peek()?.type === 'OR') {
+          consume();
+          const r = parseAnd(); // always consume RHS tokens before combining
+          v = v || r;
+        }
+        return v;
+      }
+
+      function parseAnd() {
+        let v = parseNot();
+        while (peek()?.type === 'AND') {
+          consume();
+          const r = parseNot(); // always consume RHS tokens before combining
+          v = v && r;
+        }
+        return v;
+      }
+
+      function parseNot() {
+        if (peek()?.type === 'NOT') { consume(); return !parseNot(); }
+        return parseAtom();
+      }
+
+      function parseAtom() {
+        const t = peek();
+        if (!t) throw new Error('Unexpected end of formula');
+        if (t.type === 'VAR') {
+          consume();
+          if (!(t.name in assignment)) throw new Error(`Unknown variable: ${t.name}`);
+          return assignment[t.name];
+        }
+        if (t.type === 'LPAREN') {
+          consume();
+          const v = parseNor();
+          expect('RPAREN');
+          return v;
+        }
+        throw new Error(`Unexpected token type: ${t.type}`);
+      }
+
+      const result = parseNor();
+      if (pos < tokens.length) throw new Error(`Unconsumed tokens from position ${pos}`);
+      return result;
+    }
+
+    // -------------------------------------------------------------------------
+    // Self-test (runs on load, results visible in browser console)
+    // -------------------------------------------------------------------------
+    function runSelfTests() {
+      const T = true, F = false;
+      const tests = [
+        // formula,        assignment,         expected
+        ['!P',            {P:T},              F],
+        ['!P',            {P:F},              T],
+        ['~~P',           {P:T},              T],
+        ['P & Q',         {P:T, Q:T},         T],
+        ['P & Q',         {P:T, Q:F},         F],
+        ['P | Q',         {P:F, Q:F},         F],
+        ['P | Q',         {P:F, Q:T},         T],
+        ['P -> Q',        {P:T, Q:F},         F],
+        ['P -> Q',        {P:F, Q:F},         T],  // vacuous truth
+        ['P -> Q',        {P:T, Q:T},         T],
+        ['P <-> Q',       {P:T, Q:T},         T],
+        ['P <-> Q',       {P:T, Q:F},         F],
+        ['P XOR Q',       {P:T, Q:T},         F],
+        ['P XOR Q',       {P:T, Q:F},         T],
+        ['P NAND Q',      {P:T, Q:T},         F],
+        ['P NAND Q',      {P:T, Q:F},         T],
+        ['P NOR Q',       {P:F, Q:F},         T],
+        ['P NOR Q',       {P:T, Q:F},         F],
+        ['¬P ∨ Q',        {P:T, Q:F},         F],  // Unicode operators
+        ['P → Q',         {P:T, Q:F},         F],
+        ['P ↔ Q',         {P:F, Q:F},         T],
+        ['(P & Q) | !P',  {P:T, Q:F},         F],
+        ['(P & Q) | !P',  {P:F, Q:F},         T],
+        // Problem 1b-specific formulas
+        ['Q -> P',        {P:T, Q:F},         T],
+        ['Q -> P',        {P:F, Q:T},         F],
+      ];
+
+      let passed = 0, failed = 0;
+      tests.forEach(([formula, assignment, expected]) => {
+        let result;
+        try { result = evaluate(formula, assignment); }
+        catch (e) { result = `ERROR: ${e.message}`; }
+        const ok = result === expected;
+        if (ok) { passed++; }
+        else {
+          failed++;
+          console.error(`FAIL  evaluate("${formula}", ${JSON.stringify(assignment)}) → ${result}, expected ${expected}`);
+        }
+      });
+      console.log(`Evaluator self-test: ${passed}/${passed + failed} passed${failed ? ' — see errors above' : ' ✓'}`);
+    }
+
+    // formulaCellRefs[rowIndex][fi] = <td>  (fi = position within formulaCols, 0-based)
+    // Populated by renderTable, used by checkTable
+    let formulaCellRefs = [];
+
+    let studentColCounter = 0;
+
+    function addStudentColumn() {
+      const table = document.querySelector('#widget table');
+      if (!table) return;
+
+      const colId = 's' + (++studentColCounter);
+
+      // --- Header cell ---
+      const headerRow = table.tHead.rows[0];
+      const lastTh = headerRow.querySelector('th.col-section-end');
+
+      const th = document.createElement('th');
+      th.dataset.student = 'true';
+      th.dataset.colid = colId;
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Label (e.g. ¬P)';
+      input.className = 'col-label-input';
+      // Prevent clicks on the input from bubbling to the table click handler
+      input.addEventListener('click', e => e.stopPropagation());
+
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '✕';
+      removeBtn.className = 'remove-col-btn';
+      removeBtn.addEventListener('click', () => removeStudentColumn(colId));
+
+      th.appendChild(input);
+      th.appendChild(removeBtn);
+      headerRow.insertBefore(th, lastTh);
+
+      // --- Body cells ---
+      Array.from(table.tBodies[0].rows).forEach((tr, rowIndex) => {
+        const lastTd = tr.querySelector('td.col-section-end');
+        const td = document.createElement('td');
+        td.dataset.colid = colId;
+        td.dataset.row = rowIndex;
+        td.dataset.value = '';
+        td.classList.add('formula-cell');
+        tr.insertBefore(td, lastTd);
+      });
+    }
+
+    function removeStudentColumn(colId) {
+      document.querySelectorAll(`#widget [data-colid="${colId}"]`).forEach(el => el.remove());
+    }
+
+    function checkTable() {
+      const { variables, firstColumn, middleColumns = [], lastColumn } = PROBLEM;
+      const numVars = variables.length;
+      const numRows = Math.pow(2, numVars);
+      const formulaCols = [firstColumn, ...middleColumns, lastColumn];
+      const lastFi = formulaCols.length - 1;
+
+      let equivalent = true;   // assume equivalent until we find a counterexample
+      let formulaError = false; // set true if any formula fails to evaluate
+
+      for (let row = 0; row < numRows; row++) {
+        // Reconstruct the truth assignment for this row from its index
+        const assignment = {};
+        variables.forEach((v, vi) => {
+          const bitPos = numVars - 1 - vi;
+          assignment[v.toUpperCase()] = !!((row >> bitPos) & 1);
+        });
+
+        // Evaluate every formula column; cache correct values so we can compare
+        // firstColumn (fi=0) vs lastColumn (fi=lastFi) without a second eval pass.
+        const correctValues = new Array(formulaCols.length);
+
+        formulaCols.forEach((col, fi) => {
+          const td = formulaCellRefs[row]?.[fi];
+          if (!td) return;
+
+          let correct;
+          try {
+            correct = evaluate(col.formula, assignment);
+          } catch (e) {
+            console.error(`Error evaluating "${col.formula}" for row ${row}:`, e);
+            formulaError = true;
+            return;
+          }
+
+          correctValues[fi] = correct;
+          const expected = correct ? "T" : "F";
+          const verdict = td.dataset.value === expected ? "cell-correct" : "cell-incorrect";
+          td.classList.remove("cell-correct", "cell-incorrect");
+          td.classList.add(verdict);
+        });
+
+        // Equivalence check: do firstColumn and lastColumn agree on this row?
+        if (correctValues[0] !== undefined && correctValues[lastFi] !== undefined) {
+          if (correctValues[0] !== correctValues[lastFi]) {
+            equivalent = false;
+            const tr = document.querySelector(`#widget tr[data-row="${row}"]`);
+            if (tr) tr.classList.add("row-counterexample");
+          }
+        }
+      }
+
+      // Lock all formula cells so cycling is disabled until Reset
+      document.querySelectorAll("#widget td.formula-cell").forEach(td => {
+        td.dataset.locked = "true";
+      });
+
+      // Show equivalence verdict banner
+      const verdictEl = document.getElementById("verdict");
+      if (verdictEl && !formulaError) {
+        verdictEl.className = equivalent ? "verdict-equivalent" : "verdict-not-equivalent";
+        verdictEl.textContent = equivalent
+          ? "✓ Equivalent"
+          : "✗ Not equivalent — see highlighted rows";
+      }
+    }
+
+    function resetTable() {
+      // Clear per-cell feedback and unlock all formula cells
+      document.querySelectorAll("#widget td.formula-cell").forEach(td => {
+        td.dataset.value = "";
+        td.textContent = "";
+        td.classList.remove("cell-correct", "cell-incorrect");
+        delete td.dataset.locked;
+      });
+
+      // Remove counterexample row highlights
+      document.querySelectorAll("#widget tr.row-counterexample").forEach(tr => {
+        tr.classList.remove("row-counterexample");
+      });
+
+      // Hide verdict banner
+      const verdictEl = document.getElementById("verdict");
+      if (verdictEl) {
+        verdictEl.className = "";
+        verdictEl.textContent = "";
+      }
+    }
+
+    function renderTable() {
+      formulaCellRefs = [];
+      const { variables, firstColumn, middleColumns = [], lastColumn } = PROBLEM;
+      const numVars = variables.length;
+      const numRows = Math.pow(2, numVars);
+
+      // Build the ordered list of formula columns with their index for data-col
+      // Col indices: 0..numVars-1 are variable cols; formula cols start at numVars
+      const formulaCols = [firstColumn, ...middleColumns, lastColumn];
+
+      const table = document.createElement("table");
+
+      // --- Header row ---
+      const thead = table.createTHead();
+      const headerRow = thead.insertRow();
+
+      // Variable column headers
+      variables.forEach(v => {
+        const th = document.createElement("th");
+        th.textContent = v;
+        headerRow.appendChild(th);
+      });
+
+      // Formula column headers
+      formulaCols.forEach((col, i) => {
+        const th = document.createElement("th");
+        th.textContent = col.label;
+        const colIndex = numVars + i;
+        th.dataset.col = colIndex;
+        // All instructor-provided formula columns are "fixed" (blue header).
+        th.classList.add("col-fixed");
+        if (i === 0)                          th.classList.add("col-section-start");
+        if (i === formulaCols.length - 1)     th.classList.add("col-section-end");
+        headerRow.appendChild(th);
+      });
+
+      // --- Body rows ---
+      const tbody = table.createTBody();
+
+      for (let row = 0; row < numRows; row++) {
+        const tr = tbody.insertRow();
+        tr.dataset.row = row;
+
+        // Variable cells: auto-filled T/F (MSB first)
+        variables.forEach((_, vi) => {
+          const td = tr.insertCell();
+          const bitPos = numVars - 1 - vi;
+          td.textContent = (row >> bitPos) & 1 ? "T" : "F";
+          td.classList.add("var-cell");
+        });
+
+        // Formula cells: empty, clickable, with data attributes
+        formulaCols.forEach((_, fi) => {
+          const td = tr.insertCell();
+          const colIndex = numVars + fi;
+          td.dataset.col = colIndex;
+          td.dataset.row = row;
+          td.dataset.value = "";
+          td.classList.add("formula-cell");
+          if (fi === 0) td.classList.add("col-section-start");
+          if (fi === formulaCols.length - 1) td.classList.add("col-section-end");
+          // Store direct reference so checkTable doesn't need querySelector
+          if (!formulaCellRefs[row]) formulaCellRefs[row] = [];
+          formulaCellRefs[row][fi] = td;
+        });
+      }
+
+      // Click-to-cycle handler on the table (delegation covers future dynamic columns too)
+      table.addEventListener("click", e => {
+        const td = e.target.closest("td.formula-cell");
+        if (!td || td.dataset.locked) return;
+        const cycle = { "": "T", "T": "F", "F": "" };
+        td.dataset.value = cycle[td.dataset.value];
+        td.textContent = td.dataset.value;
+      });
+
+      const widget = document.getElementById("widget");
+      widget.innerHTML = "";
+
+      // Problem title and instructions (from PROBLEM config)
+      const { title, instructions } = PROBLEM;
+      if (title || instructions) {
+        const header = document.createElement("div");
+        header.id = "problem-header";
+        if (title) {
+          const h2 = document.createElement("h2");
+          h2.textContent = title;
+          header.appendChild(h2);
+        }
+        if (instructions) {
+          const p = document.createElement("p");
+          p.textContent = instructions;
+          header.appendChild(p);
+        }
+        widget.appendChild(header);
+      }
+
+      // Verdict banner — populated by checkTable(), cleared by resetTable()
+      const verdictEl = document.createElement("div");
+      verdictEl.id = "verdict";
+      widget.appendChild(verdictEl);
+
+      widget.appendChild(table);
+
+      const controls = document.createElement("div");
+      controls.id = "controls";
+
+      const addBtn = document.createElement("button");
+      addBtn.id = "add-col-btn";
+      addBtn.textContent = "+ Add column";
+      addBtn.addEventListener("click", addStudentColumn);
+
+      const checkBtn = document.createElement("button");
+      checkBtn.id = "check-btn";
+      checkBtn.textContent = "Check";
+      checkBtn.addEventListener("click", checkTable);
+
+      const resetBtn = document.createElement("button");
+      resetBtn.id = "reset-btn";
+      resetBtn.textContent = "Reset";
+      resetBtn.addEventListener("click", resetTable);
+
+      controls.appendChild(addBtn);
+
+      // Thin separator between "+ Add column" and symbol buttons
+      const sep1 = document.createElement("span");
+      sep1.className = "controls-sep";
+      controls.appendChild(sep1);
+
+      // Symbol insert buttons — click while a column-label input is focused
+      // to insert the symbol at the cursor position; no-op if nothing is focused.
+      const SYMBOLS = [
+        { label: '¬',    sym: '¬'    },
+        { label: '∧',    sym: '∧'    },
+        { label: '∨',    sym: '∨'    },
+        { label: '→',    sym: '→'    },
+        { label: '↔',    sym: '↔'    },
+        { label: '⊕',    sym: '⊕'    },
+        { label: 'NAND', sym: 'NAND' },
+        { label: 'NOR',  sym: 'NOR'  },
+      ];
+      SYMBOLS.forEach(({ label, sym }) => {
+        const btn = document.createElement("button");
+        btn.className = "sym-btn";
+        btn.textContent = label;
+        btn.title = `Insert ${label}`;
+        // mousedown preventDefault keeps focus on the label input,
+        // so the subsequent click handler can still find it with :focus.
+        btn.addEventListener("mousedown", e => e.preventDefault());
+        btn.addEventListener("click", () => {
+          const input = document.querySelector("#widget .col-label-input:focus");
+          if (!input) return; // no label input focused — silently do nothing
+          const start = input.selectionStart;
+          const end   = input.selectionEnd;
+          input.value = input.value.slice(0, start) + sym + input.value.slice(end);
+          const newPos = start + sym.length;
+          input.setSelectionRange(newPos, newPos);
+        });
+        controls.appendChild(btn);
+      });
+
+      // Thin separator between symbol buttons and Check / Reset
+      const sep2 = document.createElement("span");
+      sep2.className = "controls-sep";
+      controls.appendChild(sep2);
+
+      controls.appendChild(checkBtn);
+      controls.appendChild(resetBtn);
+
+      widget.appendChild(controls);
+    }
+
+    window.addEventListener("load", () => {
+      runSelfTests();
+      renderTable();
+    });
+  </script>
+
+</body>
+</html>

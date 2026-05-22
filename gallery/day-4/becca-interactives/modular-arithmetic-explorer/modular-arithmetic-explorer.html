@@ -1,0 +1,38 @@
+<!--
+  Modular Arithmetic Explorer — embeddable widget.
+
+  Embed shape: a single self-contained <div class="mae-widget"> per problem.
+  Edit the JSON inside the data-problem attribute to author a new instance.
+  Multiple <div class="mae-widget"> blocks can coexist on the same page;
+  each is mounted as an independent instance.
+
+  Pedagogy: students explore arithmetic in ℤ_n by viewing the full
+  multiplication or addition table for a chosen modulus. The widget
+  classifies each row of the multiplication table:
+    · invertible    — row contains 1 (i.e. [a] has a multiplicative inverse);
+    · zero divisor  — row contains 0 in a non-trivial column;
+    · trivial       — the [0] row.
+  Row labels are colored accordingly. Hovering or clicking a row shows the
+  gcd(a, n) computation tying the visual classification to the theorem
+  "[a] has an inverse mod n iff gcd(a, n) = 1".
+
+  data-problem JSON keys:
+    title           (string, optional) — bold heading shown above the widget.
+    intro           (HTML string, optional) — short introduction below the title.
+    moduli          (Array<integer>, required) — values of n offered in the
+                    selector. Each n must satisfy 2 ≤ n ≤ 20.
+    defaultModulus  (integer, optional) — initial n. Must be a member of
+                    moduli. Defaults to the first entry.
+    defaultOp       ("mult" | "add", optional) — initial operation.
+                    Defaults to "mult".
+
+  Authors only specify which moduli appear in the selector. The widget
+  computes the tables, gcds, and row classifications.
+-->
+<div class="mae-widget" data-problem='{
+  "title": "Modular Arithmetic Explorer",
+  "intro": "<p>Explore the structure of ℤ_n by examining its multiplication and addition tables. Pick a modulus, then look at which rows contain a 1 (those elements have multiplicative inverses) and which rows contain a 0 in a non-trivial column (those are zero divisors). Watch what happens as <em>n</em> changes — and notice the special behavior when <em>n</em> is prime.</p>",
+  "moduli": [4, 5, 6, 7, 8, 9, 12],
+  "defaultModulus": 6,
+  "defaultOp": "mult"
+}'></div>

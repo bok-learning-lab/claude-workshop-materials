@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G7 Demographics — Country profiles</title>
+<style>
+  :root { --ink: #1a1a1a; --muted: #6b6b6b; --rule: #e5e5e0; --bg: #fbfaf7; --card: #ffffff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--ink); }
+  h1, h2 { font-family: "Iowan Old Style", Georgia, "Times New Roman", serif; font-weight: 600; letter-spacing: -0.01em; }
+  a { color: inherit; text-decoration: none; }
+
+  .topnav { padding: 14px 32px; border-bottom: 1px solid var(--rule); background: var(--card); font-family: "Iowan Old Style", Georgia, serif; font-size: 17px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 32px 80px; }
+  .kicker { text-transform: uppercase; letter-spacing: 0.14em; font-size: 12px; color: #1f4e79; font-weight: 600; margin-bottom: 14px; }
+  h1 { font-size: 56px; margin: 0 0 18px; line-height: 1.05; }
+  .deck { font-size: 19px; color: #3a3a3a; max-width: 720px; margin-bottom: 48px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .card { background: var(--card); padding: 28px 24px; transition: background 0.15s; display: block; }
+  .card:hover { background: #f3efe4; }
+  .card .country { font-family: "Iowan Old Style", Georgia, serif; font-size: 26px; margin-bottom: 6px; }
+  .card .accent { display: inline-block; width: 32px; height: 3px; margin-bottom: 14px; }
+  .card .blurb { font-size: 14px; color: var(--muted); line-height: 1.5; }
+  .card .arrow { display: inline-block; margin-top: 14px; font-size: 13px; color: var(--ink); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<nav class="topnav">Demographics ◇ G7</nav>
+<div class="wrap">
+  <div class="kicker">Series · Population in the wealthy democracies</div>
+  <h1>The demographic shape of the G7.</h1>
+  <p class="deck">Seven short, interactive profiles drawn from the UN's <em>World Population Prospects 2024</em> revision. Each page tracks population, age structure, fertility, mortality and life expectancy from 1950 through 2100. Pick a country to start.</p>
+
+  <div class="grid">
+    <a class="card" href="usa.html"><div class="accent" style="background:#1f4e79"></div><div class="country">United States</div><div class="blurb">Slower growth, deeper aging — but propped up by sustained immigration.</div><div class="arrow">View profile →</div></a>
+    <a class="card" href="uk.html"><div class="accent" style="background:#8c1d40"></div><div class="country">United Kingdom</div><div class="blurb">A mid-sized population still inching upward as births fall and longevity rises.</div><div class="arrow">View profile →</div></a>
+    <a class="card" href="canada.html"><div class="accent" style="background:#c8102e"></div><div class="country">Canada</div><div class="blurb">Among the fastest-growing rich-world populations, almost entirely via migration.</div><div class="arrow">View profile →</div></a>
+    <a class="card" href="france.html"><div class="accent" style="background:#0055a4"></div><div class="country">France</div><div class="blurb">The Western European outlier — fertility nearer replacement, growth holding on.</div><div class="arrow">View profile →</div></a>
+    <a class="card" href="germany.html"><div class="accent" style="background:#1c1c1c"></div><div class="country">Germany</div><div class="blurb">A textbook of population aging: shrinking workforce, rising median age.</div><div class="arrow">View profile →</div></a>
+    <a class="card" href="italy.html"><div class="accent" style="background:#0e7a4a"></div><div class="country">Italy</div><div class="blurb">Europe's sharpest demographic decline: ultra-low fertility, a shrinking workforce.</div><div class="arrow">View profile →</div></a>
+    <a class="card" href="japan.html"><div class="accent" style="background:#bc002d"></div><div class="country">Japan</div><div class="blurb">The frontier of aging — already past peak, with the steepest contraction ahead.</div><div class="arrow">View profile →</div></a>
+  </div>
+
+  <footer>Data: United Nations Department of Economic and Social Affairs, Population Division (2024). All figures shown after 2024 are medium-variant projections.</footer>
+</div>
+</body>
+</html>

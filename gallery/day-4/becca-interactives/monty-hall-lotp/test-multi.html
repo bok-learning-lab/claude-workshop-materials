@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monty Hall LoTP — multi-instance test</title>
+  <link rel="stylesheet" href="monty-hall-lotp.css">
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; margin: 24px; max-width: 1100px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Monty Hall LoTP Partition Visualizer — multi-instance test</h1>
+  <p class="hint">
+    Three independent widgets on one page. Open the console:
+    self-tests should run exactly once. Each widget keeps its own G / P
+    state — moving a slider in one must not affect the others.
+  </p>
+
+  <!-- Widget 1: classic 3-door (default) -->
+  <div class="mhl-widget" data-problem='{
+    "title": "Widget 1 — Classic 3-door Monty Hall",
+    "intro": "<p>The canonical example. G = 2 goats, P = 1 prize. Switching wins with probability 2/3; staying wins with probability 1/3.</p>",
+    "defaultG": 2,
+    "defaultP": 1
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: 10-door 1-prize (intuition pump) -->
+  <div class="mhl-widget" data-problem='{
+    "title": "Widget 2 — 10-door variant (G = 9, P = 1)",
+    "intro": "<p>Pump up the goat count: G = 9. The asymmetry between branches grows — initial pick is a goat 9/10 of the time. P(win | switch) = 9/80 ≈ 0.1125 (just one of 8 unrevealed doors), still beating P(win | stay) = 1/10.</p>",
+    "defaultG": 9,
+    "defaultP": 1
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: multi-prize variant -->
+  <div class="mhl-widget" data-problem='{
+    "title": "Widget 3 — Multi-prize (G = 4, P = 2)",
+    "intro": "<p>What if there are multiple prizes? With G = 4 goats and P = 2 prizes, P(win | switch) = 5/12 ≈ 0.417 vs P(win | stay) = 2/6 = 1/3 ≈ 0.333.</p>",
+    "defaultG": 4,
+    "defaultP": 2
+  }'></div>
+
+  <script src="monty-hall-lotp.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prim's Algorithm Stepper — multi-instance test</title>
+  <link rel="stylesheet" href="prim-stepper.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1200px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Prim's Algorithm Stepper — multi-instance test (segment 5.0 Activity 12)</h1>
+  <p class="hint">
+    Two independent widgets on one page. Each must keep its own preset,
+    start vertex, partial tree, and Run/Step state. Switching presets in
+    one widget must not affect the other; pressing Run in one starts only
+    that widget animating.
+  </p>
+
+  <!-- Widget 1: lecture example -->
+  <div class="prim-widget" data-problem='{
+    "title": "Widget 1 — lecture example",
+    "defaultPreset": "lecture"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: tied-weights example -->
+  <div class="prim-widget" data-problem='{
+    "title": "Widget 2 — tied weights",
+    "defaultPreset": "ties"
+  }'></div>
+
+  <script src="prim-stepper.js"></script>
+
+</body>
+</html>

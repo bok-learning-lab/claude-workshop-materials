@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monty Hall Simulator — multi-instance test</title>
+  <link rel="stylesheet" href="monty-hall-simulator.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 1100px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 32px; }
+  </style>
+</head>
+<body>
+
+  <h1>Monty Hall Simulator — multi-instance test (segment 8.1 Activity 16)</h1>
+  <p class="hint">
+    Four independent widgets on one page, each defaulting to a different
+    mode. Each must keep its own mode, sliders, strategy, running tally,
+    and pinned simulation. Try Guided Exercise 1 on widget 1 (10 manual
+    switch games at 3 doors); the 6-door variant on widget 2 (Monty
+    opens 4 goat doors, switch wins 5/6 of the time); Monte Carlo at
+    N=10000 on widget 3 (≈0.667 for switch); and N-door at 10 doors
+    on widget 4 (≈0.9 for switch).
+  </p>
+
+  <!-- Widget 1: 3-door game (default) -->
+  <div class="mhs-widget" data-problem='{
+    "title": "Widget 1 — 3-door game (graphical)",
+    "defaultMode": "single"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: 6-door game (graphical) -->
+  <div class="mhs-widget" data-problem='{
+    "title": "Widget 2 — 6-door game (graphical, Monty opens 4 goats)",
+    "defaultMode": "sixDoor"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: Monte Carlo -->
+  <div class="mhs-widget" data-problem='{
+    "title": "Widget 3 — Monte Carlo (3 doors)",
+    "defaultMode": "monteCarlo"
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 4: N-door variant -->
+  <div class="mhs-widget" data-problem='{
+    "title": "Widget 4 — N-door variant (3–20 doors)",
+    "defaultMode": "ndoor"
+  }'></div>
+
+  <script src="monty-hall-simulator.js"></script>
+
+</body>
+</html>

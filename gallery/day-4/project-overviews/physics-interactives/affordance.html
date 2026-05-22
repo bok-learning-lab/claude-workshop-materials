@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What changes when faculty author their own simulations — and what does not — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+:root { --bg: rgb(240, 238, 230); --fg: rgb(31, 30, 29); }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--fg); font-family: "Newsreader", "Times New Roman", serif; font-size: 20px; font-weight: 400; line-height: 1.6; min-height: 100vh; }
+.site-header { display: flex; align-items: center; justify-content: flex-start; padding: 20px 32px; position: relative; border-bottom: 1px solid rgba(128, 128, 128, 0.15); }
+.author-name { font-size: 20px; font-weight: 400; letter-spacing: 0.02em; }
+.header-controls { position: absolute; right: 32px; display: flex; align-items: center; gap: 16px; }
+.ctrl-btn { background: none; border: 1px solid var(--fg); color: var(--fg); font-family: "Newsreader", "Times New Roman", serif; font-size: 13px; padding: 4px 12px; border-radius: 4px; cursor: pointer; opacity: 0.5; transition: opacity 0.2s ease; }
+.ctrl-btn:hover { opacity: 1; }
+.essay-layout { display: flex; max-width: 1100px; margin: 0 auto; padding: 48px 32px; gap: 64px; }
+.essay-content { flex: 1; max-width: 680px; }
+.essay-content h1 { font-size: 62px; font-weight: 600; line-height: 1.1; margin: 0 0 12px 0; }
+.subtitle { font-size: 20px; font-style: italic; margin: 0 0 12px 0; opacity: 0.8; }
+.date { font-size: 16px; margin: 0 0 32px 0; opacity: 0.6; }
+.essay-content h2 { font-size: 40px; font-weight: 600; margin: 48px 0 16px 0; line-height: 1.3; }
+.essay-content h3 { font-size: 28px; font-weight: 600; margin: 36px 0 12px 0; line-height: 1.3; }
+.essay-content h4 { font-size: 24px; font-weight: 600; margin: 32px 0 12px 0; line-height: 1.3; font-style: italic; }
+.essay-content p { margin: 0 0 20px 0; }
+.essay-content em { font-style: italic; }
+.essay-content strong { font-weight: 600; }
+.essay-content ul, .essay-content ol { margin: 0 0 20px 0; padding-left: 24px; }
+.essay-content li { margin-bottom: 8px; }
+.essay-content blockquote { border-left: 3px solid var(--fg); margin: 24px 0; padding: 0 0 0 20px; opacity: 0.85; }
+.essay-content a { color: var(--fg); text-decoration: underline; }
+.essay-content hr { border: none; border-top: 1px solid rgba(128, 128, 128, 0.3); margin: 40px 0; }
+.essay-content pre { background: rgba(0, 0, 0, 0.04); border-radius: 4px; padding: 16px 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; line-height: 1.5; margin: 0 0 20px 0; }
+.essay-content code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
+.essay-content :not(pre) > code { background: rgba(0, 0, 0, 0.06); padding: 1px 5px; border-radius: 3px; }
+.essay-content table { border-collapse: collapse; margin: 0 0 20px 0; width: 100%; font-size: 17px; }
+.essay-content th, .essay-content td { border-bottom: 1px solid rgba(128, 128, 128, 0.3); padding: 8px 12px; text-align: left; vertical-align: top; }
+.essay-content th { font-weight: 600; }
+.footnotes { font-size: 16px; opacity: 0.85; margin-top: 32px; }
+.footnotes li { margin-bottom: 6px; }
+@media (max-width: 860px) {
+  .essay-layout { padding: 32px 20px; gap: 0; }
+  .essay-content { max-width: 100%; }
+  .essay-content h1 { font-size: 36px; }
+  .site-header { padding: 16px 20px; }
+  .header-controls { right: 20px; gap: 10px; }
+}
+@media print {
+  @page { margin: 0.75in; }
+  body { background: none; color: #000; font-size: 11pt; line-height: 1.45; min-height: 0; }
+  .site-header, .header-controls { display: none !important; }
+  .essay-layout { display: block; max-width: none; padding: 0; gap: 0; }
+  .essay-content { max-width: 6.5in; margin: 0 auto; }
+  .essay-content h1 { font-size: 22pt; line-height: 1.15; margin: 0 0 6pt 0; }
+  .subtitle { font-size: 12pt; margin: 0 0 6pt 0; opacity: 1; }
+  .date { font-size: 10pt; margin: 0 0 18pt 0; opacity: 1; }
+  .essay-content h2 { font-size: 16pt; margin: 20pt 0 6pt 0; line-height: 1.25; break-after: avoid; page-break-after: avoid; }
+  .essay-content h3 { font-size: 13pt; margin: 16pt 0 4pt 0; line-height: 1.25; break-after: avoid; page-break-after: avoid; }
+  .essay-content h4 { font-size: 12pt; margin: 14pt 0 4pt 0; break-after: avoid; page-break-after: avoid; }
+  .essay-content p { margin: 0 0 8pt 0; orphans: 3; widows: 3; }
+  .essay-content ul, .essay-content ol { margin: 0 0 8pt 0; }
+  .essay-content li { margin-bottom: 3pt; }
+  .essay-content blockquote { margin: 10pt 0; padding-left: 14pt; border-left-color: #000; opacity: 1; }
+  .essay-content hr { margin: 18pt 0; }
+  .essay-content a { color: #000; }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>What changes when faculty author their own simulations — and what does not</h1>
+      <p class="subtitle">One of three day-4 projects in the Bok Center workshop. ← <a href="../index.html">Project landing page</a>. Companion docs: <a href="summary.html">Summary</a> · <a href="tradition.html">Tradition</a>.</p>
+
+      <p>The PhET tradition outlined in the <a href="tradition.html">tradition</a> essay rested on a coordination of expertise — domain knowledge, learning-science knowledge, software engineering, interface design, longitudinal classroom evaluation — that took a funded team three to five specialists deep and several years per simulation. That coordination was the actual barrier. Generative AI does not lower it by removing one of those specialists; it lowers it by collapsing the cost of <em>prototyping</em> an artifact to the point where a single faculty member, working alone with Claude Code, can produce in an afternoon what previously took a team a year. This essay is about what that collapse genuinely changes, what it conspicuously does not, and how the two skills in this project — <code>/phet-sim</code> and <code>/phet-activity</code> — try to keep the difference legible.</p>
+
+      <h2>What the collapse opens up</h2>
+
+      <p>The most important thing to notice is <em>which</em> cost has collapsed. The cost of writing the code has collapsed. The cost of identifying the right learning goal, choosing the right simplification, designing the right linked representations, and validating against actual students has not. The first set of costs gated whether the artifact could exist at all; the second set determined whether the artifact, once built, taught anything. PhET's twenty-year track record came from doing both kinds of work expensively and well.</p>
+
+      <p>Within that frame, the new affordance is substantial. A faculty member can describe a conceptual system in natural language — "show me a tank where I can vary the wavelength and amplitude of two sources and watch the interference pattern on a screen behind them" — and have a working interactive in minutes. They can iterate on labels, units, and ranges for their specific course. They can generate parallel versions for different student levels. They can do this for the topics PhET never covered, in the disciplines PhET never served. A rhetorical-feedback-loop sandbox for a writing class, a small-N qualitative-coding visualizer for a methods class, a bargaining-game widget for an economics tutorial, an attention-mechanism visualizer for a CS lecture, an infrastructure-decay simulator for an urban-studies seminar — none of these were going to be built by a funded team. All of them are now within reach of a faculty member with an afternoon. The collapse, in other words, opens the genre to traditions that had the pedagogical insight for decades but never the production budget.</p>
+
+      <h2>What does not change: the design discipline</h2>
+
+      <p>The risk of the new condition is that the technical floor has dropped far faster than the design floor. A bad AI-generated simulation can be very seductive — sliders, particles, graphs, color, motion, all responding immediately to the user, and no learning goal at the center of it. PhET's hardest lesson was not "make things interactive." It was: <em>make the right things interactive, in the right way, and constrain everything else.</em> That lesson matters more now than it did when the technical barriers did the constraint work automatically. An LLM instructed to "make a simulation about waves" will produce something that looks like a simulation. Whether it teaches depends on choices the LLM cannot make on its own: which misconception is at the center, what to hide, how the representations link, what the student is supposed to notice.</p>
+
+      <p><code>/phet-sim</code> is built around this constraint. Its first move is not to write code; it is to walk the faculty member through a ten-question pedagogical interview — learning goal, target learner, the misconception the simulation should make visible, the manipulable variables, the deliberately hidden ones, the linked representations, the immediate feedback, the reflection prompts, the model's limitations, the classroom use. Only after that work is done does the skill generate the HTML file. The interview is not friction the skill could be optimized to remove. The interview <em>is</em> the skill's contribution. Without it, the project is competing with every other "make a slider thing" prompt.</p>
+
+      <h2>What does not change: the classroom use</h2>
+
+      <p>A simulation in a tab open beside a textbook is not a lesson. It is a tool waiting for a lesson. Wieman's group has been clear about this in print for years: PhET simulations produce conceptual gains <em>when wrapped in interactive engagement activities</em>, and not otherwise. The research convergence — Hake's interactive-engagement data, Mazur's Peer Instruction findings, the Freeman meta-analysis on active learning across STEM — points to the same handful of moves. Students learn more when they commit to a prediction <em>before</em> observing the answer; when they encounter evidence and have to explain the discrepancy with what they predicted; when they discuss the explanation with a peer who holds a different view; and when the instructor enters that conversation knowing in advance which wrong answers to expect.</p>
+
+      <p><code>/phet-activity</code> takes a simulation and produces a 45-minute lesson plan organized around exactly this structure: Predict, Observe, Explain, Synthesize. It refuses to ship a plan that does not name at least two expected wrong predictions, because the empirical record is clear that the instructor's preparation for those predictions is the highest-leverage piece of the lesson — and the one most often skipped by faculty new to interactive engagement. The skill's <a href="../../projects/physics-interactives/.claude/skills/phet-activity/reference/wieman-pedagogy.md">research anchor</a> walks through the evidence behind each non-negotiable choice it makes. The lesson plan is not a worksheet. It is a script for the instructor's attention during the class meeting.</p>
+
+      <p>The third skill, <code>/phet-accessibility-audit</code>, is part of the same logic. Accessibility is not a polish item to add at the end; it is the question of whether students with disabilities can encounter the conceptual content at all. The audit produces a categorized report — Blockers, Warnings, Notes — and gates "ready to share with students" on real measurements rather than instructor confidence. The PhET team has worked on accessibility for years; an instructor-built artifact starts from zero, and the LLM will not add what was not asked for.</p>
+
+      <h2>What we are not claiming</h2>
+
+      <p>The skills in this project are not claiming to produce simulations that are <em>better</em> than PhET's. They are not claiming that an instructor-built artifact has been validated against students the way a published PhET simulation has been. They are not claiming that LLM-built simulations have a measured learning effect — they have no such track record, by definition. They are not claiming to substitute for the iterative interview-and-revise protocol the PhET team has practiced for two decades; that work still has to happen, and now it has to happen at the individual faculty member's desk. They are not claiming that the field's open problems — assessment for new genres, maintenance and decay of single-file artifacts, the equity gap between faculty with strong design intuition and faculty without — are solved.</p>
+
+      <p>The defensible claim is the conditional one: an AI-built simulation is more likely to teach when it follows PhET-tradition design principles, is integrated into an active-learning routine in the classroom, and is iteratively tested with actual learners. The skills make the first two cheaper to do well. The third still belongs to the instructor.</p>
+
+      <p>The instrument is more powerful. The standard of care has not changed.</p>
+
+      <hr>
+
+      <p><em>Physics interactives overview: <a href="summary.html">Summary</a> · <a href="tradition.html">Tradition</a> · <a href="affordance.html">Affordance</a>. Back to the <a href="../index.html">project landing page</a>.</em></p>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># What changes when faculty author their own simulations — and what does not
+
+*One of three day-4 projects in the Bok Center workshop. ← [Project landing page](../index.md). Companion docs: [Summary](summary.md) · [Tradition](tradition.md).*
+
+The PhET tradition outlined in the [tradition](tradition.md) essay rested on a coordination of expertise — domain knowledge, learning-science knowledge, software engineering, interface design, longitudinal classroom evaluation — that took a funded team three to five specialists deep and several years per simulation. That coordination was the actual barrier. Generative AI does not lower it by removing one of those specialists; it lowers it by collapsing the cost of *prototyping* an artifact to the point where a single faculty member, working alone with Claude Code, can produce in an afternoon what previously took a team a year. This essay is about what that collapse genuinely changes, what it conspicuously does not, and how the two skills in this project — `/phet-sim` and `/phet-activity` — try to keep the difference legible.
+
+## What the collapse opens up
+
+The most important thing to notice is *which* cost has collapsed. The cost of writing the code has collapsed. The cost of identifying the right learning goal, choosing the right simplification, designing the right linked representations, and validating against actual students has not. The first set of costs gated whether the artifact could exist at all; the second set determined whether the artifact, once built, taught anything. PhET's twenty-year track record came from doing both kinds of work expensively and well.
+
+Within that frame, the new affordance is substantial. A faculty member can describe a conceptual system in natural language — "show me a tank where I can vary the wavelength and amplitude of two sources and watch the interference pattern on a screen behind them" — and have a working interactive in minutes. They can iterate on labels, units, and ranges for their specific course. They can generate parallel versions for different student levels. They can do this for the topics PhET never covered, in the disciplines PhET never served. A rhetorical-feedback-loop sandbox for a writing class, a small-N qualitative-coding visualizer for a methods class, a bargaining-game widget for an economics tutorial, an attention-mechanism visualizer for a CS lecture, an infrastructure-decay simulator for an urban-studies seminar — none of these were going to be built by a funded team. All of them are now within reach of a faculty member with an afternoon. The collapse, in other words, opens the genre to traditions that had the pedagogical insight for decades but never the production budget.
+
+## What does not change: the design discipline
+
+The risk of the new condition is that the technical floor has dropped far faster than the design floor. A bad AI-generated simulation can be very seductive — sliders, particles, graphs, color, motion, all responding immediately to the user, and no learning goal at the center of it. PhET's hardest lesson was not "make things interactive." It was: *make the right things interactive, in the right way, and constrain everything else.* That lesson matters more now than it did when the technical barriers did the constraint work automatically. An LLM instructed to "make a simulation about waves" will produce something that looks like a simulation. Whether it teaches depends on choices the LLM cannot make on its own: which misconception is at the center, what to hide, how the representations link, what the student is supposed to notice.
+
+`/phet-sim` is built around this constraint. Its first move is not to write code; it is to walk the faculty member through a ten-question pedagogical interview — learning goal, target learner, the misconception the simulation should make visible, the manipulable variables, the deliberately hidden ones, the linked representations, the immediate feedback, the reflection prompts, the model's limitations, the classroom use. Only after that work is done does the skill generate the HTML file. The interview is not friction the skill could be optimized to remove. The interview *is* the skill's contribution. Without it, the project is competing with every other "make a slider thing" prompt.
+
+## What does not change: the classroom use
+
+A simulation in a tab open beside a textbook is not a lesson. It is a tool waiting for a lesson. Wieman's group has been clear about this in print for years: PhET simulations produce conceptual gains *when wrapped in interactive engagement activities*, and not otherwise. The research convergence — Hake's interactive-engagement data, Mazur's Peer Instruction findings, the Freeman meta-analysis on active learning across STEM — points to the same handful of moves. Students learn more when they commit to a prediction *before* observing the answer; when they encounter evidence and have to explain the discrepancy with what they predicted; when they discuss the explanation with a peer who holds a different view; and when the instructor enters that conversation knowing in advance which wrong answers to expect.
+
+`/phet-activity` takes a simulation and produces a 45-minute lesson plan organized around exactly this structure: Predict, Observe, Explain, Synthesize. It refuses to ship a plan that does not name at least two expected wrong predictions, because the empirical record is clear that the instructor's preparation for those predictions is the highest-leverage piece of the lesson — and the one most often skipped by faculty new to interactive engagement. The skill's [research anchor](../../projects/physics-interactives/.claude/skills/phet-activity/reference/wieman-pedagogy.md) walks through the evidence behind each non-negotiable choice it makes. The lesson plan is not a worksheet. It is a script for the instructor's attention during the class meeting.
+
+The third skill, `/phet-accessibility-audit`, is part of the same logic. Accessibility is not a polish item to add at the end; it is the question of whether students with disabilities can encounter the conceptual content at all. The audit produces a categorized report — Blockers, Warnings, Notes — and gates "ready to share with students" on real measurements rather than instructor confidence. The PhET team has worked on accessibility for years; an instructor-built artifact starts from zero, and the LLM will not add what was not asked for.
+
+## What we are not claiming
+
+The skills in this project are not claiming to produce simulations that are *better* than PhET's. They are not claiming that an instructor-built artifact has been validated against students the way a published PhET simulation has been. They are not claiming that LLM-built simulations have a measured learning effect — they have no such track record, by definition. They are not claiming to substitute for the iterative interview-and-revise protocol the PhET team has practiced for two decades; that work still has to happen, and now it has to happen at the individual faculty member's desk. They are not claiming that the field's open problems — assessment for new genres, maintenance and decay of single-file artifacts, the equity gap between faculty with strong design intuition and faculty without — are solved.
+
+The defensible claim is the conditional one: an AI-built simulation is more likely to teach when it follows PhET-tradition design principles, is integrated into an active-learning routine in the classroom, and is iteratively tested with actual learners. The skills make the first two cheaper to do well. The third still belongs to the instructor.
+
+The instrument is more powerful. The standard of care has not changed.
+
+---
+
+*Physics interactives overview: [Summary](summary.md) · [Tradition](tradition.md) · [Affordance](affordance.md). Back to the [project landing page](../index.md).*
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+      printBtn.addEventListener('click', function () { window.print(); });
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+        } else { fallbackCopy(text); done(); }
+      });
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

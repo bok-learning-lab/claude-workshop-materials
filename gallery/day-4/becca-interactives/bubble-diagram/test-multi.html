@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Diagram Widget — multi-instance test</title>
+  <link rel="stylesheet" href="bubble-diagram.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 900px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Bubble-diagram widget — multi-instance test</h1>
+  <p class="hint">
+    Three independent widgets on one page. Each must keep its own state:
+    drawing arrows on widget 1 must not affect widgets 2 or 3, set-size
+    controls must scope to their own diagram, the part tabs and reset
+    button must only affect the widget they belong to, and the SVG arrow
+    markers must render correctly on every diagram (verifying that the
+    per-instance marker IDs do not collide).
+  </p>
+
+  <!-- Widget 1: the canonical Class8 Problem 3, parts (a) and (b) -->
+  <div class="bd-widget" data-problem='{
+    "title": "Widget 1 — Composition Counterexample (Class8 P3)",
+    "setDefaults": { "A": 3, "B": 4, "C": 2 },
+    "parts": [
+      {
+        "id": "a",
+        "label": "Part (a)",
+        "statement": "<strong>Part (a).</strong>&nbsp; Find total functions <span class=\"math\">f : A → B</span> (injective) and <span class=\"math\">g : B → C</span> (surjective) such that <span class=\"math\">g ∘ f</span> is neither injective nor surjective.",
+        "goalHtml": "<strong>Goal:</strong>&nbsp; <span class=\"math\">f</span> total + injective &nbsp;·&nbsp; <span class=\"math\">g</span> total + surjective &nbsp;·&nbsp; <span class=\"math\">g ∘ f</span> total, NOT injective, NOT surjective.",
+        "hintHtml": "Try |B| larger than |A| and |C|.",
+        "constraints": [
+          { "fn": "f",   "props": ["total", "injective"] },
+          { "fn": "g",   "props": ["total", "surjective"] },
+          { "fn": "gof", "props": ["total", "!injective", "!surjective"] }
+        ]
+      },
+      {
+        "id": "b",
+        "label": "Part (b)",
+        "statement": "<strong>Part (b).</strong>&nbsp; Find total functions <span class=\"math\">f : A → B</span> (surjective) and <span class=\"math\">g : B → C</span> (injective) such that <span class=\"math\">g ∘ f</span> is neither injective nor surjective.",
+        "goalHtml": "<strong>Goal:</strong>&nbsp; <span class=\"math\">f</span> total + surjective &nbsp;·&nbsp; <span class=\"math\">g</span> total + injective &nbsp;·&nbsp; <span class=\"math\">g ∘ f</span> total, NOT injective, NOT surjective.",
+        "hintHtml": "Try |A| larger than |B|.",
+        "constraints": [
+          { "fn": "f",   "props": ["total", "surjective"] },
+          { "fn": "g",   "props": ["total", "injective"] },
+          { "fn": "gof", "props": ["total", "!injective", "!surjective"] }
+        ]
+      }
+    ]
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: a single-part variant, larger sets, no hints -->
+  <div class="bd-widget" data-problem='{
+    "title": "Widget 2 — Single-part, large sets, no hints",
+    "setDefaults": { "A": 4, "B": 4, "C": 4 },
+    "parts": [
+      {
+        "id": "only",
+        "label": "Make a bijection",
+        "statement": "Make <span class=\"math\">f</span> and <span class=\"math\">g</span> both bijections. Their composition will then also be a bijection.",
+        "goalHtml": "<strong>Goal:</strong>&nbsp; both <span class=\"math\">f</span> and <span class=\"math\">g</span> total, injective, and surjective.",
+        "constraints": [
+          { "fn": "f",   "props": ["total", "injective", "surjective"] },
+          { "fn": "g",   "props": ["total", "injective", "surjective"] }
+        ]
+      }
+    ]
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 3: omit title to verify optional fields -->
+  <div class="bd-widget" data-problem='{
+    "setDefaults": { "A": 2, "B": 3, "C": 2 },
+    "parts": [
+      {
+        "id": "only",
+        "label": "Lose injectivity through composition",
+        "statement": "Make <span class=\"math\">f</span> injective but arrange <span class=\"math\">g</span> so that <span class=\"math\">g ∘ f</span> is not injective.",
+        "goalHtml": "<strong>Goal:</strong>&nbsp; <span class=\"math\">f</span> injective, but <span class=\"math\">g ∘ f</span> NOT injective.",
+        "hintHtml": "Pick g that maps two elements of B to the same element of C.",
+        "constraints": [
+          { "fn": "f",   "props": ["injective"] },
+          { "fn": "gof", "props": ["!injective"] }
+        ]
+      }
+    ]
+  }'></div>
+
+  <script src="bubble-diagram.js"></script>
+
+</body>
+</html>

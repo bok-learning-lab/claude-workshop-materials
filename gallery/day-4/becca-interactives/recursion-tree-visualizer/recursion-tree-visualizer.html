@@ -1,0 +1,43 @@
+<!--
+  Recursion Tree Visualizer (W27) — embeddable widget.
+
+  Each <div class="rt-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students enter a recurrence (divide-and-conquer T(n) = a·T(n/b)
+  + f(n) or n−1 form T(n) = a·T(n−1) + f(n)) and see the recursion tree
+  drawn with one node per subproblem. Each node shows its subproblem size
+  and per-node work. Step through depths to see the per-depth work totals
+  — exactly the geometric-sum-across-depths view from segment 6.0.
+  Used in segment 6.1 Activity 18.
+
+  Inputs:
+    Form    — D&C or n−1.
+    a       — branching factor (1..5).
+    b       — subproblem-size divisor (D&C only, 2..5).
+    f(n)    — non-recursive work per node, chosen from "1", "n", "n²".
+    T(1)    — base case value.
+    n       — initial input size. For D&C, must be a power of b; the
+              widget snaps any non-power-of-b input to the nearest valid n.
+
+  Modes:
+    Watch    — auto-builds the tree with sizes and work filled in. Step
+               controls (Prev / Run / Next) walk through depths.
+    Practice — auto-builds the tree SKELETON only; student fills in
+               size and work at every node. Per-cell green/red feedback;
+               per-depth totals reveal once that depth is fully correct;
+               grand total reveals when the whole tree is correct.
+               "Reset blanks" clears entries; "Reveal answers" flips into
+               Watch view for the current build.
+
+  data-problem JSON keys (all optional):
+    title       (string) — bold heading.
+    intro       (HTML)   — short intro card above the widget.
+    defaultForm ("dnc" | "nminus1") — initial recurrence form; default "dnc".
+    defaultMode ("watch" | "practice") — initial mode; default "watch".
+-->
+<div class="rt-widget" data-problem='{
+  "title": "Recursion Tree Visualizer",
+  "intro": "<p>Pick a recurrence form and parameters, then build the tree. Use the step controls to walk depth-by-depth through the per-depth work — that&#39;s the geometric-sum-across-depths view from segment 6.0 made visible.</p>",
+  "defaultForm": "dnc"
+}'></div>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lazy Susan Pigeonhole Visualizer — multi-instance test</title>
+  <link rel="stylesheet" href="lazy-susan-pigeonhole.css">
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 960px; }
+    h1 { font-size: 1.2rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .gap { height: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Lazy Susan Pigeonhole Visualizer — multi-instance test (segment 3.2 Activity 6)</h1>
+  <p class="hint">
+    Two independent widgets on one page. Each must keep its own
+    derangement, rotation state, dropdown selections, and feedback.
+    Spinning one Susan must not affect the other; pressing "New
+    configuration" or Reset on one must not affect the other.
+  </p>
+
+  <!-- Widget 1: canonical 11-person Lazy Susan problem from segment 3.2 Activity 6. -->
+  <div class="lzs-widget" data-problem='{
+    "title": "Widget 1 — 11-person Lazy Susan",
+    "statement": "<p>Eleven people sit evenly spaced around a circular table with a lazy Susan in the center. Each person ordered a different dish. The dishes are placed on the Susan, but every dish is mismatched — no person has their own dish in front of them. Prove there is a rotation of the Susan after which at least two people have their correct dish in front of them.</p>",
+    "hint": "<p>For each person, ask: <em>how many positions clockwise does the Susan have to spin to bring me my dish?</em> Then count how many distinct values that question can produce.</p>",
+    "viz": {
+      "people": 11
+    },
+    "components": {
+      "pigeons": {
+        "options": [
+          { "id": "people", "text": "The 11 people.", "correct": true },
+          { "id": "dishes", "text": "The 11 dishes.", "feedback": "The dishes don’t map to anything useful. Each person has a personal “needed rotation” — that’s the function that turns 11 things into a smaller set, so the people are the pigeons." },
+          { "id": "rotations", "text": "The 10 non-zero rotation distances.", "feedback": "Rotation distances are the *codomain* — the set each person’s needed rotation lands in. The pigeons (the inputs of the function) are the people themselves." },
+          { "id": "seat-dish-pairs", "text": "All 121 (seat, dish) pairs.", "feedback": "Way too many things, and not what gets sorted. We need a function from a set of size 11 into a smaller set; the people are the natural input." }
+        ]
+      },
+      "pigeonholes": {
+        "options": [
+          { "id": "rot-1-10", "text": "The 10 non-zero rotation distances {1, 2, …, 10}.", "correct": true },
+          { "id": "rot-0-10", "text": "The 11 rotation distances {0, 1, 2, …, 10}.", "feedback": "Rotation 0 is ruled out by the problem: no person has their dish at the start, so no person’s needed rotation is 0. That leaves only the 10 non-zero values — and 11 people in 10 holes is what triggers PHP." },
+          { "id": "dishes", "text": "The 11 dishes.", "feedback": "Dishes aren’t the codomain of the needed-rotation function. Each person maps to a *number* (their needed rotation), not to a dish." },
+          { "id": "seats", "text": "The 11 seats.", "feedback": "The seats are the same as the people in this problem (11 things, one per person). For PHP we need a *smaller* set as the codomain — the rotation distances give us 10." }
+        ]
+      },
+      "mapping": {
+        "options": [
+          { "id": "p-to-needed-r", "text": "Each person → the rotation distance they need to get their correct dish.", "correct": true },
+          { "id": "p-to-current", "text": "Each person → the dish currently in front of them.", "feedback": "This maps people to dishes, not people to rotation distances. The PHP argument needs a function whose codomain is the set of rotation distances." },
+          { "id": "r-to-matches", "text": "Each rotation → the number of matches it produces.", "feedback": "This maps rotations to numbers, not people to rotations. The pigeons (people) need to be the *input* of the mapping." },
+          { "id": "d-to-seat", "text": "Each dish → the seat it’s currently at.", "feedback": "This is a different function (dishes → seats), and it doesn’t put 11 things into a smaller codomain — both sides have size 11. The PHP-triggering function is people → needed rotations." }
+        ]
+      },
+      "conclusion": {
+        "options": [
+          { "id": "two-share-r", "text": "Two people share the same needed rotation, so that one rotation puts both their correct dishes in front of them — at least 2 matches at that rotation.", "correct": true },
+          { "id": "all-eleven", "text": "Some rotation matches all 11 people simultaneously.", "feedback": "PHP only gives ≥ 2 — it doesn’t guarantee 11. (In fact, getting all 11 right would require the Susan to be rotated to its identity position, but we’re told no one has their dish at start.)" },
+          { "id": "some-rotation-zero", "text": "Some rotation produces zero matches.", "feedback": "Some rotations may produce zero matches — but the conclusion we need is the opposite: that at least one rotation produces ≥ 2 matches." },
+          { "id": "after-11-rotations", "text": "After 11 rotations, every person has had their correct dish at some point.", "feedback": "True, but irrelevant — that’s a property of full rotations, not what PHP gives us. PHP gives us a *single* rotation with ≥ 2 simultaneous matches." }
+        ]
+      }
+    },
+    "success": {
+      "banner": "<strong>Correct setup.</strong> 11 people each have a needed rotation in {1, 2, …, 10}. By PHP, at least two of those needed rotations are equal — so spinning the Susan to that distance gives both people their correct dish at the same time. Open the “Show needed rotations” panel under the table to see exactly which two (or more)."
+    }
+  }'></div>
+
+  <div class="gap"></div>
+
+  <!-- Widget 2: smaller variant (5 people) to verify viz config flexibility
+       and confirm the math still holds at smaller N. With 5 people, PHP says
+       2 share a needed rotation in {1,2,3,4}. -->
+  <div class="lzs-widget" data-problem='{
+    "title": "Widget 2 — 5-person Lazy Susan (variant)",
+    "statement": "<p>Five people sit at a circular table; each ordered a different dish; the Susan starts in a derangement (no one has their own dish). Prove some rotation gives at least 2 simultaneous matches.</p>",
+    "viz": {
+      "people": 5
+    },
+    "components": {
+      "pigeons": {
+        "options": [
+          { "id": "people", "text": "The 5 people.", "correct": true },
+          { "id": "rotations", "text": "The 4 non-zero rotation distances.", "feedback": "Rotations are the codomain. The pigeons are the people." },
+          { "id": "dishes", "text": "The 5 dishes.", "feedback": "Dishes don’t map naturally to a smaller set; people map to needed rotations, which are fewer." }
+        ]
+      },
+      "pigeonholes": {
+        "options": [
+          { "id": "rot-1-4", "text": "The 4 non-zero rotation distances {1, 2, 3, 4}.", "correct": true },
+          { "id": "rot-0-4", "text": "The 5 rotation distances {0, 1, 2, 3, 4}.", "feedback": "Rotation 0 isn’t a possible needed rotation in a derangement — no person already has their dish. So the codomain is {1, …, 4}, not {0, …, 4}." },
+          { "id": "people", "text": "The 5 people.", "feedback": "This would put 5 in 5, which doesn’t trigger PHP. We need a smaller codomain than the domain." }
+        ]
+      },
+      "mapping": {
+        "options": [
+          { "id": "p-to-needed-r", "text": "Each person → the rotation distance they need to get their correct dish.", "correct": true },
+          { "id": "p-to-current", "text": "Each person → the dish currently in front of them.", "feedback": "This maps people to dishes (5 things to 5 things), so PHP doesn’t apply." }
+        ]
+      },
+      "conclusion": {
+        "options": [
+          { "id": "two-share-r", "text": "Two people share a needed rotation, so that rotation gives 2 simultaneous matches.", "correct": true },
+          { "id": "all-five", "text": "Some rotation matches all 5 people.", "feedback": "PHP only gives ≥ 2, not all 5." }
+        ]
+      }
+    }
+  }'></div>
+
+  <script src="lazy-susan-pigeonhole.js"></script>
+
+</body>
+</html>

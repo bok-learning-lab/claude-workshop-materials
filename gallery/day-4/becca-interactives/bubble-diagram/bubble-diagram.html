@@ -1,0 +1,66 @@
+<!--
+  Bubble Diagram (composition counterexample) — embeddable widget.
+
+  Embed shape: a single self-contained <div class="bd-widget"> per problem.
+  Edit the JSON inside the data-problem attribute to author a new problem.
+  Multiple <div class="bd-widget"> blocks can coexist on the same page.
+
+  data-problem JSON keys:
+    title          (string, optional) — bold heading shown above the tabs.
+                   Omit if no heading is wanted on the page.
+    setDefaults    ({ A: number, B: number, C: number }, optional)
+                   Initial element counts per set. Defaults to {A:3, B:4, C:2}.
+                   Each count is clamped to [2, 5].
+    parts          (Array<Part>, required) — one or more problem parts shown
+                   as tabs. Each Part has:
+      id           (string, required) — unique part ID, e.g. "a", "b".
+      label        (string, required) — tab label, e.g. "Part (a)".
+      statement    (HTML string, required) — body of the problem-statement card.
+      goalHtml     (HTML string, required) — body of the goal panel.
+      hintHtml     (HTML string, optional) — body of the hints panel for this part.
+      constraints  (Array<Constraint>, required) — goal-checker rules.
+        fn         "f" | "g" | "gof"
+        props      Array of property names to satisfy. Property names:
+                   "total", "injective", "surjective". Prefix with "!" to mean
+                   "must NOT have this property".
+                   The success banner appears when all constraints across all
+                   parts of constraints[] are met simultaneously.
+
+  Property semantics:
+    total     — every domain element has exactly one outgoing arrow.
+    injective — no two domain elements share a target.
+    surjective — every codomain element is hit by at least one arrow.
+
+  Sets and functions are fixed: A, B, C with f: A→B, g: B→C, and
+  gof = g ∘ f computed automatically.
+-->
+<div class="bd-widget" data-problem='{
+  "title": "Problem 3: Function Composition — Bubble Diagram Explorer",
+  "setDefaults": { "A": 3, "B": 4, "C": 2 },
+  "parts": [
+    {
+      "id": "a",
+      "label": "Part (a)",
+      "statement": "<strong>Part (a).</strong>&nbsp; Find an example of an <em>injection</em> <span class=\"math\">f : A → B</span> and a <em>surjection</em> <span class=\"math\">g : B → C</span> such that <span class=\"math\">g ∘ f</span> is <em>neither injective nor surjective</em>. Both <span class=\"math\">f</span> and <span class=\"math\">g</span> should be total functions. Use the diagram below to construct your example by drawing arrows.",
+      "goalHtml": "<strong>Goal:</strong>&nbsp; <span class=\"math\">f</span> must be <strong>injective</strong> &nbsp;·&nbsp; <span class=\"math\">g</span> must be <strong>surjective</strong> &nbsp;·&nbsp; <span class=\"math\">g ∘ f</span> must be <strong>neither injective nor surjective</strong> &nbsp;·&nbsp; both must be <strong>total functions</strong>.",
+      "hintHtml": "<strong>Part (a):</strong> Try making |<span class=\"math\">B</span>| larger than both |<span class=\"math\">A</span>| and |<span class=\"math\">C</span>|. Even if <span class=\"math\">f</span> is injective, can <span class=\"math\">g</span> collapse two images of <span class=\"math\">f</span> onto the same element of <span class=\"math\">C</span>?",
+      "constraints": [
+        { "fn": "f",   "props": ["total", "injective"] },
+        { "fn": "g",   "props": ["total", "surjective"] },
+        { "fn": "gof", "props": ["total", "!injective", "!surjective"] }
+      ]
+    },
+    {
+      "id": "b",
+      "label": "Part (b)",
+      "statement": "<strong>Part (b).</strong>&nbsp; Find an example of a <em>surjection</em> <span class=\"math\">f : A → B</span> and an <em>injection</em> <span class=\"math\">g : B → C</span> such that <span class=\"math\">g ∘ f</span> is <em>neither injective nor surjective</em>. Both <span class=\"math\">f</span> and <span class=\"math\">g</span> should be total functions. Use the diagram below to construct your example by drawing arrows.",
+      "goalHtml": "<strong>Goal:</strong>&nbsp; <span class=\"math\">f</span> must be <strong>surjective</strong> &nbsp;·&nbsp; <span class=\"math\">g</span> must be <strong>injective</strong> &nbsp;·&nbsp; <span class=\"math\">g ∘ f</span> must be <strong>neither injective nor surjective</strong> &nbsp;·&nbsp; both must be <strong>total functions</strong>.",
+      "hintHtml": "<strong>Part (b):</strong> Try making |<span class=\"math\">A</span>| larger than |<span class=\"math\">B</span>| so <span class=\"math\">f</span> must merge elements. Can <span class=\"math\">g</span> remain injective while <span class=\"math\">g ∘ f</span> fails to cover all of <span class=\"math\">C</span>?",
+      "constraints": [
+        { "fn": "f",   "props": ["total", "surjective"] },
+        { "fn": "g",   "props": ["total", "injective"] },
+        { "fn": "gof", "props": ["total", "!injective", "!surjective"] }
+      ]
+    }
+  ]
+}'></div>

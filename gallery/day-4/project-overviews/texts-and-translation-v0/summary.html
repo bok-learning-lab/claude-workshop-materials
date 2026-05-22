@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Close textual work across languages, with Claude Code as first-pass collaborator — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+:root { --bg: rgb(240, 238, 230); --fg: rgb(31, 30, 29); }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--fg); font-family: "Newsreader", "Times New Roman", serif; font-size: 20px; font-weight: 400; line-height: 1.6; min-height: 100vh; }
+.site-header { display: flex; align-items: center; justify-content: flex-start; padding: 20px 32px; position: relative; border-bottom: 1px solid rgba(128, 128, 128, 0.15); }
+.author-name { font-size: 20px; font-weight: 400; letter-spacing: 0.02em; }
+.header-controls { position: absolute; right: 32px; display: flex; align-items: center; gap: 16px; }
+.ctrl-btn { background: none; border: 1px solid var(--fg); color: var(--fg); font-family: "Newsreader", "Times New Roman", serif; font-size: 13px; padding: 4px 12px; border-radius: 4px; cursor: pointer; opacity: 0.5; transition: opacity 0.2s ease; }
+.ctrl-btn:hover { opacity: 1; }
+.essay-layout { display: flex; max-width: 1100px; margin: 0 auto; padding: 48px 32px; gap: 64px; }
+.essay-content { flex: 1; max-width: 680px; }
+.essay-content h1 { font-size: 62px; font-weight: 600; line-height: 1.1; margin: 0 0 12px 0; }
+.subtitle { font-size: 20px; font-style: italic; margin: 0 0 12px 0; opacity: 0.8; }
+.date { font-size: 16px; margin: 0 0 32px 0; opacity: 0.6; }
+.essay-content h2 { font-size: 40px; font-weight: 600; margin: 48px 0 16px 0; line-height: 1.3; }
+.essay-content h3 { font-size: 28px; font-weight: 600; margin: 36px 0 12px 0; line-height: 1.3; }
+.essay-content h4 { font-size: 24px; font-weight: 600; margin: 32px 0 12px 0; line-height: 1.3; font-style: italic; }
+.essay-content p { margin: 0 0 20px 0; }
+.essay-content em { font-style: italic; }
+.essay-content strong { font-weight: 600; }
+.essay-content ul, .essay-content ol { margin: 0 0 20px 0; padding-left: 24px; }
+.essay-content li { margin-bottom: 8px; }
+.essay-content blockquote { border-left: 3px solid var(--fg); margin: 24px 0; padding: 0 0 0 20px; opacity: 0.85; }
+.essay-content a { color: var(--fg); text-decoration: underline; }
+.essay-content hr { border: none; border-top: 1px solid rgba(128, 128, 128, 0.3); margin: 40px 0; }
+.essay-content pre { background: rgba(0, 0, 0, 0.04); border-radius: 4px; padding: 16px 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; line-height: 1.5; margin: 0 0 20px 0; }
+.essay-content code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
+.essay-content :not(pre) > code { background: rgba(0, 0, 0, 0.06); padding: 1px 5px; border-radius: 3px; }
+.essay-content table { border-collapse: collapse; margin: 0 0 20px 0; width: 100%; font-size: 17px; }
+.essay-content th, .essay-content td { border-bottom: 1px solid rgba(128, 128, 128, 0.3); padding: 8px 12px; text-align: left; vertical-align: top; }
+.essay-content th { font-weight: 600; }
+.footnotes { font-size: 16px; opacity: 0.85; margin-top: 32px; }
+.footnotes li { margin-bottom: 6px; }
+@media (max-width: 860px) {
+  .essay-layout { padding: 32px 20px; gap: 0; }
+  .essay-content { max-width: 100%; }
+  .essay-content h1 { font-size: 36px; }
+  .site-header { padding: 16px 20px; }
+  .header-controls { right: 20px; gap: 10px; }
+}
+@media print {
+  @page { margin: 0.75in; }
+  body { background: none; color: #000; font-size: 11pt; line-height: 1.45; min-height: 0; }
+  .site-header, .header-controls { display: none !important; }
+  .essay-layout { display: block; max-width: none; padding: 0; gap: 0; }
+  .essay-content { max-width: 6.5in; margin: 0 auto; }
+  .essay-content h1 { font-size: 22pt; line-height: 1.15; margin: 0 0 6pt 0; }
+  .subtitle { font-size: 12pt; margin: 0 0 6pt 0; opacity: 1; }
+  .date { font-size: 10pt; margin: 0 0 18pt 0; opacity: 1; }
+  .essay-content h2 { font-size: 16pt; margin: 20pt 0 6pt 0; line-height: 1.25; break-after: avoid; page-break-after: avoid; }
+  .essay-content h3 { font-size: 13pt; margin: 16pt 0 4pt 0; line-height: 1.25; break-after: avoid; page-break-after: avoid; }
+  .essay-content h4 { font-size: 12pt; margin: 14pt 0 4pt 0; break-after: avoid; page-break-after: avoid; }
+  .essay-content p { margin: 0 0 8pt 0; orphans: 3; widows: 3; }
+  .essay-content ul, .essay-content ol { margin: 0 0 8pt 0; }
+  .essay-content li { margin-bottom: 3pt; }
+  .essay-content blockquote { margin: 10pt 0; padding-left: 14pt; border-left-color: #000; opacity: 1; }
+  .essay-content hr { margin: 18pt 0; }
+  .essay-content a { color: #000; }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>Close textual work across languages, with Claude Code as first-pass collaborator</h1>
+      <p class="subtitle">One of three day-4 projects in the Bok Center workshop. ← <a href="../index.html">Project landing page</a>. Companion docs: <a href="tradition.html">Tradition</a> · <a href="affordance.html">Affordance</a>.</p>
+
+      <p>This project is a scaffolded demonstration of how LLM-assisted close work might look in disciplines whose primary sources are not in English: classics, comparative literature, religious studies, modern languages, and the area-studies fields that maintain serious philological traditions of their own. Unlike the workshop's <a href="../interview-coding/summary.html">interview-coding</a> and <a href="../physics-interactives/summary.html">physics-interactives</a> projects, the skills here are not yet built. Two corpora are in place; the workshop demonstrates what the candidate skills would do against those corpora and reflects on the larger question of what LLMs can and cannot be asked to contribute to philological labor.</p>
+
+      <h2>What the project ships</h2>
+
+      <p>Two demo corpora, each set up as a standalone target so a faculty member can grab the folder and work with either independently.</p>
+
+      <ul>
+        <li><strong>Homer's <em>Odyssey</em> in fourteen translations</strong> at <a href="../../projects/texts-and-translation/the-odyssey/">the-odyssey/</a>, spanning Greek, Latin, Spanish, French, Swedish, and eight English versions (Bryant, Butcher/Lang, Butler, Cotterill, Cowper, Merry/Riddell, Monro, Pope). Polylas's nineteenth-century Modern Greek translation serves as the corpus "source" text; the Homeric original is left as a separate-sourcing question. The corpus is set up for <em>comparative translation</em> — line up five or fourteen versions of the proem, of the Cyclops episode, of the Sirens, and look at where the translators diverge.</li>
+        <li><strong>Jagannātha Paṇḍitarāja's <em>Rasagaṅgādhara</em></strong> (17th-c. Sanskrit) at <a href="../../projects/texts-and-translation/early-modern-sanskrit/">early-modern-sanskrit/</a>, in Devanāgarī from the GRETIL archive at Göttingen, edited by Timothy C. Cahill from four printed editions. Only Ānana 1 is currently downloaded. The <em>Rasagaṅgādhara</em> is one of the last great works of classical Sanskrit poetics; it is itself an <em>alaṃkāra-śāstra</em> — a treatise on figures of speech — which makes it an unusually apt target for a skill that identifies figures, since the same text that defines the categories can also audit the skill's calls.</li>
+      </ul>
+
+      <p>The project's <a href="../../projects/texts-and-translation/PLAN.md">PLAN.md</a> sketches a small set of candidate skills — <code>/compare-translations</code>, <code>/identify-figures</code>, <code>/build-glossary</code>, <code>/commentary-companion</code>, <code>/transliterate</code>, <code>/teaching-handout</code> — and selects two for initial parallel build: comparative translation against the Odyssey and figure identification against the Rasagaṅgādhara. Neither is built yet.</p>
+
+      <h2>What attendees see in the session</h2>
+
+      <p>The workshop session for this project is reflective rather than demonstrative. Attendees see the two corpora laid out, walk through what <code>/compare-translations</code> would do against <em>Odyssey</em> 1.1–10 (the proem — every translator's most labored opening, where Wilson's "complicated man" sits next to Lattimore's "man of many ways" and Pope's "man for wisdom's various arts renown'd"), and what <code>/identify-figures</code> would do against an illustrative verse from the <em>Rasagaṅgādhara</em> whose alaṃkāra Jagannātha himself names. The session then steps back to the broader question — what <em>should</em> the discipline ask of an LLM, and what should it keep firmly with the trained scholar?</p>
+
+      <p>The honest framing matters. Faculty who do close philological work daily are, with reason, the most skeptical audience for AI tools in the university. This project is built so they can find their own answer rather than be sold one.</p>
+
+      <h2>A note on framing</h2>
+
+      <p>The skills sketched here treat the LLM as a first-pass collaborator, never a final arbiter. The scholar reads the primary source; the LLM surfaces candidates the scholar evaluates. Source text is quoted verbatim, never paraphrased. Citations use primary coordinates (<em>Odyssey</em> 1.1, <em>Rasagaṅgādhara</em> Ān. 1 §17), not file paths. The model's confidence is treated as a hypothesis to be checked, not as expertise.</p>
+
+      <p>The deeper argument is laid out in two companion documents: <a href="tradition.html">tradition.html</a> situates the project in two centuries of philological and translation-theoretic work, and <a href="affordance.html">affordance.html</a> walks through what LLMs change about that work and — at greater length — what they do not.</p>
+
+      <hr>
+
+      <p><em>Texts and translation overview: <a href="summary.html">Summary</a> · <a href="tradition.html">Tradition</a> · <a href="affordance.html">Affordance</a>. Back to the <a href="../index.html">project landing page</a>.</em></p>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># Close textual work across languages, with Claude Code as first-pass collaborator
+
+*One of three day-4 projects in the Bok Center workshop. ← [Project landing page](../index.md). Companion docs: [Tradition](tradition.md) · [Affordance](affordance.md).*
+
+This project is a scaffolded demonstration of how LLM-assisted close work might look in disciplines whose primary sources are not in English: classics, comparative literature, religious studies, modern languages, and the area-studies fields that maintain serious philological traditions of their own. Unlike the workshop's [interview-coding](../interview-coding/summary.md) and [physics-interactives](../physics-interactives/summary.md) projects, the skills here are not yet built. Two corpora are in place; the workshop demonstrates what the candidate skills would do against those corpora and reflects on the larger question of what LLMs can and cannot be asked to contribute to philological labor.
+
+## What the project ships
+
+Two demo corpora, each set up as a standalone target so a faculty member can grab the folder and work with either independently.
+
+- **Homer's *Odyssey* in fourteen translations** at [the-odyssey/](../../projects/texts-and-translation/the-odyssey/), spanning Greek, Latin, Spanish, French, Swedish, and eight English versions (Bryant, Butcher/Lang, Butler, Cotterill, Cowper, Merry/Riddell, Monro, Pope). Polylas's nineteenth-century Modern Greek translation serves as the corpus "source" text; the Homeric original is left as a separate-sourcing question. The corpus is set up for *comparative translation* — line up five or fourteen versions of the proem, of the Cyclops episode, of the Sirens, and look at where the translators diverge.
+- **Jagannātha Paṇḍitarāja's *Rasagaṅgādhara*** (17th-c. Sanskrit) at [early-modern-sanskrit/](../../projects/texts-and-translation/early-modern-sanskrit/), in Devanāgarī from the GRETIL archive at Göttingen, edited by Timothy C. Cahill from four printed editions. Only Ānana 1 is currently downloaded. The *Rasagaṅgādhara* is one of the last great works of classical Sanskrit poetics; it is itself an *alaṃkāra-śāstra* — a treatise on figures of speech — which makes it an unusually apt target for a skill that identifies figures, since the same text that defines the categories can also audit the skill's calls.
+
+The project's [PLAN.md](../../projects/texts-and-translation/PLAN.md) sketches a small set of candidate skills — `/compare-translations`, `/identify-figures`, `/build-glossary`, `/commentary-companion`, `/transliterate`, `/teaching-handout` — and selects two for initial parallel build: comparative translation against the Odyssey and figure identification against the Rasagaṅgādhara. Neither is built yet.
+
+## What attendees see in the session
+
+The workshop session for this project is reflective rather than demonstrative. Attendees see the two corpora laid out, walk through what `/compare-translations` would do against *Odyssey* 1.1–10 (the proem — every translator's most labored opening, where Wilson's "complicated man" sits next to Lattimore's "man of many ways" and Pope's "man for wisdom's various arts renown'd"), and what `/identify-figures` would do against an illustrative verse from the *Rasagaṅgādhara* whose alaṃkāra Jagannātha himself names. The session then steps back to the broader question — what *should* the discipline ask of an LLM, and what should it keep firmly with the trained scholar?
+
+The honest framing matters. Faculty who do close philological work daily are, with reason, the most skeptical audience for AI tools in the university. This project is built so they can find their own answer rather than be sold one.
+
+## A note on framing
+
+The skills sketched here treat the LLM as a first-pass collaborator, never a final arbiter. The scholar reads the primary source; the LLM surfaces candidates the scholar evaluates. Source text is quoted verbatim, never paraphrased. Citations use primary coordinates (*Odyssey* 1.1, *Rasagaṅgādhara* Ān. 1 §17), not file paths. The model's confidence is treated as a hypothesis to be checked, not as expertise.
+
+The deeper argument is laid out in two companion documents: [tradition.md](tradition.md) situates the project in two centuries of philological and translation-theoretic work, and [affordance.md](affordance.md) walks through what LLMs change about that work and — at greater length — what they do not.
+
+---
+
+*Texts and translation overview: [Summary](summary.md) · [Tradition](tradition.md) · [Affordance](affordance.md). Back to the [project landing page](../index.md).*
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+      printBtn.addEventListener('click', function () { window.print(); });
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+        } else { fallbackCopy(text); done(); }
+      });
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What LLMs change about flexible coding (and what they do not) — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>What LLMs change about flexible coding (and what they do not)</h1>
+      <p class="subtitle">One of three day-4 projects in the Bok Center workshop. &larr; <a href="../index.html">Project landing page</a>. Companion docs: <a href="summary.html">Summary</a> &middot; <a href="tradition.html">Tradition</a>.</p>
+
+      <p>The reason Deterding and Waters' (2018) proposal maps onto LLM affordances with unusual cleanliness is that the moves it proposes are precisely the moves that scale poorly under human-only labor at <em>N</em>&gt;50. The mapping is not a happy accident; it follows from what indexing, analytic coding, and validation each ask of the analyst. Each of the three stages has a different relationship to LLMs, and the differences matter.</p>
+
+      <h2>Indexing at scale</h2>
+
+      <p>Indexing is the most LLM-tractable move in the workflow, and the one where the affordance is largest. Assigning one or more of a small set of protocol-anchored topical codes to a passage is precisely what contemporary instruction-tuned language models are reliable at when given a clear codebook. Tai and colleagues (2024) document that LLM analysis can aid qualitative researchers by deductively coding transcripts, testing 160 iterations against human coders.<sup><a href="#fn-tai" id="fnref-tai">1</a></sup> Qiao and colleagues (2024) found that deductive coding using ChatGPT was comparable to traditional coding when provided with a clear codebook and context.<sup><a href="#fn-qiao" id="fnref-qiao">2</a></sup> The empirical question &mdash; does an model assign the same index code that a trained human RA would assign, given the same protocol and codebook &mdash; is just that, an empirical question, and one recent studies have begun to answer with cautious affirmatives.</p>
+
+      <p>In this project the skill <code>/index-transcript</code> does this in seconds per transcript and produces both an indexed copy and a coverage report flagging where the conversation drifted away from the protocol. The downstream effects are larger than they first appear. Once a corpus is indexed, later analytic coding can target only the relevant ~20% &mdash; the proportion Deterding and Waters argue is the empirically reasonable focus.<sup><a href="#fn-dw-share" id="fnref-dw-share">3</a></sup> Indexing also makes the corpus legible to later analysts: to the team member who joined after fieldwork, the secondary analyst with a different question, the reviewer who wants to verify what was looked at. This matters because qualitative data archiving &mdash; through the Qualitative Data Repository at Syracuse, the NIH Data Management and Sharing Policy (2023), NSF Data Management Plans &mdash; is steadily becoming a condition of funding.<sup><a href="#fn-archiving" id="fnref-archiving">4</a></sup> The gap between an archive's existence and the practical accessibility of its contents is, in part, an indexing problem.</p>
+
+      <h2>Analytic coding under researcher control</h2>
+
+      <p>This is the stage where the framing matters most. The verb to refuse, across the workflow, is <em>discover</em>. The verb to keep is <em>apply</em>. If LLM-assisted analytic coding is sold as &ldquo;discover the themes in this corpus,&rdquo; everything the field has learned about the limits of induction applies, and applies in a worse form, because the LLM is generating analytical insight in a way the researcher cannot inspect. If it is sold as &ldquo;apply the researcher's codebook to these indexed sections, surface candidates for human review, and flag passages where the code does not quite fit,&rdquo; then it is the kind of human-augmenting move that framework analysis has defended for thirty years.<sup><a href="#fn-framework-llm" id="fnref-framework-llm">5</a></sup> Than and colleagues (2025), updating &ldquo;The Future of Coding&rdquo; for the LLM era, examine exactly this &mdash; whether instruction-tuned generative LLMs can replicate and augment the iterative qualitative process of alternating between deductive and inductive analysis, citing Deterding and Waters directly.<sup><a href="#fn-than" id="fnref-than">6</a></sup></p>
+
+      <p>The interview-coding project does not yet ship a dedicated <code>/apply-codebook</code> skill &mdash; the workshop demo runs only the three skills described in <a href="summary.html">summary.md</a>. The design move when one is built will be the same: the researcher provides the codes; the model provides scale; every assigned code is traceable to a passage; disagreements are surfaced rather than hidden.</p>
+
+      <h2>Validation through exhaustive negative-case hunting</h2>
+
+      <p>Stage 3 is the surprise. Deterding and Waters explicitly endorse Blee's standard that &ldquo;data that diverge from the pattern are not discounted without a clear rationale to do so,&rdquo; a standard the qualitative literature has repeated since Katz (1982) and Luker (2008).<sup><a href="#fn-blee" id="fnref-blee">7</a></sup><sup><a href="#fn-katz" id="fnref-katz">8</a></sup><sup><a href="#fn-luker" id="fnref-luker">9</a></sup> The standard is easy to state and hard to enforce. At <em>N</em>=4 a researcher can hold the negative cases in mind. At <em>N</em>=200 the exhaustive negative-case audit is honored more in citation than in practice, for the same reason any thorough human procedure honors itself in citation at scale: there are not enough hours. In practice, &ldquo;engagement with negative cases&rdquo; has often meant engagement with the cases the analyst happened to notice.</p>
+
+      <p>LLMs make it tractable. The skill <code>/find-negative-cases</code> takes a claim and the indexed corpus, returns respondents whose evidence cuts against the claim with verbatim excerpts and reasoning, and offers an implications-for-the-theory recommendation &mdash; narrow the claim, abandon it, or keep it but report the negative case in the eventual write-up. The reliability question shifts in a way worth noting: from &ldquo;did the researcher think hard enough&rdquo; to &ldquo;given the typology and the corpus, what did the search return&rdquo; &mdash; an answerable empirical question rather than a methodological article of faith. This is the move where LLM assistance most clearly augments rather than substitutes.</p>
+
+      <h2>Transparency and methods reporting</h2>
+
+      <p>Deterding and Waters' single most-cited finding is that 17.3% of articles in their journal sample described no coding procedure at all, and only 39.7% mentioned which QDA software they used.<sup><a href="#fn-dw-table2" id="fnref-dw-table2">10</a></sup> The methodological literature has been calling for better methods reporting for two decades against a body of practice that has not noticeably improved. The reason it has not improved is that writing a defensible methods paragraph requires reconstructing a process from memory, weeks or months after the analysis was done, and the reconstruction has all the limits of unaided memory.</p>
+
+      <p>LLM-assisted coding pipelines leave a trace. Every code applied, every excerpt selected, every claim audited produces an artifact. The skill <code>/methods-paragraph</code> reads those artifacts and produces a 250&ndash;500 word methods paragraph that is honest about what was done and &mdash; equally important &mdash; about what was not. (If no inter-coder reliability was computed, the paragraph says so.) The methods paragraph Deterding and Waters wish more articles had is now writable, not because the researcher is more conscientious, but because the project state can report itself.</p>
+
+      <h2>What we are not claiming</h2>
+
+      <p>The temptation in talking about LLM-assisted qualitative work is to over-describe what is happening. Three things are worth being explicit about, before any conversation with a senior methodologist.</p>
+
+      <p>LLMs do not &ldquo;discover themes.&rdquo; The themes are what the researcher brings to the work &mdash; the prior reading, the theoretical commitments, the construct under analysis. The model applies and validates them at scale; the analysis remains the researcher's. The framing matters because the alternative framing &mdash; &ldquo;the LLM found themes I missed&rdquo; &mdash; is empirically false and would not survive contact with a senior methodologist for thirty seconds.</p>
+
+      <p>LLMs do not replace the immersive first read. Deterding and Waters are clear that flexible coding presupposes the researcher knows the corpus. So is anyone who has supervised an interview-based dissertation. The first pass &mdash; the slow, attentive, occasionally bewildered first reading of the transcripts &mdash; is irreducible. What the model does is what the researcher could not do alone afterward, at scale.</p>
+
+      <p>Quantification is not validation. Eight respondents using the word &ldquo;stability&rdquo; does not mean stability is a finding; it means eight respondents used that word. LLMs make counting easy; counting is still not analysis. Validity claims have to be made the way they have always been made &mdash; through engagement with the data and with the negative cases.</p>
+
+      <h2>The hard problems</h2>
+
+      <p>The credibility of any LLM-assisted-coding proposal depends on naming the difficulties honestly. Five are worth raising in any conversation with a senior methodologist.</p>
+
+      <p><strong>IRB and the data-transfer question.</strong> As Davison and colleagues (2024) note, entering participant data into a commercial LLM is itself a data transfer, and consent should reflect this; IRB guidance remains uneven.<sup><a href="#fn-davison" id="fnref-davison">11</a></sup> Most interview studies were consented under language that did not anticipate transmission of transcript text to third-party model APIs. For corpora collected under earlier consent regimes &mdash; including most archived data &mdash; the question of whether secondary analysts can use LLM-assisted methods is genuinely open, and currently being worked out in IRB offices on a case-by-case basis. Locally hosted open-source models, increasingly viable, are one path through this; explicit consent language is another; institutional enterprise agreements with model vendors are a third.</p>
+
+      <p><strong>Reproducibility and version stability.</strong> Models change. The same prompt run against the same transcript on the same model name, six months later, can produce different coding. Pinning model versions, archiving prompts and codebooks alongside data, and treating the model as a versioned dependency are partial answers.</p>
+
+      <p><strong>Researcher trust.</strong> How does one convince a peer reviewer that what the LLM did is what a careful human would have done? Honestly: by reporting reliability metrics calibrated against a subset of human-coded transcripts, and by showing that analytic insights are reviewable on inspection. The field will need to develop shared vocabulary for this kind of reporting, and several recent papers are beginning to do that work.<sup><a href="#fn-than" id="fnref-than">6</a></sup><sup><a href="#fn-tai" id="fnref-tai">1</a></sup><sup><a href="#fn-misra" id="fnref-misra">12</a></sup></p>
+
+      <p><strong>The construct-validity feedback loop.</strong> This is the most interesting hard problem. Deterding and Waters' validity machinery assumes the researcher is reading enough of the corpus, with enough care, that they can <em>feel</em> when a typology stops fitting. If indexing is LLM-mediated, does the researcher still develop that tacit feel? Probably only if the workflow is designed to preserve it &mdash; if the researcher reads fully and codes by hand some calibration subset before the model extends their work, and if validation forces them back into close reading of cases the typology fails on. A workflow that simply hands transcripts to a model and accepts the output undermines the judgment that gives flexible coding its warrant. This will not solve itself; it has to be designed for.</p>
+
+      <p><strong>False fluency.</strong> LLMs can produce plausible-sounding methods text and plausible-sounding analytic memos not supported by the underlying data. This is the failure mode that should worry qualitative researchers most, because the social cues that usually catch sloppy coding &mdash; a graduate student who cannot defend their choices in lab meeting, a methods section that reads as evasive &mdash; do not apply to model output. The mitigation is structural: every model-produced claim should be traceable to a specific passage, every analytic code reviewable against the corpus, every methods paragraph auditable against the log of coding decisions. The skills in this project enforce that discipline; not every LLM-assisted workflow will.</p>
+
+      <hr>
+
+      <p>These problems are not arguments against the move. They are the methodological work that has to happen alongside it, in the same way the validity machinery of grounded theory had to be built up over decades after Glaser and Strauss's first proposal. Deterding and Waters wrote their paper to liberate a generation of interview researchers from a methodological inheritance that no longer fit the work they were actually doing. The LLM extension is, at its best, more of the same liberation: relieving the parts of the workflow that scale poorly, preserving the parts where researcher judgment is the whole point, and making transparent what was previously buried. The line between what the researcher does and what the tools do is movable. It has moved before. Where it moves next depends less on what the models can do than on what the methodological community decides counts as good work.</p>
+
+      <hr>
+
+      <p><em>Interview coding overview: <a href="summary.html">Summary</a> &middot; <a href="tradition.html">Tradition</a> &middot; <a href="affordance.html">Affordance</a>. Back to the <a href="../index.html">project landing page</a>.</em></p>
+
+      <ol class="footnotes">
+        <li id="fn-tai">Tai, R. H., Bentley, L. R., Xia, X., Sitt, J. M., Fankhauser, S. C., Chicas-Mosier, A. M., &amp; Monteith, B. G. (2024). &ldquo;An Examination of the Use of Large Language Models to Aid Analysis of Textual Data.&rdquo; <em>International Journal of Qualitative Methods</em> 23. <a href="#fnref-tai">&#8617;</a></li>
+        <li id="fn-qiao">Qiao, S., et al. (2024). &ldquo;Comparing ChatGPT and Trained Human Coders in Qualitative Deductive Analysis.&rdquo; <em>Qualitative Health Research</em>, advance online publication. <a href="#fnref-qiao">&#8617;</a></li>
+        <li id="fn-dw-share">Deterding &amp; Waters (2018), p. 729, on the analytic-coding stage targeting only the indexed-relevant fraction of the corpus. <a href="#fnref-dw-share">&#8617;</a></li>
+        <li id="fn-archiving">Qualitative Data Repository at Syracuse (qdr.syr.edu); NIH Data Management and Sharing Policy (effective January 2023); NSF Data Management Plan requirements. <a href="#fnref-archiving">&#8617;</a></li>
+        <li id="fn-framework-llm">Framework analysis (Ritchie &amp; Spencer 1994) has long performed a structurally similar move &mdash; indexing transcripts to a thematic framework before analytic coding &mdash; and its workflows port to LLM assistance with relatively little adjustment. <a href="#fnref-framework-llm">&#8617;</a></li>
+        <li id="fn-than">Than, N., Fan, L., Law, T., Nelson, L. K., &amp; McCall, L. (2025). &ldquo;Updating &lsquo;The Future of Coding&rsquo;: Qualitative Coding with Generative Large Language Models.&rdquo; <em>Sociological Methods &amp; Research</em>. <a href="#fnref-than">&#8617;</a></li>
+        <li id="fn-blee">Blee, K. M. (2009). &ldquo;Access and Methods in Research on Hidden Communities.&rdquo; Quoted in Deterding &amp; Waters (2018), p. 731. <a href="#fnref-blee">&#8617;</a></li>
+        <li id="fn-katz">Katz, J. (1982). <em>Poor People's Lawyers in Transition</em>. Rutgers University Press. <a href="#fnref-katz">&#8617;</a></li>
+        <li id="fn-luker">Luker, K. (2008). <em>Salsa Dancing into the Social Sciences</em>. Harvard University Press. <a href="#fnref-luker">&#8617;</a></li>
+        <li id="fn-dw-table2">Deterding, N. M., &amp; Waters, M. C. (2018). &ldquo;Flexible Coding of In-depth Interviews: A Twenty-first-century Approach.&rdquo; <em>Sociological Methods &amp; Research</em> 50(2): 708&ndash;739. Table 2, p. 719. <a href="#fnref-dw-table2">&#8617;</a></li>
+        <li id="fn-davison">Davison, R. M., et al. (2024). &ldquo;The Ethics of Using Generative AI for Qualitative Data Analysis.&rdquo; <em>Information Systems Journal</em> 34(5): 1433&ndash;1439. <a href="#fnref-davison">&#8617;</a></li>
+        <li id="fn-misra">Misra, R., et al. (2026). &ldquo;Large Language Models in Qualitative Analysis: Comparing Traditional and Researcher-interpreted Approaches.&rdquo; <em>International Journal of Qualitative Methods</em>. <a href="#fnref-misra">&#8617;</a></li>
+      </ol>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># What LLMs change about flexible coding (and what they do not)
+
+*One of three day-4 projects in the Bok Center workshop. ← [Project landing page](../index.md). Companion docs: [Summary](summary.md) · [Tradition](tradition.md).*
+
+The reason Deterding and Waters' (2018) proposal maps onto LLM affordances with unusual cleanliness is that the moves it proposes are precisely the moves that scale poorly under human-only labor at *N*>50. The mapping is not a happy accident; it follows from what indexing, analytic coding, and validation each ask of the analyst. Each of the three stages has a different relationship to LLMs, and the differences matter.
+
+## Indexing at scale
+
+Indexing is the most LLM-tractable move in the workflow, and the one where the affordance is largest. Assigning one or more of a small set of protocol-anchored topical codes to a passage is precisely what contemporary instruction-tuned language models are reliable at when given a clear codebook. Tai and colleagues (2024) document that LLM analysis can aid qualitative researchers by deductively coding transcripts, testing 160 iterations against human coders.[^tai] Qiao and colleagues (2024) found that deductive coding using ChatGPT was comparable to traditional coding when provided with a clear codebook and context.[^qiao] The empirical question — does an model assign the same index code that a trained human RA would assign, given the same protocol and codebook — is just that, an empirical question, and one recent studies have begun to answer with cautious affirmatives.
+
+In this project the skill `/index-transcript` does this in seconds per transcript and produces both an indexed copy and a coverage report flagging where the conversation drifted away from the protocol. The downstream effects are larger than they first appear. Once a corpus is indexed, later analytic coding can target only the relevant ~20% — the proportion Deterding and Waters argue is the empirically reasonable focus.[^dw-share] Indexing also makes the corpus legible to later analysts: to the team member who joined after fieldwork, the secondary analyst with a different question, the reviewer who wants to verify what was looked at. This matters because qualitative data archiving — through the Qualitative Data Repository at Syracuse, the NIH Data Management and Sharing Policy (2023), NSF Data Management Plans — is steadily becoming a condition of funding.[^archiving] The gap between an archive's existence and the practical accessibility of its contents is, in part, an indexing problem.
+
+## Analytic coding under researcher control
+
+This is the stage where the framing matters most. The verb to refuse, across the workflow, is *discover*. The verb to keep is *apply*. If LLM-assisted analytic coding is sold as "discover the themes in this corpus," everything the field has learned about the limits of induction applies, and applies in a worse form, because the LLM is generating analytical insight in a way the researcher cannot inspect. If it is sold as "apply the researcher's codebook to these indexed sections, surface candidates for human review, and flag passages where the code does not quite fit," then it is the kind of human-augmenting move that framework analysis has defended for thirty years.[^framework-llm] Than and colleagues (2025), updating "The Future of Coding" for the LLM era, examine exactly this — whether instruction-tuned generative LLMs can replicate and augment the iterative qualitative process of alternating between deductive and inductive analysis, citing Deterding and Waters directly.[^than]
+
+The interview-coding project does not yet ship a dedicated `/apply-codebook` skill — the workshop demo runs only the three skills described in [summary.md](summary.md). The design move when one is built will be the same: the researcher provides the codes; the model provides scale; every assigned code is traceable to a passage; disagreements are surfaced rather than hidden.
+
+## Validation through exhaustive negative-case hunting
+
+Stage 3 is the surprise. Deterding and Waters explicitly endorse Blee's standard that "data that diverge from the pattern are not discounted without a clear rationale to do so," a standard the qualitative literature has repeated since Katz (1982) and Luker (2008).[^blee][^katz][^luker] The standard is easy to state and hard to enforce. At *N*=4 a researcher can hold the negative cases in mind. At *N*=200 the exhaustive negative-case audit is honored more in citation than in practice, for the same reason any thorough human procedure honors itself in citation at scale: there are not enough hours. In practice, "engagement with negative cases" has often meant engagement with the cases the analyst happened to notice.
+
+LLMs make it tractable. The skill `/find-negative-cases` takes a claim and the indexed corpus, returns respondents whose evidence cuts against the claim with verbatim excerpts and reasoning, and offers an implications-for-the-theory recommendation — narrow the claim, abandon it, or keep it but report the negative case in the eventual write-up. The reliability question shifts in a way worth noting: from "did the researcher think hard enough" to "given the typology and the corpus, what did the search return" — an answerable empirical question rather than a methodological article of faith. This is the move where LLM assistance most clearly augments rather than substitutes.
+
+## Transparency and methods reporting
+
+Deterding and Waters' single most-cited finding is that 17.3% of articles in their journal sample described no coding procedure at all, and only 39.7% mentioned which QDA software they used.[^dw-table2] The methodological literature has been calling for better methods reporting for two decades against a body of practice that has not noticeably improved. The reason it has not improved is that writing a defensible methods paragraph requires reconstructing a process from memory, weeks or months after the analysis was done, and the reconstruction has all the limits of unaided memory.
+
+LLM-assisted coding pipelines leave a trace. Every code applied, every excerpt selected, every claim audited produces an artifact. The skill `/methods-paragraph` reads those artifacts and produces a 250–500 word methods paragraph that is honest about what was done and — equally important — about what was not. (If no inter-coder reliability was computed, the paragraph says so.) The methods paragraph Deterding and Waters wish more articles had is now writable, not because the researcher is more conscientious, but because the project state can report itself.
+
+## What we are not claiming
+
+The temptation in talking about LLM-assisted qualitative work is to over-describe what is happening. Three things are worth being explicit about, before any conversation with a senior methodologist.
+
+LLMs do not "discover themes." The themes are what the researcher brings to the work — the prior reading, the theoretical commitments, the construct under analysis. The model applies and validates them at scale; the analysis remains the researcher's. The framing matters because the alternative framing — "the LLM found themes I missed" — is empirically false and would not survive contact with a senior methodologist for thirty seconds.
+
+LLMs do not replace the immersive first read. Deterding and Waters are clear that flexible coding presupposes the researcher knows the corpus. So is anyone who has supervised an interview-based dissertation. The first pass — the slow, attentive, occasionally bewildered first reading of the transcripts — is irreducible. What the model does is what the researcher could not do alone afterward, at scale.
+
+Quantification is not validation. Eight respondents using the word "stability" does not mean stability is a finding; it means eight respondents used that word. LLMs make counting easy; counting is still not analysis. Validity claims have to be made the way they have always been made — through engagement with the data and with the negative cases.
+
+## The hard problems
+
+The credibility of any LLM-assisted-coding proposal depends on naming the difficulties honestly. Five are worth raising in any conversation with a senior methodologist.
+
+**IRB and the data-transfer question.** As Davison and colleagues (2024) note, entering participant data into a commercial LLM is itself a data transfer, and consent should reflect this; IRB guidance remains uneven.[^davison] Most interview studies were consented under language that did not anticipate transmission of transcript text to third-party model APIs. For corpora collected under earlier consent regimes — including most archived data — the question of whether secondary analysts can use LLM-assisted methods is genuinely open, and currently being worked out in IRB offices on a case-by-case basis. Locally hosted open-source models, increasingly viable, are one path through this; explicit consent language is another; institutional enterprise agreements with model vendors are a third.
+
+**Reproducibility and version stability.** Models change. The same prompt run against the same transcript on the same model name, six months later, can produce different coding. Pinning model versions, archiving prompts and codebooks alongside data, and treating the model as a versioned dependency are partial answers.
+
+**Researcher trust.** How does one convince a peer reviewer that what the LLM did is what a careful human would have done? Honestly: by reporting reliability metrics calibrated against a subset of human-coded transcripts, and by showing that analytic insights are reviewable on inspection. The field will need to develop shared vocabulary for this kind of reporting, and several recent papers are beginning to do that work.[^than][^tai][^misra]
+
+**The construct-validity feedback loop.** This is the most interesting hard problem. Deterding and Waters' validity machinery assumes the researcher is reading enough of the corpus, with enough care, that they can *feel* when a typology stops fitting. If indexing is LLM-mediated, does the researcher still develop that tacit feel? Probably only if the workflow is designed to preserve it — if the researcher reads fully and codes by hand some calibration subset before the model extends their work, and if validation forces them back into close reading of cases the typology fails on. A workflow that simply hands transcripts to a model and accepts the output undermines the judgment that gives flexible coding its warrant. This will not solve itself; it has to be designed for.
+
+**False fluency.** LLMs can produce plausible-sounding methods text and plausible-sounding analytic memos not supported by the underlying data. This is the failure mode that should worry qualitative researchers most, because the social cues that usually catch sloppy coding — a graduate student who cannot defend their choices in lab meeting, a methods section that reads as evasive — do not apply to model output. The mitigation is structural: every model-produced claim should be traceable to a specific passage, every analytic code reviewable against the corpus, every methods paragraph auditable against the log of coding decisions. The skills in this project enforce that discipline; not every LLM-assisted workflow will.
+
+---
+
+These problems are not arguments against the move. They are the methodological work that has to happen alongside it, in the same way the validity machinery of grounded theory had to be built up over decades after Glaser and Strauss's first proposal. Deterding and Waters wrote their paper to liberate a generation of interview researchers from a methodological inheritance that no longer fit the work they were actually doing. The LLM extension is, at its best, more of the same liberation: relieving the parts of the workflow that scale poorly, preserving the parts where researcher judgment is the whole point, and making transparent what was previously buried. The line between what the researcher does and what the tools do is movable. It has moved before. Where it moves next depends less on what the models can do than on what the methodological community decides counts as good work.
+
+---
+
+*Interview coding overview: [Summary](summary.md) · [Tradition](tradition.md) · [Affordance](affordance.md). Back to the [project landing page](../index.md).*
+
+[^tai]: Tai, R. H., Bentley, L. R., Xia, X., Sitt, J. M., Fankhauser, S. C., Chicas-Mosier, A. M., & Monteith, B. G. (2024). "An Examination of the Use of Large Language Models to Aid Analysis of Textual Data." *International Journal of Qualitative Methods* 23.
+[^qiao]: Qiao, S., et al. (2024). "Comparing ChatGPT and Trained Human Coders in Qualitative Deductive Analysis." *Qualitative Health Research*, advance online publication.
+[^dw-share]: Deterding & Waters (2018), p. 729, on the analytic-coding stage targeting only the indexed-relevant fraction of the corpus.
+[^archiving]: Qualitative Data Repository at Syracuse (qdr.syr.edu); NIH Data Management and Sharing Policy (effective January 2023); NSF Data Management Plan requirements.
+[^framework-llm]: Framework analysis (Ritchie & Spencer 1994) has long performed a structurally similar move — indexing transcripts to a thematic framework before analytic coding — and its workflows port to LLM assistance with relatively little adjustment.
+[^than]: Than, N., Fan, L., Law, T., Nelson, L. K., & McCall, L. (2025). "Updating 'The Future of Coding': Qualitative Coding with Generative Large Language Models." *Sociological Methods & Research*.
+[^blee]: Blee, K. M. (2009). "Access and Methods in Research on Hidden Communities." Quoted in Deterding & Waters (2018), p. 731.
+[^katz]: Katz, J. (1982). *Poor People's Lawyers in Transition*. Rutgers University Press.
+[^luker]: Luker, K. (2008). *Salsa Dancing into the Social Sciences*. Harvard University Press.
+[^dw-table2]: Deterding, N. M., & Waters, M. C. (2018). "Flexible Coding of In-depth Interviews: A Twenty-first-century Approach." *Sociological Methods & Research* 50(2): 708–739. Table 2, p. 719.
+[^davison]: Davison, R. M., et al. (2024). "The Ethics of Using Generative AI for Qualitative Data Analysis." *Information Systems Journal* 34(5): 1433–1439.
+[^misra]: Misra, R., et al. (2026). "Large Language Models in Qualitative Analysis: Comparing Traditional and Researcher-interpreted Approaches." *International Journal of Qualitative Methods*.
+</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

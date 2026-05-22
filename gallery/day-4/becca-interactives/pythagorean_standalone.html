@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pythagorean Theorem: Visual Proof</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #f7f7f5;
+      color: #222;
+      padding: 24px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .problem-statement {
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .problem-statement em {
+      font-style: italic;
+    }
+
+    .math {
+      font-style: italic;
+    }
+
+    /* Controls bar */
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      padding: 6px 14px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      background: #fff;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #444;
+      line-height: 1.4;
+    }
+
+    .btn:hover {
+      background: #f0f0ee;
+      border-color: #999;
+    }
+
+    .btn-reset {
+      margin-left: auto;
+      color: #666;
+    }
+
+    .hints {
+      display: none;
+      background: #fffbea;
+      border-left: 3px solid #e5b800;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .hints.visible {
+      display: block;
+    }
+
+    .hints p {
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .hints ul {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    .hints li {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+
+    /* Canvas area */
+    .canvas-wrapper {
+      position: relative;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .canvas-instructions {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 8px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Problem: Pythagorean Theorem</h1>
+
+  <div class="problem-statement">
+    <p>
+      Recall <strong>The Pythagorean Theorem</strong>: in any right triangle with legs
+      <span class="math">a</span> and <span class="math">b</span> and hypotenuse
+      <span class="math">c</span>, &nbsp;<span class="math">a</span><sup>2</sup> +
+      <span class="math">b</span><sup>2</sup> = <span class="math">c</span><sup>2</sup>.
+    </p>
+    <br>
+    <p>
+      Below are <strong>two sets</strong> of four identical right triangles and one small square each.
+      How can you use them to construct a <em>visual proof</em> of the theorem? Drag and rotate
+      the shapes to experiment.
+    </p>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="hintToggle">Show hints</button>
+    <button class="btn btn-reset" id="resetBtn">↺ Reset pieces</button>
+  </div>
+
+  <div class="hints" id="hints">
+    <p>Problem guide</p>
+    <ul>
+      <li>Consider the idea that area is preserved. Can you make one shape with area <span class="math">c</span><sup>2</sup>
+          and one shape with area <span class="math">a</span><sup>2</sup> + <span class="math">b</span><sup>2</sup>?</li>
+      <li>If you are having a hard time making a shape with area <span class="math">a</span><sup>2</sup> + <span class="math">b</span><sup>2</sup>, consider the side length of the small square.</li>
+    </ul>
+  </div>
+
+  <div class="canvas-wrapper">
+    <canvas id="workspace" width="820" height="560"></canvas>
+  </div>
+  <p class="canvas-instructions">Drag a shape to move it &nbsp;·&nbsp; Click to select, then drag the ↺ handle to rotate &nbsp;·&nbsp; ← → arrow keys nudge rotation by 5°</p>
+
+  <script>
+  (function () {
+    // ── Hint toggle ───────────────────────────────────────────────────────────
+    const hintToggle = document.getElementById('hintToggle');
+    const hints      = document.getElementById('hints');
+
+    hintToggle.addEventListener('click', () => {
+      const visible = hints.classList.toggle('visible');
+      hintToggle.textContent = visible ? 'Hide hints' : 'Show hints';
+    });
+
+    // ── Canvas setup ──────────────────────────────────────────────────────────
+    const canvas = document.getElementById('workspace');
+    const ctx    = canvas.getContext('2d');
+    const W      = canvas.width;   // 820
+    const H      = canvas.height;  // 560
+
+    // ── Geometry constants (3-4-5 triangle scaled ×20) ───────────────────────
+    // leg a = 80 (drawn vertically), leg b = 60 (horizontally), hyp c = 100
+    // small square side s = |a − b| = 20
+    const A = 80, B = 60, S = 20; // leg a=80, leg b=60, hyp c=100, small square s=|a-b|=20
+
+    // Triangle vertices relative to centroid.
+    // Default orientation: right angle at bottom-left, a goes up, b goes right.
+    //   right-angle vertex : (0, 0)      → relative: (−b/3,  a/3)
+    //   top of leg a        : (0, −a)    → relative: (−b/3, −2a/3)
+    //   right of leg b      : (b,  0)    → relative: ( 2b/3,  a/3)
+    const TRI_VERTS = [
+      [-B/3,      A/3],   // right-angle vertex
+      [-B/3,  -2*A/3],    // tip of leg a
+      [ 2*B/3,    A/3],   // tip of leg b
+    ];
+
+    // Square vertices relative to center
+    const SQ_VERTS = [
+      [-S/2, -S/2],
+      [ S/2, -S/2],
+      [ S/2,  S/2],
+      [-S/2,  S/2],
+    ];
+
+    // ── Shape objects ─────────────────────────────────────────────────────────
+    // x, y = centroid in canvas coordinates; rotation in radians
+    // Tray uses two columns: left col at x=55, right col at x=145, square centred at x=100
+    const TL = 55, TR = 145, TC = 100; // tray left col, right col, centre
+
+    // Set A: row1 y=60, row2 y=155, square y=228
+    // Set B: row1 y=332, row2 y=427, square y=500
+    const INITIAL = [
+      // ── Set A (warm palette) ─────────────────────────────────────────────
+      { type: 'triangle', x: TL, y:  60, rotation: 0, fill: '#aac9e8', stroke: '#5a89b8' },
+      { type: 'triangle', x: TR, y:  60, rotation: 0, fill: '#aad5b0', stroke: '#5a9a68' },
+      { type: 'triangle', x: TL, y: 155, rotation: 0, fill: '#f0b8a0', stroke: '#c07050' },
+      { type: 'triangle', x: TR, y: 155, rotation: 0, fill: '#c8b8e0', stroke: '#8870b8' },
+      { type: 'square',   x: TC, y: 228, rotation: 0, fill: '#e8df9a', stroke: '#a89830' },
+      // ── Set B (cool palette) ─────────────────────────────────────────────
+      { type: 'triangle', x: TL, y: 332, rotation: 0, fill: '#7bb8e0', stroke: '#2860a0' },
+      { type: 'triangle', x: TR, y: 332, rotation: 0, fill: '#7dd0b8', stroke: '#289878' },
+      { type: 'triangle', x: TL, y: 427, rotation: 0, fill: '#a898d8', stroke: '#5840a8' },
+      { type: 'triangle', x: TR, y: 427, rotation: 0, fill: '#7cc8d8', stroke: '#2080a0' },
+      { type: 'square',   x: TC, y: 500, rotation: 0, fill: '#b0a8e0', stroke: '#5040a8' },
+    ];
+
+    // Mutable working state (deep-cloned from INITIAL)
+    const shapes = INITIAL.map(s => ({ ...s }));
+
+    // ── Interaction state ─────────────────────────────────────────────────────
+    let selectedShape    = null;   // highlighted shape; persists between drag/rotate ops
+    let mode             = 'idle'; // 'idle' | 'dragging' | 'rotating'
+    let dragOffset       = { x: 0, y: 0 };
+    let rotateStartAngle = 0;      // atan2 angle at rotate-start
+    let rotateStartRot   = 0;      // shape.rotation at rotate-start
+
+    // ── Drawing helpers ───────────────────────────────────────────────────────
+
+    // Draw a filled + stroked polygon from a vertex array [[x,y], ...]
+    function drawPolygon(verts, fillStyle, strokeStyle) {
+      ctx.beginPath();
+      ctx.moveTo(verts[0][0], verts[0][1]);
+      for (let i = 1; i < verts.length; i++) ctx.lineTo(verts[i][0], verts[i][1]);
+      ctx.closePath();
+      // Fill with a soft drop-shadow
+      ctx.shadowColor   = 'rgba(0,0,0,0.13)';
+      ctx.shadowBlur    = 8;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 3;
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+      // Stroke without shadow
+      ctx.shadowColor = 'transparent';
+      ctx.strokeStyle = strokeStyle;
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+    }
+
+    // Small right-angle marker at the right-angle vertex (local coords)
+    function drawRightAngleMark() {
+      const rx = -B/3, ry = A/3, m = 8;
+      ctx.beginPath();
+      ctx.moveTo(rx,     ry    );
+      ctx.lineTo(rx + m, ry    );
+      ctx.lineTo(rx + m, ry - m);
+      ctx.lineTo(rx,     ry - m);
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(0,0,0,0.30)';
+      ctx.lineWidth   = 1;
+      ctx.stroke();
+    }
+
+    // Italic math label with white halo for readability at any rotation
+    function label(text, x, y, align = 'center', baseline = 'middle', size = 14) {
+      ctx.save();
+      ctx.font         = `italic ${size}px Georgia, "Times New Roman", serif`;
+      ctx.textAlign    = align;
+      ctx.textBaseline = baseline;
+      // White halo behind the text
+      ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+      ctx.lineWidth   = 4;
+      ctx.lineJoin    = 'round';
+      ctx.strokeText(text, x, y);
+      // Foreground text
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    // Draw one triangle in local coordinates (centroid at origin)
+    function drawTriangle(shape) {
+      drawPolygon(TRI_VERTS, shape.fill, shape.stroke);
+      drawRightAngleMark();
+
+      // Label positions (local coords):
+      //   'a': midpoint of left side (−b/3, −a/6), nudged left
+      //   'b': midpoint of bottom side (b/6, a/3), nudged below
+      //   'c': midpoint of hypotenuse (b/6, −a/6), nudged along outward normal
+      //        outward normal to hyp = (a/c, −b/c) = (0.8, −0.6), offset ×15
+      label('a',  -B/3 - 12,  -A/6,        'right',  'middle');
+      label('b',   B/6,         A/3 + 15,  'center', 'middle');
+      label('c',   B/6 + 13,  -A/6 -  9,  'left',   'middle');
+    }
+
+    // Draw the small square in local coordinates (center at origin)
+    function drawSquare(shape) {
+      drawPolygon(SQ_VERTS, shape.fill, shape.stroke);
+      label('?', 0, 0, 'center', 'middle', 11);
+    }
+
+    // Draw one shape: translate → rotate → draw → optional selection ring
+    function drawShape(shape) {
+      ctx.save();
+      ctx.translate(shape.x, shape.y);
+      ctx.rotate(shape.rotation);
+      if (shape.type === 'triangle') drawTriangle(shape);
+      else                           drawSquare(shape);
+      // Selection highlight + rotation handle (both in local space)
+      if (shape === selectedShape) {
+        // Blue border outline
+        const verts = shape.type === 'triangle' ? TRI_VERTS : SQ_VERTS;
+        ctx.beginPath();
+        ctx.moveTo(verts[0][0], verts[0][1]);
+        for (let i = 1; i < verts.length; i++) ctx.lineTo(verts[i][0], verts[i][1]);
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(40, 100, 230, 0.8)';
+        ctx.lineWidth   = 3;
+        ctx.stroke();
+
+        // Rotation handle — sits above the centroid in local space
+        const hDist = shape.type === 'triangle' ? 72 : 28;
+        const hx = 0, hy = -hDist;
+
+        // Dashed stem
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(hx, hy);
+        ctx.strokeStyle = 'rgba(40, 100, 230, 0.35)';
+        ctx.lineWidth   = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Handle circle
+        ctx.beginPath();
+        ctx.arc(hx, hy, 8, 0, Math.PI * 2);
+        ctx.fillStyle   = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(40, 100, 230, 0.9)';
+        ctx.lineWidth   = 2;
+        ctx.stroke();
+
+        // Rotation arc symbol inside circle
+        ctx.beginPath();
+        ctx.arc(hx, hy, 4, Math.PI * 0.25, Math.PI * 1.75);
+        ctx.strokeStyle = 'rgba(40, 100, 230, 0.9)';
+        ctx.lineWidth   = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    // ── Background: grid + tray ───────────────────────────────────────────────
+    const TRAY_W    = 200;
+    const TRAY_SEP_Y = 262; // horizontal separator between Set A and Set B
+    const GRID      = 20;
+
+    function drawGrid() {
+      ctx.save();
+      // Fine grid
+      ctx.strokeStyle = '#e8e8e8';
+      ctx.lineWidth   = 1;
+      for (let x = 0; x <= W; x += GRID) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for (let y = 0; y <= H; y += GRID) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+      // Coarser accent every 100 px
+      ctx.strokeStyle = '#d4d4d0';
+      for (let x = 0; x <= W; x += 100) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for (let y = 0; y <= H; y += 100) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+      ctx.restore();
+    }
+
+    function drawTray() {
+      ctx.save();
+      // Tray background
+      ctx.fillStyle = '#f2f2ef';
+      ctx.fillRect(0, 0, TRAY_W, H);
+      // Subtle warm tint for Set A half, cool tint for Set B half
+      ctx.fillStyle = 'rgba(255, 235, 190, 0.18)';
+      ctx.fillRect(0, 0, TRAY_W, TRAY_SEP_Y);
+      ctx.fillStyle = 'rgba(180, 210, 240, 0.18)';
+      ctx.fillRect(0, TRAY_SEP_Y, TRAY_W, H - TRAY_SEP_Y);
+      // Grid over tray
+      ctx.strokeStyle = '#e0e0dc';
+      ctx.lineWidth   = 1;
+      for (let x = 0; x <= TRAY_W; x += GRID) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for (let y = 0; y <= H;      y += GRID) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(TRAY_W,y); ctx.stroke(); }
+      // Horizontal separator between Set A and Set B
+      ctx.strokeStyle = '#b0a090';
+      ctx.lineWidth   = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath(); ctx.moveTo(0, TRAY_SEP_Y); ctx.lineTo(TRAY_W, TRAY_SEP_Y); ctx.stroke();
+      ctx.setLineDash([]);
+      // Vertical dashed divider at right edge of tray
+      ctx.strokeStyle = '#bbb';
+      ctx.lineWidth   = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath(); ctx.moveTo(TRAY_W, 0); ctx.lineTo(TRAY_W, H); ctx.stroke();
+      ctx.setLineDash([]);
+      // Set labels
+      ctx.font         = 'bold 10px "Helvetica Neue", Helvetica, Arial, sans-serif';
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillStyle    = '#b07040';
+      ctx.fillText('SET A', TRAY_W / 2, 5);
+      ctx.fillStyle    = '#3060a0';
+      ctx.fillText('SET B', TRAY_W / 2, TRAY_SEP_Y + 5);
+      ctx.restore();
+    }
+
+    // ── Main render ───────────────────────────────────────────────────────────
+    function render() {
+      ctx.clearRect(0, 0, W, H);
+      drawGrid();
+      drawTray();
+      // Draw unselected shapes first, selected shape on top
+      shapes.forEach(s => { if (s !== selectedShape) drawShape(s); });
+      if (selectedShape) drawShape(selectedShape);
+    }
+
+    // ── Interaction helpers ───────────────────────────────────────────────────
+
+    // Map a browser event point to canvas internal coordinates (handles CSS scaling)
+    function getCanvasPos(e) {
+      const rect   = canvas.getBoundingClientRect();
+      const scaleX = W / rect.width;
+      const scaleY = H / rect.height;
+      const src    = e.touches ? e.touches[0] : e;
+      return {
+        x: (src.clientX - rect.left) * scaleX,
+        y: (src.clientY - rect.top)  * scaleY,
+      };
+    }
+
+    // Transform a canvas-space point into a shape's local coordinate system
+    function toLocal(px, py, shape) {
+      const dx  = px - shape.x;
+      const dy  = py - shape.y;
+      const cos = Math.cos(-shape.rotation);
+      const sin = Math.sin(-shape.rotation);
+      return { x: dx * cos - dy * sin, y: dx * sin + dy * cos };
+    }
+
+    // Ray-casting point-in-polygon
+    function pointInPolygon(px, py, verts) {
+      let inside = false;
+      for (let i = 0, j = verts.length - 1; i < verts.length; j = i++) {
+        const xi = verts[i][0], yi = verts[i][1];
+        const xj = verts[j][0], yj = verts[j][1];
+        if (((yi > py) !== (yj > py)) &&
+            (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) {
+          inside = !inside;
+        }
+      }
+      return inside;
+    }
+
+    // Return the topmost shape under canvas point (px, py), or null
+    function findShape(px, py) {
+      for (let i = shapes.length - 1; i >= 0; i--) {
+        const s     = shapes[i];
+        const local = toLocal(px, py, s);
+        const verts = s.type === 'triangle' ? TRI_VERTS : SQ_VERTS;
+        if (pointInPolygon(local.x, local.y, verts)) return s;
+      }
+      return null;
+    }
+
+    // Move a shape to end of array so it renders on top
+    function bringToFront(shape) {
+      const idx = shapes.indexOf(shape);
+      if (idx !== -1 && idx !== shapes.length - 1) {
+        shapes.splice(idx, 1);
+        shapes.push(shape);
+      }
+    }
+
+    // Canvas-space position of a shape's rotation handle.
+    // Handle sits at local (0, -hDist), transformed to canvas space.
+    function getHandlePos(shape) {
+      const hDist = shape.type === 'triangle' ? 72 : 28;
+      const cos   = Math.cos(shape.rotation);
+      const sin   = Math.sin(shape.rotation);
+      // local (0, -hDist) → canvas: x = cx + hDist*sin, y = cy - hDist*cos
+      return { x: shape.x + hDist * sin, y: shape.y - hDist * cos };
+    }
+
+    // True if canvas point (px,py) is within 12px of the handle centre
+    function hitHandle(px, py, shape) {
+      const h = getHandlePos(shape);
+      return (px - h.x) ** 2 + (py - h.y) ** 2 < 144;
+    }
+
+    // Update cursor based on what the pointer is hovering over
+    function updateCursor(pos) {
+      if (selectedShape && hitHandle(pos.x, pos.y, selectedShape)) {
+        canvas.style.cursor = 'crosshair';
+      } else if (findShape(pos.x, pos.y)) {
+        canvas.style.cursor = 'grab';
+      } else {
+        canvas.style.cursor = 'default';
+      }
+    }
+
+    // ── Mouse events ──────────────────────────────────────────────────────────
+    canvas.addEventListener('mousedown', e => {
+      const pos = getCanvasPos(e);
+
+      // Priority 1: rotation handle of the selected shape
+      if (selectedShape && hitHandle(pos.x, pos.y, selectedShape)) {
+        mode             = 'rotating';
+        rotateStartAngle = Math.atan2(pos.y - selectedShape.y, pos.x - selectedShape.x);
+        rotateStartRot   = selectedShape.rotation;
+        canvas.style.cursor = 'crosshair';
+        return;
+      }
+
+      // Priority 2: body of any shape → drag it
+      const hit = findShape(pos.x, pos.y);
+      if (hit) {
+        selectedShape = hit;
+        bringToFront(hit);
+        dragOffset          = { x: pos.x - hit.x, y: pos.y - hit.y };
+        mode                = 'dragging';
+        canvas.style.cursor = 'grabbing';
+      } else {
+        // Click on empty space → deselect
+        selectedShape = null;
+        mode          = 'idle';
+      }
+      render();
+    });
+
+    canvas.addEventListener('mousemove', e => {
+      const pos = getCanvasPos(e);
+      if (mode === 'dragging' && selectedShape) {
+        selectedShape.x = pos.x - dragOffset.x;
+        selectedShape.y = pos.y - dragOffset.y;
+        render();
+      } else if (mode === 'rotating' && selectedShape) {
+        const angle  = Math.atan2(pos.y - selectedShape.y, pos.x - selectedShape.x);
+        const raw    = rotateStartRot + (angle - rotateStartAngle);
+        const STEP   = Math.PI / 36; // 5°
+        selectedShape.rotation = Math.round(raw / STEP) * STEP;
+        render();
+      } else {
+        updateCursor(pos);
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      mode = 'idle';
+      canvas.style.cursor = 'default';
+      render(); // re-render so handle appears on now-stationary shape
+    });
+
+    // End active operation if cursor leaves; keep selection
+    canvas.addEventListener('mouseleave', () => {
+      mode = 'idle';
+      canvas.style.cursor = 'default';
+    });
+
+    // ── Touch events ──────────────────────────────────────────────────────────
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const pos = getCanvasPos(e);
+
+      if (selectedShape && hitHandle(pos.x, pos.y, selectedShape)) {
+        mode             = 'rotating';
+        rotateStartAngle = Math.atan2(pos.y - selectedShape.y, pos.x - selectedShape.x);
+        rotateStartRot   = selectedShape.rotation;
+        render();
+        return;
+      }
+
+      const hit = findShape(pos.x, pos.y);
+      if (hit) {
+        selectedShape = hit;
+        bringToFront(hit);
+        dragOffset = { x: pos.x - hit.x, y: pos.y - hit.y };
+        mode       = 'dragging';
+      } else {
+        selectedShape = null;
+        mode          = 'idle';
+      }
+      render();
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (mode === 'idle' || !selectedShape) return;
+      const pos = getCanvasPos(e);
+      if (mode === 'dragging') {
+        selectedShape.x = pos.x - dragOffset.x;
+        selectedShape.y = pos.y - dragOffset.y;
+      } else if (mode === 'rotating') {
+        const angle  = Math.atan2(pos.y - selectedShape.y, pos.x - selectedShape.x);
+        const raw    = rotateStartRot + (angle - rotateStartAngle);
+        const STEP   = Math.PI / 36; // 5°
+        selectedShape.rotation = Math.round(raw / STEP) * STEP;
+      }
+      render();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => {
+      mode = 'idle';
+      render();
+    });
+
+    // ── Keyboard: arrow keys nudge rotation of selected shape ─────────────────
+    document.addEventListener('keydown', e => {
+      if (!selectedShape) return;
+      const STEP = Math.PI / 36; // 5° per keypress
+      if (e.key === 'ArrowLeft')  { selectedShape.rotation -= STEP; e.preventDefault(); render(); }
+      if (e.key === 'ArrowRight') { selectedShape.rotation += STEP; e.preventDefault(); render(); }
+    });
+
+    // ── Reset ─────────────────────────────────────────────────────────────────
+    function resetShapes() {
+      // Replace array contents in-place (keeps the const reference valid)
+      shapes.splice(0, shapes.length, ...INITIAL.map(s => ({ ...s })));
+      selectedShape = null;
+      mode          = 'idle';
+      canvas.style.cursor = 'default';
+      render();
+    }
+
+    document.getElementById('resetBtn').addEventListener('click', resetShapes);
+
+    render();
+  }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+title: Claude Workshop Materials
+description: Bok Center AI faculty workshop — encyclopedia, activities, and project gallery.
+baseurl: "/claude-workshop-materials"
+url: "https://madxwoods.github.io"
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+permalink: pretty
+
+defaults:
+  - scope:
+      path: "encyclopedia"
+    values:
+      layout: default
+      section: encyclopedia
+  - scope:
+      path: "activities"
+    values:
+      layout: default
+      section: activities
+  - scope:
+      path: "gallery"
+    values:
+      layout: default
+      section: gallery
+
+exclude:
+  - ".claude"
+  - "node_modules"
+  - Gemfile
+  - Gemfile.lock
+  - "*.sh"

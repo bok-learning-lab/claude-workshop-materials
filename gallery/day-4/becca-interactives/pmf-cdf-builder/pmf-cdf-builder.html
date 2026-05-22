@@ -1,0 +1,28 @@
+<!--
+  PMF / CDF Builder (W32) — embeddable widget.
+
+  Each <div class="pmf-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students enter (value, probability) pairs into a PMF table and
+  see the bar chart, the step-function CDF, the running Σp validity check,
+  and the live expectation E[X] update as they type. Click any bar in the
+  PMF chart (or any step in the CDF chart) to highlight the corresponding
+  pair in the table — and vice versa — so students see the PMF and CDF as
+  two views of the same RV.
+
+  Used in segment 9.0 Activity 19 (verification + visualization tool for
+  the segment's hand-derived PMFs: Harvard football, sailor random walk,
+  jury pool, max-of-IID-uniforms, etc.).
+
+  data-problem JSON keys (all optional):
+    title         (string) — bold heading.
+    intro         (HTML)   — short intro card above the controls.
+    defaultPreset ("blank" | "twoDice" | "binomial10" | "sailor4") —
+                  initial preset; default "blank".
+-->
+<div class="pmf-widget" data-problem='{
+  "title": "PMF / CDF Builder",
+  "intro": "<p>Enter (value, probability) pairs to define a discrete random variable. The widget computes the bar-chart PMF, the step-function CDF, the live <em>Σ p</em> validity check, and the expectation <em>E[X]</em> as you type. Or load one of the presets to verify a hand-derived PMF from the segment.</p>",
+  "defaultPreset": "blank"
+}'></div>

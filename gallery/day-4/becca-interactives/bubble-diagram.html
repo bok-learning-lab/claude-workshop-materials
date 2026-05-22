@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Diagram Explorer</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #f7f7f5;
+      color: #222;
+      padding: 24px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    /* ── Part tabs ────────────────────────────────────────────────────── */
+    .part-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 0;
+    }
+
+    .part-tab {
+      padding: 6px 20px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #e4e4e2;
+      border: 1px solid #bbb;
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      cursor: pointer;
+      color: #666;
+      transition: background 0.1s;
+    }
+
+    .part-tab:hover { background: #ececea; }
+
+    .part-tab.active {
+      background: #fff;
+      color: #222;
+      font-weight: bold;
+      border-color: #aaa;
+      position: relative;
+      /* cover the border-bottom of the card below */
+      bottom: -1px;
+      z-index: 1;
+    }
+
+    /* ── Problem statement card ───────────────────────────────────────── */
+    .problem-statement {
+      background: #fff;
+      border: 1px solid #aaa;
+      border-radius: 0 4px 4px 4px;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+
+    .problem-statement.hidden { display: none; }
+
+    .math { font-style: italic; }
+
+    /* ── Goal panel ───────────────────────────────────────────────────── */
+    .goal-panel {
+      background: #eef3fb;
+      border-left: 3px solid #4a7fc1;
+      border-radius: 0 4px 4px 0;
+      padding: 9px 16px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      color: #1a3660;
+    }
+
+    .goal-panel.hidden { display: none; }
+
+    /* ── Controls bar ─────────────────────────────────────────────────── */
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .mode-label {
+      font-size: 0.84rem;
+      color: #555;
+    }
+
+    .btn, .mode-btn {
+      padding: 6px 14px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      background: #fff;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #444;
+      line-height: 1.4;
+      transition: background 0.1s;
+    }
+
+    .btn:hover, .mode-btn:hover {
+      background: #f0f0ee;
+      border-color: #999;
+    }
+
+    .mode-btn.active {
+      background: #dbeafe;
+      border-color: #5a8fd4;
+      color: #1e3f8a;
+      font-weight: bold;
+    }
+
+    .btn-reset { margin-left: auto; color: #666; }
+
+    /* ── Hints panel ──────────────────────────────────────────────────── */
+    .hints {
+      background: #fffbea;
+      border-left: 3px solid #e5b800;
+      border-radius: 0 4px 4px 0;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .hints.hidden { display: none; }
+
+    .hints .hints-heading {
+      font-size: 0.78rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #776000;
+      margin-bottom: 8px;
+    }
+
+    .hints ul { list-style: disc; padding-left: 20px; }
+    .hints li { margin-bottom: 4px; }
+    .hints li.hidden { display: none; }
+
+    /* ── SVG wrapper ──────────────────────────────────────────────────── */
+    .svg-wrapper {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    svg { display: block; width: 100%; height: auto; }
+
+    /* ── Properties panel ─────────────────────────────────────────────── */
+    .properties-panel {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 14px 18px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .properties-panel h2 {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .props-table {
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .props-table th, .props-table td {
+      border: 1px solid #ddd;
+      padding: 7px 18px;
+      text-align: center;
+    }
+
+    .props-table thead th {
+      background: #f0f0ee;
+      color: #444;
+      font-size: 0.8rem;
+      font-weight: bold;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .props-table tbody th {
+      font-style: italic;
+      font-weight: normal;
+      text-align: left;
+      padding-left: 14px;
+      background: #fafaf8;
+      color: #333;
+      min-width: 70px;
+    }
+
+    .props-table td {
+      color: #bbb;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    /* ── Set size controls (below SVG) ───────────────────────────────── */
+    .set-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      margin-top: -6px;
+      margin-bottom: 14px;
+      padding: 0 2px;
+    }
+
+    .set-ctrl {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: #666;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .set-ctrl-name { font-style: italic; }
+
+    .set-ctrl .elem-count {
+      min-width: 14px;
+      text-align: center;
+      font-style: normal;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.82rem;
+      color: #444;
+    }
+
+    .elem-btn {
+      width: 22px;
+      height: 22px;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      background: #fff;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      cursor: pointer;
+      color: #555;
+      font-family: inherit;
+      transition: background 0.1s;
+    }
+
+    .elem-btn:hover:not(:disabled) { background: #f0f0ee; border-color: #999; }
+
+    .elem-btn:disabled { color: #ccc; cursor: default; background: #f5f5f5; }
+
+    /* ── SVG element circles ──────────────────────────────────────────── */
+    .element-circle {
+      fill: #fff;
+      stroke: #aaa;
+      stroke-width: 1.5;
+      cursor: pointer;
+      transition: fill 0.12s, stroke 0.12s;
+    }
+
+    .element-circle:hover {
+      fill: #e8f0fd;
+      stroke: #4a7fc1;
+    }
+
+    .element-label {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 12px;
+      font-style: italic;
+      fill: #333;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Selected source element (awaiting target click) */
+    .element-circle.selected {
+      fill: #dbeafe;
+      stroke: #4a7fc1;
+      stroke-width: 2.5;
+    }
+
+    /* Small instruction line below SVG */
+    .svg-instructions {
+      font-size: 0.78rem;
+      color: #888;
+      margin-bottom: 4px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    /* ── Property check marks ─────────────────────────────────────────── */
+    .props-table td.check { color: #2a8a3e; font-weight: bold; }
+    .props-table td.cross { color: #c0392b; font-weight: bold; }
+
+    /* Goal-relevant cells: unmet = amber tint, met = green tint */
+    .props-table td.goal-unmet { background: #fef6d9; }
+    .props-table td.goal-met   { background: #e8f8ef; }
+
+    /* ── Success banner ──────────────────────────────────────────────── */
+    .success-banner {
+      background: #e8f8ef;
+      border: 2px solid #52be80;
+      border-radius: 4px;
+      padding: 13px 18px;
+      font-size: 1rem;
+      color: #145a32;
+      text-align: center;
+      margin-top: 12px;
+    }
+    .success-banner.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>Problem 3: Function Composition — Bubble Diagram Explorer</h1>
+
+  <!-- Part tabs -->
+  <div class="part-tabs">
+    <button class="part-tab active" id="tab-a">Part (a)</button>
+    <button class="part-tab"        id="tab-b">Part (b)</button>
+  </div>
+
+  <!-- Problem statements (one visible at a time) -->
+  <div class="problem-statement" id="stmt-a">
+    <strong>Part (a).</strong>&nbsp;
+    Find an example of an <em>injection</em> <span class="math">f : A → B</span>
+    and a <em>surjection</em> <span class="math">g : B → C</span>
+    such that <span class="math">g ∘ f</span> is <em>neither injective nor surjective</em>.
+    Both <span class="math">f</span> and <span class="math">g</span> should be total functions.
+    Use the diagram below to construct your example by drawing arrows.
+  </div>
+
+  <div class="problem-statement hidden" id="stmt-b">
+    <strong>Part (b).</strong>&nbsp;
+    Find an example of a <em>surjection</em> <span class="math">f : A → B</span>
+    and an <em>injection</em> <span class="math">g : B → C</span>
+    such that <span class="math">g ∘ f</span> is <em>neither injective nor surjective</em>.
+    Both <span class="math">f</span> and <span class="math">g</span> should be total functions.
+    Use the diagram below to construct your example by drawing arrows.
+  </div>
+
+  <!-- Goal panels (one visible at a time) -->
+  <div class="goal-panel" id="goal-a">
+    <strong>Goal:</strong>&nbsp;
+    <span class="math">f</span> must be <strong>injective</strong> &nbsp;·&nbsp;
+    <span class="math">g</span> must be <strong>surjective</strong> &nbsp;·&nbsp;
+    <span class="math">g ∘ f</span> must be <strong>neither injective nor surjective</strong> &nbsp;·&nbsp;
+    both must be <strong>total functions</strong>.
+  </div>
+
+  <div class="goal-panel hidden" id="goal-b">
+    <strong>Goal:</strong>&nbsp;
+    <span class="math">f</span> must be <strong>surjective</strong> &nbsp;·&nbsp;
+    <span class="math">g</span> must be <strong>injective</strong> &nbsp;·&nbsp;
+    <span class="math">g ∘ f</span> must be <strong>neither injective nor surjective</strong> &nbsp;·&nbsp;
+    both must be <strong>total functions</strong>.
+  </div>
+
+  <!-- Controls bar -->
+  <div class="controls">
+    <span class="mode-label">Drawing mode:</span>
+    <button class="mode-btn active" id="mode-f">Draw <em>f</em>&nbsp; (A → B)</button>
+    <button class="mode-btn"        id="mode-g">Draw <em>g</em>&nbsp; (B → C)</button>
+    <button class="btn" id="hintToggle">Show hints</button>
+    <button class="btn btn-reset" id="resetBtn">↺ Reset</button>
+  </div>
+
+  <!-- Hints panel -->
+  <div class="hints hidden" id="hints">
+    <div class="hints-heading">Hints</div>
+    <ul>
+      <li id="hint-a">
+        <strong>Part (a):</strong> Try making |<span class="math">B</span>| larger than
+        both |<span class="math">A</span>| and |<span class="math">C</span>|.
+        Even if <span class="math">f</span> is injective, can
+        <span class="math">g</span> collapse two images of <span class="math">f</span>
+        onto the same element of <span class="math">C</span>?
+      </li>
+      <li id="hint-b" class="hidden">
+        <strong>Part (b):</strong> Try making |<span class="math">A</span>| larger than
+        |<span class="math">B</span>| so <span class="math">f</span> must merge elements.
+        Can <span class="math">g</span> remain injective while
+        <span class="math">g ∘ f</span> fails to cover all of <span class="math">C</span>?
+      </li>
+    </ul>
+  </div>
+
+  <!-- SVG diagram -->
+  <div class="svg-wrapper">
+    <svg id="diagram" viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Arrowhead: f (blue) — markerUnits=strokeWidth scales with line thickness -->
+        <marker id="arrow-f" markerUnits="strokeWidth" markerWidth="9" markerHeight="7"
+                refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L9,3.5 z" fill="#4a7fc1"/>
+        </marker>
+        <!-- Arrowhead: g (green) -->
+        <marker id="arrow-g" markerUnits="strokeWidth" markerWidth="9" markerHeight="7"
+                refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L9,3.5 z" fill="#3a9a6a"/>
+        </marker>
+        <!-- Arrowhead: g∘f (gray, slightly smaller to match thinner stroke) -->
+        <marker id="arrow-gof" markerUnits="strokeWidth" markerWidth="10" markerHeight="8"
+                refX="8" refY="4" orient="auto">
+          <path d="M0,0 L0,8 L10,4 z" fill="#aaa"/>
+        </marker>
+      </defs>
+
+      <!-- ── Set ovals ──────────────────────────────────────────────── -->
+      <ellipse cx="140" cy="218" rx="84" ry="178"
+               fill="#fafafa" stroke="#bbb" stroke-width="1.5"/>
+      <ellipse cx="430" cy="218" rx="84" ry="178"
+               fill="#fafafa" stroke="#bbb" stroke-width="1.5"/>
+      <ellipse cx="720" cy="218" rx="84" ry="178"
+               fill="#fafafa" stroke="#bbb" stroke-width="1.5"/>
+
+      <!-- ── Set labels ─────────────────────────────────────────────── -->
+      <text x="140" y="28"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="22" font-weight="bold" font-style="italic"
+            fill="#333" text-anchor="middle">A</text>
+      <text x="430" y="28"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="22" font-weight="bold" font-style="italic"
+            fill="#333" text-anchor="middle">B</text>
+      <text x="720" y="28"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="22" font-weight="bold" font-style="italic"
+            fill="#333" text-anchor="middle">C</text>
+
+      <!-- ── Function labels in arrow channels ─────────────────────── -->
+      <!-- f label: midpoint between A and B -->
+      <text x="285" y="22"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="15" font-style="italic"
+            fill="#4a7fc1" text-anchor="middle">f</text>
+      <line x1="260" y1="17" x2="308" y2="17"
+            stroke="#4a7fc1" stroke-width="1" opacity="0.35"
+            marker-end="url(#arrow-f)"/>
+
+      <!-- g label: midpoint between B and C -->
+      <text x="575" y="22"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="15" font-style="italic"
+            fill="#3a9a6a" text-anchor="middle">g</text>
+      <line x1="550" y1="17" x2="598" y2="17"
+            stroke="#3a9a6a" stroke-width="1" opacity="0.35"
+            marker-end="url(#arrow-g)"/>
+
+      <!-- g∘f label: below the ovals, centered -->
+      <text x="430" y="412"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="13" font-style="italic"
+            fill="#aaa" text-anchor="middle">g ∘ f</text>
+
+      <!-- ── Placeholder layers (populated in later steps) ─────────── -->
+      <g id="layer-gof-arrows"></g>
+      <g id="layer-g-arrows"></g>
+      <g id="layer-f-arrows"></g>
+      <g id="layer-elements"></g>
+    </svg>
+  </div>
+  <p class="svg-instructions">Click a source element, then a target element to draw an arrow &nbsp;·&nbsp; Shift-click or right-click an arrow to remove it</p>
+
+  <!-- Set size controls -->
+  <div class="set-controls">
+    <div class="set-ctrl">
+      <span class="set-ctrl-name">Set <em>A</em></span>
+      <button class="elem-btn" id="btn-minus-A">−</button>
+      <span class="elem-count" id="count-A">3</span>
+      <button class="elem-btn" id="btn-plus-A">+</button>
+    </div>
+    <div class="set-ctrl">
+      <span class="set-ctrl-name">Set <em>B</em></span>
+      <button class="elem-btn" id="btn-minus-B">−</button>
+      <span class="elem-count" id="count-B">4</span>
+      <button class="elem-btn" id="btn-plus-B">+</button>
+    </div>
+    <div class="set-ctrl">
+      <span class="set-ctrl-name">Set <em>C</em></span>
+      <button class="elem-btn" id="btn-minus-C">−</button>
+      <span class="elem-count" id="count-C">2</span>
+      <button class="elem-btn" id="btn-plus-C">+</button>
+    </div>
+  </div>
+
+  <!-- Properties panel -->
+  <div class="properties-panel">
+    <h2>Properties</h2>
+    <table class="props-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Total fn</th>
+          <th>Injective</th>
+          <th>Surjective</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="row-f">
+          <th><em>f</em></th>
+          <td>—</td><td>—</td><td>—</td>
+        </tr>
+        <tr id="row-g">
+          <th><em>g</em></th>
+          <td>—</td><td>—</td><td>—</td>
+        </tr>
+        <tr id="row-gof">
+          <th><em>g</em> ∘ <em>f</em></th>
+          <td>—</td><td>—</td><td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Success banner (hidden until all goal conditions are met) -->
+  <div class="success-banner hidden" id="success-banner">
+    ✓ Valid example found! This construction satisfies all the goal conditions.
+  </div>
+
+  <script>
+  (function () {
+    // ── Constants ─────────────────────────────────────────────────────
+    const OVAL_CX      = { A: 140, B: 430, C: 720 };
+    const ELEM_TOP     = 62;   // topmost element centre (SVG units)
+    const ELEM_BOT     = 384;  // bottommost element centre (SVG units)
+    const ELEM_R       = 14;   // element circle radius
+    const MIN_ELEMS    = 2;
+    const MAX_ELEMS    = 5;
+    const CURVE_OFFSET = 22;   // perpendicular arc height for Bézier curves
+    // Unicode subscript digits ₁–₅
+    const SUB = ['', '\u2081', '\u2082', '\u2083', '\u2084', '\u2085'];
+
+    // ── Data model ────────────────────────────────────────────────────
+    const INITIAL_COUNTS = { A: 3, B: 4, C: 2 };
+    const counts = { ...INITIAL_COUNTS };
+
+    // arrows.f[fromIdx] = toIdx  — A→B mapping
+    // arrows.g[fromIdx] = toIdx  — B→C mapping
+    const arrows = { f: {}, g: {} };
+
+    // Two-click drawing state: null when idle, or {fromKey, fromIdx}
+    let pending = null;
+
+    // Current drawing mode: 'f' (A→B) or 'g' (B→C)
+    let mode = 'f';
+
+    // Which problem part is active: 'a' or 'b'
+    let activePart = 'a';
+
+    // Source/target sets per mode
+    const SRC = { f: 'A', g: 'B' };
+    const TGT = { f: 'B', g: 'C' };
+
+    // ── Label / position helpers ───────────────────────────────────────
+    function elemLabel(setKey, i) {
+      return { A: 'a', B: 'b', C: 'c' }[setKey] + SUB[i + 1];
+    }
+
+    function elemPos(setKey, i, n) {
+      const spacing = (ELEM_BOT - ELEM_TOP) / (n + 1);
+      return { x: OVAL_CX[setKey], y: ELEM_TOP + spacing * (i + 1) };
+    }
+
+    // ── SVG helpers ───────────────────────────────────────────────────
+    const NS          = 'http://www.w3.org/2000/svg';
+    const layerElems  = document.getElementById('layer-elements');
+    const layerFArr   = document.getElementById('layer-f-arrows');
+    const layerGArr   = document.getElementById('layer-g-arrows');
+    const layerGofArr = document.getElementById('layer-gof-arrows');
+
+    function svgEl(tag, attrs) {
+      const el = document.createElementNS(NS, tag);
+      for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+      return el;
+    }
+
+    // ── Arrow geometry ─────────────────────────────────────────────────
+    // Shorten a line segment so it starts/ends at the element circle edges.
+    // The endpoint offset accounts for: circle radius + arrowhead overhang.
+    // With markerUnits="strokeWidth", stroke-width=1.8, refX=7, tip at x=9:
+    //   overhang = (9−7) × 1.8 ≈ 3.6 SVG units → use 4 for a clean landing.
+    function endpoints(x1, y1, x2, y2) {
+      const dx = x2 - x1, dy = y2 - y1;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 1) return { sx: x1, sy: y1, ex: x2, ey: y2 };
+      const ux = dx / dist, uy = dy / dist;
+      return {
+        sx: x1 + ux * (ELEM_R + 2),          // leave source circle
+        sy: y1 + uy * (ELEM_R + 2),
+        ex: x2 - ux * (ELEM_R + 4),          // stop so arrowhead tip lands on target edge
+        ey: y2 - uy * (ELEM_R + 4),
+      };
+    }
+
+    // Quadratic Bézier with a gentle arc perpendicular to the line direction.
+    // curveSign=1  → bows upward  (f and g arrows)
+    // curveSign=-1 → bows downward (g∘f arrows, so they don't overlap)
+    // curveOffset overrides CURVE_OFFSET for callers that need a different arc magnitude
+    function bezierPath(x1, y1, x2, y2, curveSign = 1, curveOffset = CURVE_OFFSET) {
+      const { sx, sy, ex, ey } = endpoints(x1, y1, x2, y2);
+      const mx = (sx + ex) / 2, my = (sy + ey) / 2;
+      const dx = ex - sx, dy = ey - sy;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 1) return `M ${sx},${sy} L ${ex},${ey}`;
+      // Right-perpendicular unit vector — upward in SVG for rightward arrows
+      const nx = dy / dist, ny = -dx / dist;
+      const cx = mx + nx * curveOffset * curveSign,
+            cy = my + ny * curveOffset * curveSign;
+      return `M ${sx},${sy} Q ${cx},${cy} ${ex},${ey}`;
+    }
+
+    // Build an arrow group: wide transparent hit zone + thin visual path.
+    // The hit zone makes shift-click and right-click easy to trigger.
+    function makeArrowEl(pathD, color, markerUrl, fn, fromIdx, toIdx) {
+      const g = svgEl('g', {
+        class:       `arrow arrow-${fn}`,
+        'data-fn':   fn,
+        'data-from': fromIdx,
+        'data-to':   toIdx,
+        cursor:      'pointer',
+      });
+      // Transparent wide hit zone
+      g.appendChild(svgEl('path', {
+        d:              pathD,
+        stroke:         'transparent',
+        'stroke-width': 12,
+        fill:           'none',
+      }));
+      // Visual path (pointer-events off so it doesn't interfere)
+      g.appendChild(svgEl('path', {
+        d:               pathD,
+        stroke:          color,
+        'stroke-width':  1.8,
+        fill:            'none',
+        'marker-end':    markerUrl,
+        'pointer-events':'none',
+      }));
+      return g;
+    }
+
+    // ── Render elements ───────────────────────────────────────────────
+    function renderElements() {
+      layerElems.innerHTML = '';
+      for (const key of ['A', 'B', 'C']) {
+        const n = counts[key];
+        for (let i = 0; i < n; i++) {
+          const { x, y } = elemPos(key, i, n);
+          const g = svgEl('g', {
+            id:         `elem-${key}-${i}`,
+            class:      'element',
+            'data-set': key,
+            'data-idx': i,
+            'data-x':   x,
+            'data-y':   y,
+          });
+          g.appendChild(svgEl('circle', { cx: x, cy: y, r: ELEM_R, class: 'element-circle' }));
+          const txt = svgEl('text', {
+            x, y,
+            class:               'element-label',
+            'dominant-baseline': 'central',
+            'text-anchor':       'middle',
+          });
+          txt.textContent = elemLabel(key, i);
+          g.appendChild(txt);
+          layerElems.appendChild(g);
+        }
+      }
+      refreshSelectionHighlight();
+    }
+
+    // ── Compute g∘f ───────────────────────────────────────────────────
+    // Returns an object mapping aIdx → cIdx for each composed pair.
+    function computeGof() {
+      const gof = {};
+      for (const [ai, bi] of Object.entries(arrows.f)) {
+        const bIdx = +bi;
+        if (bIdx in arrows.g) gof[+ai] = arrows.g[bIdx];
+      }
+      return gof;
+    }
+
+    // ── Compute properties ────────────────────────────────────────────
+    // Returns {total, injective, surjective} for a relation given by arrowMap.
+    // srcCount = domain size, tgtCount = codomain size.
+    function computeProps(arrowMap, srcCount, tgtCount) {
+      // Total: every domain element has exactly one outgoing arrow
+      let total = true;
+      for (let i = 0; i < srcCount; i++) {
+        if (!(i in arrowMap)) { total = false; break; }
+      }
+
+      // Injective: no two domain elements share the same target
+      const targets = Object.values(arrowMap).map(Number);
+      const injective = targets.length === new Set(targets).size;
+
+      // Surjective: every codomain element is hit by at least one arrow
+      const targetSet = new Set(targets);
+      let surjective = true;
+      for (let i = 0; i < tgtCount; i++) {
+        if (!targetSet.has(i)) { surjective = false; break; }
+      }
+
+      return { total, injective, surjective };
+    }
+
+    // ── Live property checker ─────────────────────────────────────────
+    function updateProperties() {
+      const propsF   = computeProps(arrows.f, counts.A, counts.B);
+      const propsG   = computeProps(arrows.g, counts.B, counts.C);
+      const gof      = computeGof();
+      const propsGof = computeProps(gof,      counts.A, counts.C);
+
+      // Fill one table row with ✓/✗ symbols and check/cross CSS class
+      function fillRow(rowId, props) {
+        const tds = document.querySelectorAll(`#${rowId} td`);
+        const vals = [props.total, props.injective, props.surjective];
+        vals.forEach((v, i) => {
+          tds[i].textContent = v ? '✓' : '✗';
+          tds[i].className   = v ? 'check' : 'cross';
+        });
+      }
+      fillRow('row-f',   propsF);
+      fillRow('row-g',   propsG);
+      fillRow('row-gof', propsGof);
+
+      // Goal conditions per part:
+      // Each entry: [rowId, colIndex (0=total,1=inj,2=surj), wantTrue]
+      const goalCells = activePart === 'a' ? [
+        ['row-f',   0, true ],  // f total
+        ['row-f',   1, true ],  // f injective
+        ['row-g',   0, true ],  // g total
+        ['row-g',   2, true ],  // g surjective
+        ['row-gof', 0, true ],  // g∘f total
+        ['row-gof', 1, false],  // g∘f NOT injective
+        ['row-gof', 2, false],  // g∘f NOT surjective
+      ] : [
+        ['row-f',   0, true ],  // f total
+        ['row-f',   2, true ],  // f surjective
+        ['row-g',   0, true ],  // g total
+        ['row-g',   1, true ],  // g injective
+        ['row-gof', 0, true ],  // g∘f total
+        ['row-gof', 1, false],  // g∘f NOT injective
+        ['row-gof', 2, false],  // g∘f NOT surjective
+      ];
+
+      const propsByRow = { 'row-f': propsF, 'row-g': propsG, 'row-gof': propsGof };
+      const propKeys   = ['total', 'injective', 'surjective'];
+
+      let allMet = true;
+      for (const [rowId, colIdx, wantTrue] of goalCells) {
+        const td  = document.querySelectorAll(`#${rowId} td`)[colIdx];
+        const met = (propsByRow[rowId][propKeys[colIdx]] === wantTrue);
+        td.classList.add(met ? 'goal-met' : 'goal-unmet');
+        if (!met) allMet = false;
+      }
+
+      document.getElementById('success-banner').classList.toggle('hidden', !allMet);
+    }
+
+    // ── Render g∘f arrows ─────────────────────────────────────────────
+    // Dashed gray arcs from A directly to C, bowing downward to stay
+    // visually separate from the upward-bowing f and g arrows.
+    function renderGofArrows() {
+      layerGofArr.innerHTML = '';
+      const gof = computeGof();
+      for (const [ai, ci] of Object.entries(gof)) {
+        const aIdx = +ai, cIdx = +ci;
+        if (aIdx >= counts.A || cIdx >= counts.C) continue;
+        const s = elemPos('A', aIdx, counts.A);
+        const t = elemPos('C', cIdx, counts.C);
+        layerGofArr.appendChild(svgEl('path', {
+          // curveOffset=40: g∘f spans ~580px horizontally, so a 40px arc is
+          // subtly visible (more than the default 22px for the shorter f/g arrows)
+          d:                bezierPath(s.x, s.y, t.x, t.y, -1, 40),
+          stroke:           '#aaa',
+          'stroke-width':   1.2,
+          'stroke-dasharray': '6,4',
+          fill:             'none',
+          'marker-end':     'url(#arrow-gof)',
+          'pointer-events': 'none',
+        }));
+      }
+    }
+
+    // ── Render arrows ─────────────────────────────────────────────────
+    function renderArrows() {
+      layerFArr.innerHTML = '';
+      layerGArr.innerHTML = '';
+
+      for (const [from, to] of Object.entries(arrows.f)) {
+        const fi = +from, ti = +to;
+        if (fi >= counts.A || ti >= counts.B) continue;
+        const s = elemPos('A', fi, counts.A);
+        const t = elemPos('B', ti, counts.B);
+        layerFArr.appendChild(
+          makeArrowEl(bezierPath(s.x, s.y, t.x, t.y), '#4a7fc1', 'url(#arrow-f)', 'f', fi, ti)
+        );
+      }
+
+      for (const [from, to] of Object.entries(arrows.g)) {
+        const fi = +from, ti = +to;
+        if (fi >= counts.B || ti >= counts.C) continue;
+        const s = elemPos('B', fi, counts.B);
+        const t = elemPos('C', ti, counts.C);
+        layerGArr.appendChild(
+          makeArrowEl(bezierPath(s.x, s.y, t.x, t.y), '#3a9a6a', 'url(#arrow-g)', 'g', fi, ti)
+        );
+      }
+
+      renderGofArrows();
+      updateProperties();
+    }
+
+    // ── Selection highlight ────────────────────────────────────────────
+    // Applies the 'selected' CSS class to the pending source element circle.
+    function refreshSelectionHighlight() {
+      document.querySelectorAll('.element-circle.selected')
+        .forEach(el => el.classList.remove('selected'));
+      if (pending) {
+        const g = document.getElementById(`elem-${pending.fromKey}-${pending.fromIdx}`);
+        if (g) g.querySelector('.element-circle').classList.add('selected');
+      }
+    }
+
+    // ── Arrow removal ──────────────────────────────────────────────────
+    function removeArrow(fn, fromIdx) {
+      delete arrows[fn][fromIdx];
+      renderArrows();
+    }
+
+    // ── Two-click drawing interaction ──────────────────────────────────
+    function handleElemClick(setKey, idx) {
+      const src = SRC[mode], tgt = TGT[mode];
+
+      if (!pending) {
+        // First click: must be on the source set
+        if (setKey !== src) return;
+        pending = { fromKey: setKey, fromIdx: idx };
+        refreshSelectionHighlight();
+        return;
+      }
+
+      // Clicked the already-selected element: cancel
+      if (setKey === pending.fromKey && idx === pending.fromIdx) {
+        pending = null;
+        refreshSelectionHighlight();
+        return;
+      }
+
+      // Clicked a different element in the source set: restart selection
+      if (setKey === src) {
+        pending = { fromKey: setKey, fromIdx: idx };
+        refreshSelectionHighlight();
+        return;
+      }
+
+      // Clicked the target set: draw (or replace) the arrow
+      if (setKey === tgt) {
+        arrows[mode][pending.fromIdx] = idx;
+        pending = null;
+        refreshSelectionHighlight();
+        renderArrows();
+        return;
+      }
+      // Clicked the wrong set entirely (e.g. C while in mode f): ignore
+    }
+
+    // ── SVG event listeners ────────────────────────────────────────────
+    const svg = document.getElementById('diagram');
+
+    svg.addEventListener('click', (e) => {
+      // Shift-click on an arrow → remove it
+      if (e.shiftKey) {
+        const arrowG = e.target.closest('.arrow');
+        if (arrowG) { removeArrow(arrowG.dataset.fn, +arrowG.dataset.from); return; }
+      }
+      // Click on an element → two-click drawing flow
+      const elemG = e.target.closest('.element');
+      if (elemG) { handleElemClick(elemG.dataset.set, +elemG.dataset.idx); return; }
+      // Click on empty space → cancel pending selection
+      pending = null;
+      refreshSelectionHighlight();
+    });
+
+    svg.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const arrowG = e.target.closest('.arrow');
+      if (arrowG) removeArrow(arrowG.dataset.fn, +arrowG.dataset.from);
+    });
+
+    // ── Set size buttons ──────────────────────────────────────────────
+    function updateCountDisplays() {
+      for (const key of ['A', 'B', 'C']) {
+        document.getElementById(`count-${key}`).textContent  = counts[key];
+        document.getElementById(`btn-minus-${key}`).disabled = counts[key] <= MIN_ELEMS;
+        document.getElementById(`btn-plus-${key}`).disabled  = counts[key] >= MAX_ELEMS;
+      }
+    }
+
+    // Remove arrows that reference an element index that no longer exists.
+    function pruneArrows(key, removedIdx) {
+      if (key === 'A') {
+        delete arrows.f[removedIdx];
+      }
+      if (key === 'B') {
+        delete arrows.g[removedIdx];
+        // Remove f arrows whose target was this B element
+        for (const k of Object.keys(arrows.f)) {
+          if (arrows.f[k] === removedIdx) delete arrows.f[k];
+        }
+      }
+      if (key === 'C') {
+        // Remove g arrows whose target was this C element
+        for (const k of Object.keys(arrows.g)) {
+          if (arrows.g[k] === removedIdx) delete arrows.g[k];
+        }
+      }
+    }
+
+    function addElem(key) {
+      if (counts[key] >= MAX_ELEMS) return;
+      counts[key]++;
+      renderElements();
+      renderArrows();
+      updateCountDisplays();
+    }
+
+    function removeElem(key) {
+      if (counts[key] <= MIN_ELEMS) return;
+      const lastIdx = counts[key] - 1;
+      // Cancel pending if it pointed at the element being removed
+      if (pending && pending.fromKey === key && pending.fromIdx === lastIdx) pending = null;
+      pruneArrows(key, lastIdx);
+      counts[key]--;
+      renderElements();
+      renderArrows();
+      updateCountDisplays();
+    }
+
+    for (const key of ['A', 'B', 'C']) {
+      document.getElementById(`btn-plus-${key}`).addEventListener('click',  () => addElem(key));
+      document.getElementById(`btn-minus-${key}`).addEventListener('click', () => removeElem(key));
+    }
+
+    // ── Part toggle ───────────────────────────────────────────────────
+    const tabA  = document.getElementById('tab-a');
+    const tabB  = document.getElementById('tab-b');
+    const stmtA = document.getElementById('stmt-a');
+    const stmtB = document.getElementById('stmt-b');
+    const goalA = document.getElementById('goal-a');
+    const goalB = document.getElementById('goal-b');
+    const hintA = document.getElementById('hint-a');
+    const hintB = document.getElementById('hint-b');
+
+    function switchPart(part) {
+      activePart = part;
+      const isA = part === 'a';
+      tabA.classList.toggle('active', isA);
+      tabB.classList.toggle('active', !isA);
+      stmtA.classList.toggle('hidden', !isA);
+      stmtB.classList.toggle('hidden', isA);
+      goalA.classList.toggle('hidden', !isA);
+      goalB.classList.toggle('hidden', isA);
+      hintA.classList.toggle('hidden', !isA);
+      hintB.classList.toggle('hidden', isA);
+      // Hide hints panel and reset button label when switching parts
+      hints.classList.add('hidden');
+      hintToggle.textContent = 'Show hints';
+      resetDiagram();   // clears arrows, restores element counts, updates table
+    }
+
+    tabA.addEventListener('click', () => switchPart('a'));
+    tabB.addEventListener('click', () => switchPart('b'));
+
+    // ── Hint toggle ───────────────────────────────────────────────────
+    const hintToggle = document.getElementById('hintToggle');
+    const hints      = document.getElementById('hints');
+
+    hintToggle.addEventListener('click', () => {
+      const visible = hints.classList.toggle('hidden');
+      hintToggle.textContent = visible ? 'Show hints' : 'Hide hints';
+    });
+
+    // ── Mode selector ─────────────────────────────────────────────────
+    const modeFBtn = document.getElementById('mode-f');
+    const modeGBtn = document.getElementById('mode-g');
+
+    modeFBtn.addEventListener('click', () => {
+      mode = 'f';
+      modeFBtn.classList.add('active');
+      modeGBtn.classList.remove('active');
+      pending = null;
+      refreshSelectionHighlight();
+    });
+
+    modeGBtn.addEventListener('click', () => {
+      mode = 'g';
+      modeGBtn.classList.add('active');
+      modeFBtn.classList.remove('active');
+      pending = null;
+      refreshSelectionHighlight();
+    });
+
+    // ── Reset ─────────────────────────────────────────────────────────
+    // Clears all arrows and restores default element counts.
+    // Called by the Reset button and by the part toggle.
+    function resetDiagram() {
+      arrows.f = {};
+      arrows.g = {};
+      pending = null;
+      for (const key of ['A', 'B', 'C']) counts[key] = INITIAL_COUNTS[key];
+      renderElements();
+      renderArrows();         // also calls updateProperties()
+      updateCountDisplays();
+      refreshSelectionHighlight();
+    }
+
+    document.getElementById('resetBtn').addEventListener('click', resetDiagram);
+
+    // ── Initial render ────────────────────────────────────────────────
+    renderElements();
+    updateCountDisplays();
+    updateProperties();
+  }());
+  </script>
+</body>
+</html>

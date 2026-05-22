@@ -1,0 +1,48 @@
+<!--
+  Euclidean Algorithm Stepper — embeddable widget.
+
+  Embed shape: a single self-contained <div class="eas-widget"> per problem.
+  Edit the JSON inside the data-problem attribute to author a new problem.
+  Multiple <div class="eas-widget"> blocks can coexist on the same page.
+
+  data-problem JSON keys:
+    title    (string, optional) — bold heading shown above the intro card.
+             Omit if no heading is wanted on the page.
+    intro    (HTML string, optional) — body of the introductory card shown
+             above the round table. Use this for the prompt explaining what
+             the student is doing (e.g. computing gcd via repeated remainder).
+    rounds   (Array<Round>, required) — one or more rounds shown sequentially.
+             Each Round has:
+      x      (positive integer, required) — initial dividend.
+      y      (positive integer, required) — initial divisor. Convention is
+             x >= y, but the algorithm self-corrects after the first step
+             if reversed.
+      label  (string, optional) — short label shown in the round counter,
+             e.g. "Easy warm-up" or "Relatively prime". Falls back to the
+             "(x, y)" pair if omitted.
+
+  Behavior:
+    For each round, the student fills in r = x mod y in a table, one row at
+    a time. Correct entries lock in (green check) and reveal the next row
+    with shifted values y → x, r → y. The algorithm terminates when y
+    reaches 0; the last non-zero y is highlighted as gcd(x, y).
+
+    On a wrong entry the cell shakes; after two wrong attempts the widget
+    reveals the correct r along with a brief explanation. The student then
+    advances to the next round (or to a final summary panel after the last
+    round).
+
+  Above each row a running annotation is shown:
+    "By the lemma: gcd(x, y) = gcd(y, r)" — linking the algorithm's mechanic
+    to the underlying theorem.
+-->
+<div class="eas-widget" data-problem='{
+  "title": "Euclidean Algorithm Stepper",
+  "intro": "<p>Step through the Euclidean algorithm one row at a time. At each step, compute <span class=\"eas-math\">r = x mod y</span> (i.e. the remainder when <span class=\"eas-math\">x</span> is divided by <span class=\"eas-math\">y</span>). Each correct answer reveals the next row, with the values shifting <span class=\"eas-math\">y → x</span> and <span class=\"eas-math\">r → y</span>. When <span class=\"eas-math\">y = 0</span>, the previous <span class=\"eas-math\">y</span> is the gcd.</p>",
+  "rounds": [
+    { "x": 252, "y": 198, "label": "Warm-up" },
+    { "x": 1071, "y": 462, "label": "Larger inputs" },
+    { "x": 100, "y": 17, "label": "Relatively prime" },
+    { "x": 84, "y": 18, "label": "Quick finish" }
+  ]
+}'></div>

@@ -1,0 +1,35 @@
+<!--
+  Derivation Tree Builder (W25) — embeddable widget.
+
+  Each <div class="dt-widget"> on the page is mounted as an independent
+  instance. Multiple instances coexist with no document-wide IDs.
+
+  Pedagogy: students enter a candidate string and the widget either
+  renders its derivation tree (showing which constructor rule was applied
+  at each step, which subtree corresponds to each rule's input, and where
+  the base cases sit at the leaves) or reports a parse failure with a
+  short reason. Three preset recursive grammars are baked in:
+
+    "bp"  — Balanced Parentheses.
+            Base: ε. C1: (x) where x ∈ BP. C2: xy where x, y ∈ BP.
+    "ae"  — Arithmetic Expressions over {1, +, *, -}.
+            Base: 1. C1: -e. C2: (a+b). C3: (a*b). C4: (e) (parens-wrap).
+    "wff" — Well-Formed Propositional Formulas.
+            Base: a single lowercase letter (variable).
+            C1: !F. C2: (F&G). C3: (F|G).
+
+  data-problem JSON keys (all optional):
+    title            (string) — bold heading.
+    intro            (HTML)   — short intro card above the widget.
+    defaultGrammar   ("bp" | "ae" | "wff") — initial grammar; default "bp."
+
+  Tree rendering uses a simple top-down layout: leaves are placed at
+  fixed horizontal spacing; each internal node is centered above its
+  children. Nodes are labeled with their rule (B / C1 / C2 / …) and the
+  string they generate; the empty string (BP base) is shown as ε.
+-->
+<div class="dt-widget" data-problem='{
+  "title": "Derivation Tree Builder",
+  "intro": "<p>Pick a recursive grammar and enter a candidate string. If the string is in the language, the widget builds its derivation tree showing which constructor rule was applied at each step. Try the example shortcuts, then break things — see what parse failures look like.</p>",
+  "defaultGrammar": "bp"
+}'></div>

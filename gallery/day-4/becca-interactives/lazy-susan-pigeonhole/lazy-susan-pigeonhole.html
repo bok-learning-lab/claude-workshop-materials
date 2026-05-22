@@ -1,0 +1,83 @@
+<!--
+  Lazy Susan Pigeonhole Visualizer (W35) — embeddable widget.
+
+  Each <div class="lzs-widget" data-problem='{...}'></div> on the page is
+  mounted as an independent instance. The widget pairs an SVG-based
+  circular-table visualization (rotate the lazy Susan to find matches)
+  with the same 4-component PHP setup mapper used by W18.
+
+  Pedagogy: students start with a "derangement" — every dish is
+  mismatched to its owner. They use the rotate buttons to spin the Susan;
+  some rotations produce 0 matches, but eventually they find one that
+  produces ≥ 2 matches. The "Show needed rotations" disclosure reveals
+  why: with N people and only N − 1 possible non-zero rotation distances,
+  two people must share a needed rotation by PHP. The dropdown panel
+  asks them to articulate pigeons / pigeonholes / mapping / conclusion.
+
+  data-problem JSON keys:
+    title       (string, optional) — bold heading.
+    statement   (HTML string, required) — problem statement card.
+    hint        (HTML string, optional) — italic hint card.
+    viz         (object, optional) — visualization parameters.
+      people  (integer, optional, default 11) — N. Must be ≥ 4.
+              The widget builds a derangement of size N (a permutation
+              with no fixed points) and presents it on the table.
+      seed    (integer, optional) — seed for the derangement RNG. If
+              omitted, a per-instance seed is derived from the option
+              ids so the same widget reloads to the same configuration.
+              Use this to lock a specific layout for grading or for
+              repeated visits to the page.
+    components  (object, required) — same shape as W18: keys pigeons,
+                pigeonholes, mapping, conclusion. Each has options[]
+                with exactly one correct=true and per-distractor feedback.
+    success     (object, optional) — { banner: HTMLstring } overrides
+                the default banner shown when all four are correct.
+
+  No document-wide IDs; everything is scoped via root.querySelector.
+  Multiple instances on one page coexist with independent state.
+-->
+<div class="lzs-widget" data-problem='{
+  "title": "Pigeonhole Setup — The Lazy Susan",
+  "statement": "<p>Eleven people sit evenly spaced around a circular table with a lazy Susan in the center. Each person ordered a different dish. The dishes are placed on the Susan, but every dish is mismatched — no person has their own dish in front of them. Prove there is a rotation of the Susan after which at least two people have their correct dish in front of them.</p>",
+  "hint": "<p>For each person, ask: <em>how many positions clockwise does the Susan have to spin to bring me my dish?</em> Then count how many distinct values that question can produce.</p>",
+  "viz": {
+    "people": 11
+  },
+  "components": {
+    "pigeons": {
+      "options": [
+        { "id": "people", "text": "The 11 people.", "correct": true },
+        { "id": "dishes", "text": "The 11 dishes.", "feedback": "The dishes don’t map to anything useful. Each person has a personal “needed rotation” — that’s the function that turns 11 things into a smaller set, so the people are the pigeons." },
+        { "id": "rotations", "text": "The 10 non-zero rotation distances.", "feedback": "Rotation distances are the *codomain* — the set each person’s needed rotation lands in. The pigeons (the inputs of the function) are the people themselves." },
+        { "id": "seat-dish-pairs", "text": "All 121 (seat, dish) pairs.", "feedback": "Way too many things, and not what gets sorted. We need a function from a set of size 11 into a smaller set; the people are the natural input." }
+      ]
+    },
+    "pigeonholes": {
+      "options": [
+        { "id": "rot-1-10", "text": "The 10 non-zero rotation distances {1, 2, …, 10}.", "correct": true },
+        { "id": "rot-0-10", "text": "The 11 rotation distances {0, 1, 2, …, 10}.", "feedback": "Rotation 0 is ruled out by the problem: no person has their dish at the start, so no person’s needed rotation is 0. That leaves only the 10 non-zero values — and 11 people in 10 holes is what triggers PHP." },
+        { "id": "dishes", "text": "The 11 dishes.", "feedback": "Dishes aren’t the codomain of the needed-rotation function. Each person maps to a *number* (their needed rotation), not to a dish." },
+        { "id": "seats", "text": "The 11 seats.", "feedback": "The seats are the same as the people in this problem (11 things, one per person). For PHP we need a *smaller* set as the codomain — the rotation distances give us 10." }
+      ]
+    },
+    "mapping": {
+      "options": [
+        { "id": "p-to-needed-r", "text": "Each person → the rotation distance they need to get their correct dish.", "correct": true },
+        { "id": "p-to-current", "text": "Each person → the dish currently in front of them.", "feedback": "This maps people to dishes, not people to rotation distances. The PHP argument needs a function whose codomain is the set of rotation distances." },
+        { "id": "r-to-matches", "text": "Each rotation → the number of matches it produces.", "feedback": "This maps rotations to numbers, not people to rotations. The pigeons (people) need to be the *input* of the mapping." },
+        { "id": "d-to-seat", "text": "Each dish → the seat it’s currently at.", "feedback": "This is a different function (dishes → seats), and it doesn’t put 11 things into a smaller codomain — both sides have size 11. The PHP-triggering function is people → needed rotations." }
+      ]
+    },
+    "conclusion": {
+      "options": [
+        { "id": "two-share-r", "text": "Two people share the same needed rotation, so that one rotation puts both their correct dishes in front of them — at least 2 matches at that rotation.", "correct": true },
+        { "id": "all-eleven", "text": "Some rotation matches all 11 people simultaneously.", "feedback": "PHP only gives ≥ 2 — it doesn’t guarantee 11. (In fact, getting all 11 right would require the Susan to be rotated to its identity position, but we’re told no one has their dish at start.)" },
+        { "id": "some-rotation-zero", "text": "Some rotation produces zero matches.", "feedback": "Some rotations may produce zero matches — but the conclusion we need is the opposite: that at least one rotation produces ≥ 2 matches." },
+        { "id": "after-11-rotations", "text": "After 11 rotations, every person has had their correct dish at some point.", "feedback": "True, but irrelevant — that’s a property of full rotations, not what PHP gives us. PHP gives us a *single* rotation with ≥ 2 simultaneous matches." }
+      ]
+    }
+  },
+  "success": {
+    "banner": "<strong>Correct setup.</strong> 11 people each have a needed rotation in {1, 2, …, 10}. By PHP, at least two of those needed rotations are equal — so spinning the Susan to that distance gives both people their correct dish at the same time. Open the “Show needed rotations” panel under the table to see exactly which two (or more)."
+  }
+}'></div>

@@ -1,0 +1,19 @@
+<!--
+  Monty Hall Simulator (W31) — embeddable widget snippet.
+
+  Drop the widget root anywhere on a Canvas page and load the matching
+  CSS / JS files. Each instance is configured via JSON in `data-problem`:
+
+    {
+      "title":          (string, optional)  shown in the widget header
+      "intro":          (string, optional)  HTML rendered above the controls
+      "defaultMode":    (string, optional)  "single" | "monteCarlo" | "ndoor"
+                                            (overrides URL params for this instance)
+    }
+
+  URL parameters (read once at mount): ?mode=…&doors=…&trials=…&strategy=…
+  prefill the controls. Useful for cross-references from problem sets and
+  other activities (e.g. Activity 18's Bayes-formula video pairs nicely
+  with `?mode=monteCarlo&trials=10000&strategy=switch`).
+-->
+<div class="mhs-widget" data-problem='{}'></div>

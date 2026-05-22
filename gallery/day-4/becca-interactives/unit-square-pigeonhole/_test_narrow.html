@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unit Square Pigeonhole — Narrow Column Test</title>
+  <link rel="stylesheet" href="unit-square-pigeonhole.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fafafa;
+    }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    .scenario {
+      margin: 0 0 36px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .scenario h2 {
+      font-size: 14px;
+      margin: 0 0 12px;
+      color: #555;
+    }
+    .col-800 { max-width: 800px; }
+    .col-600 { max-width: 600px; }
+    .col-480 { max-width: 480px; }
+    .col-360 { max-width: 360px; }
+  </style>
+</head>
+<body>
+  <h1>Unit Square Pigeonhole — Narrow-Column Responsive Test</h1>
+  <p>The widget should adapt to its container width (not the viewport width). At widths below 760px the visualization and mapper panels should stack vertically instead of sitting side-by-side.</p>
+
+  <div class="scenario col-800">
+    <h2>800px column — desktop side-by-side layout expected</h2>
+    <div class="usq-widget" data-problem='{
+      "title": "Problem 4 — Five Points in a Unit Square (800px)",
+      "statement": "<p>Choose any five points inside a 1×1 unit square. Prove that there is at least one pair of points whose distance is at most <span class=\"usq-math\">1/√2 ≈ 0.707</span>.</p>",
+      "hint": "<p><em>Try splitting the square into equal-sized regions.</em></p>",
+      "viz": { "pointCap": 5 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "pts-5", "text": "The 5 chosen points.", "correct": true },
+            { "id": "corners-4", "text": "The 4 corners of the unit square.", "feedback": "The corners are fixed by the square." },
+            { "id": "regions", "text": "The 4 regions of the partition.", "feedback": "Regions are the pigeonholes." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "quad4", "text": "The 4 quadrants (each 1/2 × 1/2).", "correct": true },
+            { "id": "diag4", "text": "The 4 triangles formed by the two diagonals.", "feedback": "Same hole count, much worse bound." },
+            { "id": "strip5", "text": "5 vertical strips of width 1/5.", "feedback": "5 strips for 5 points does not trigger PHP." },
+            { "id": "strip2", "text": "2 vertical halves (each 1/2 × 1).", "feedback": "PHP applies but the bound is too loose." },
+            { "id": "sq9", "text": "9 small squares (3×3 grid).", "feedback": "9 holes for 5 points — PHP does not apply." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "pt-to-region", "text": "Each point → the region of the partition it lies in.", "correct": true },
+            { "id": "region-to-diag", "text": "Each region → its diagonal length.", "feedback": "Maps regions to numbers, not points to regions." },
+            { "id": "pair-to-dist", "text": "Each pair of points → the distance between them.", "feedback": "PHP needs a single pigeon mapping to a single hole." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-quad", "text": "Two of the 5 points share a quadrant; their distance is at most 1/√2.", "correct": true },
+            { "id": "all-same", "text": "All 5 points lie in the same quadrant.", "feedback": "PHP only forces some quadrant to contain at least 2 points." },
+            { "id": "regular-pentagon", "text": "The 5 points form a regular pentagon.", "feedback": "PHP says nothing about geometric arrangement." }
+          ]
+        }
+      },
+      "success": { "banner": "<strong>Correct setup.</strong> 5 points in 4 quadrants → some quadrant has ≥ 2 points." }
+    }'></div>
+  </div>
+
+  <div class="scenario col-600">
+    <h2>600px column — should stack (mapper below viz)</h2>
+    <div class="usq-widget" data-problem='{
+      "title": "Problem 4 — Five Points in a Unit Square (600px)",
+      "statement": "<p>Choose any five points inside a 1×1 unit square. Prove that there is at least one pair of points whose distance is at most <span class=\"usq-math\">1/√2 ≈ 0.707</span>.</p>",
+      "hint": "<p><em>Try splitting the square into equal-sized regions.</em></p>",
+      "viz": { "pointCap": 5 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "pts-5", "text": "The 5 chosen points.", "correct": true },
+            { "id": "corners-4", "text": "The 4 corners of the unit square.", "feedback": "The corners are fixed by the square." },
+            { "id": "regions", "text": "The 4 regions of the partition.", "feedback": "Regions are the pigeonholes." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "quad4", "text": "The 4 quadrants (each 1/2 × 1/2).", "correct": true },
+            { "id": "diag4", "text": "The 4 triangles formed by the two diagonals.", "feedback": "Same hole count, much worse bound." },
+            { "id": "strip5", "text": "5 vertical strips of width 1/5.", "feedback": "5 strips for 5 points does not trigger PHP." },
+            { "id": "strip2", "text": "2 vertical halves (each 1/2 × 1).", "feedback": "PHP applies but the bound is too loose." },
+            { "id": "sq9", "text": "9 small squares (3×3 grid).", "feedback": "9 holes for 5 points — PHP does not apply." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "pt-to-region", "text": "Each point → the region of the partition it lies in.", "correct": true },
+            { "id": "region-to-diag", "text": "Each region → its diagonal length.", "feedback": "Maps regions to numbers, not points to regions." },
+            { "id": "pair-to-dist", "text": "Each pair of points → the distance between them.", "feedback": "PHP needs a single pigeon mapping to a single hole." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-quad", "text": "Two of the 5 points share a quadrant; their distance is at most 1/√2.", "correct": true },
+            { "id": "all-same", "text": "All 5 points lie in the same quadrant.", "feedback": "PHP only forces some quadrant to contain at least 2 points." },
+            { "id": "regular-pentagon", "text": "The 5 points form a regular pentagon.", "feedback": "PHP says nothing about geometric arrangement." }
+          ]
+        }
+      },
+      "success": { "banner": "<strong>Correct setup.</strong> 5 points in 4 quadrants → some quadrant has ≥ 2 points." }
+    }'></div>
+  </div>
+
+  <div class="scenario col-480">
+    <h2>480px column — stacked layout</h2>
+    <div class="usq-widget" data-problem='{
+      "title": "Problem 4 — Five Points in a Unit Square (480px)",
+      "statement": "<p>Choose any five points inside a 1×1 unit square. Prove that there is at least one pair of points whose distance is at most <span class=\"usq-math\">1/√2 ≈ 0.707</span>.</p>",
+      "hint": "<p><em>Try splitting the square into equal-sized regions.</em></p>",
+      "viz": { "pointCap": 5 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "pts-5", "text": "The 5 chosen points.", "correct": true },
+            { "id": "corners-4", "text": "The 4 corners of the unit square.", "feedback": "The corners are fixed by the square." },
+            { "id": "regions", "text": "The 4 regions of the partition.", "feedback": "Regions are the pigeonholes." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "quad4", "text": "The 4 quadrants (each 1/2 × 1/2).", "correct": true },
+            { "id": "diag4", "text": "The 4 triangles formed by the two diagonals.", "feedback": "Same hole count, much worse bound." },
+            { "id": "strip5", "text": "5 vertical strips of width 1/5.", "feedback": "5 strips for 5 points does not trigger PHP." },
+            { "id": "strip2", "text": "2 vertical halves (each 1/2 × 1).", "feedback": "PHP applies but the bound is too loose." },
+            { "id": "sq9", "text": "9 small squares (3×3 grid).", "feedback": "9 holes for 5 points — PHP does not apply." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "pt-to-region", "text": "Each point → the region of the partition it lies in.", "correct": true },
+            { "id": "region-to-diag", "text": "Each region → its diagonal length.", "feedback": "Maps regions to numbers, not points to regions." },
+            { "id": "pair-to-dist", "text": "Each pair of points → the distance between them.", "feedback": "PHP needs a single pigeon mapping to a single hole." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-quad", "text": "Two of the 5 points share a quadrant; their distance is at most 1/√2.", "correct": true },
+            { "id": "all-same", "text": "All 5 points lie in the same quadrant.", "feedback": "PHP only forces some quadrant to contain at least 2 points." },
+            { "id": "regular-pentagon", "text": "The 5 points form a regular pentagon.", "feedback": "PHP says nothing about geometric arrangement." }
+          ]
+        }
+      },
+      "success": { "banner": "<strong>Correct setup.</strong> 5 points in 4 quadrants → some quadrant has ≥ 2 points." }
+    }'></div>
+  </div>
+
+  <div class="scenario col-360">
+    <h2>360px column — fully compact, stacked</h2>
+    <div class="usq-widget" data-problem='{
+      "title": "Problem 4 — Five Points in a Unit Square (360px)",
+      "statement": "<p>Choose any five points inside a 1×1 unit square. Prove that there is at least one pair of points whose distance is at most <span class=\"usq-math\">1/√2 ≈ 0.707</span>.</p>",
+      "hint": "<p><em>Try splitting the square into equal-sized regions.</em></p>",
+      "viz": { "pointCap": 5 },
+      "components": {
+        "pigeons": {
+          "options": [
+            { "id": "pts-5", "text": "The 5 chosen points.", "correct": true },
+            { "id": "corners-4", "text": "The 4 corners of the unit square.", "feedback": "The corners are fixed by the square." },
+            { "id": "regions", "text": "The 4 regions of the partition.", "feedback": "Regions are the pigeonholes." }
+          ]
+        },
+        "pigeonholes": {
+          "options": [
+            { "id": "quad4", "text": "The 4 quadrants (each 1/2 × 1/2).", "correct": true },
+            { "id": "diag4", "text": "The 4 triangles formed by the two diagonals.", "feedback": "Same hole count, much worse bound." },
+            { "id": "strip5", "text": "5 vertical strips of width 1/5.", "feedback": "5 strips for 5 points does not trigger PHP." },
+            { "id": "strip2", "text": "2 vertical halves (each 1/2 × 1).", "feedback": "PHP applies but the bound is too loose." },
+            { "id": "sq9", "text": "9 small squares (3×3 grid).", "feedback": "9 holes for 5 points — PHP does not apply." }
+          ]
+        },
+        "mapping": {
+          "options": [
+            { "id": "pt-to-region", "text": "Each point → the region of the partition it lies in.", "correct": true },
+            { "id": "region-to-diag", "text": "Each region → its diagonal length.", "feedback": "Maps regions to numbers, not points to regions." },
+            { "id": "pair-to-dist", "text": "Each pair of points → the distance between them.", "feedback": "PHP needs a single pigeon mapping to a single hole." }
+          ]
+        },
+        "conclusion": {
+          "options": [
+            { "id": "two-share-quad", "text": "Two of the 5 points share a quadrant; their distance is at most 1/√2.", "correct": true },
+            { "id": "all-same", "text": "All 5 points lie in the same quadrant.", "feedback": "PHP only forces some quadrant to contain at least 2 points." },
+            { "id": "regular-pentagon", "text": "The 5 points form a regular pentagon.", "feedback": "PHP says nothing about geometric arrangement." }
+          ]
+        }
+      },
+      "success": { "banner": "<strong>Correct setup.</strong> 5 points in 4 quadrants → some quadrant has ≥ 2 points." }
+    }'></div>
+  </div>
+
+  <script src="unit-square-pigeonhole.js"></script>
+</body>
+</html>
