@@ -36,9 +36,9 @@ section: activities
 
 <span class="tag">Claude Code</span> <span class="tag">assessment</span>
 
-**[Research Helper]({{ site.baseurl }}/activities/research-helper/)** — Ingest a set of research papers, summarize each, cross-link them, and produce a synthesis document. Demonstrates long-document processing and iterative refinement.
+**[Research Helper]({{ site.baseurl }}/activities/research-helper/)** — Give Claude a folder of PDFs and a research agenda. It reads every paper, produces a faithful neutral summary per paper, then adds a separate "pedagogical twist" pass. Four papers on context window behavior; all outputs linked.
 
-<span class="tag">Claude Code</span> <span class="tag">research synthesis</span>
+<span class="tag">Claude Code</span> <span class="tag">research synthesis</span> <span class="tag">long documents</span>
 
 **[How to Build an MCP]({{ site.baseurl }}/activities/how-to-build-an-mcp/)** — A walkthrough for building a Model Context Protocol server — the mechanism that connects Claude Code to external APIs and tools.
 
