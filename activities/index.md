@@ -16,9 +16,9 @@ section: activities
 
 <span class="tag">Claude.ai</span> <span class="tag">tool use</span> <span class="tag">failure modes</span>
 
-**[Close Reading]({{ site.baseurl }}/activities/close-reading/)** — Use Claude to analyze Shakespeare scenes — then compare its reading with your own. What does it catch? What does it flatten?
+**[Close Reading]({{ site.baseurl }}/activities/close-reading/)** — Ask Claude about a Shakespeare scene without the text: it hallucinates. Give it the text: it immediately reverses and produces a real reading. The humanities version of the multiplication activity.
 
-<span class="tag">Claude.ai</span> <span class="tag">literary analysis</span>
+<span class="tag">Claude.ai</span> <span class="tag">literary analysis</span> <span class="tag">grounding</span>
 
 **[Population Pyramids]({{ site.baseurl }}/activities/population-pyramids/)** — Feed Claude UN population data. Ask it to do arithmetic by hand — it fails. Ask it to write code — it succeeds. The clearest demonstration of why tool use matters.
 
