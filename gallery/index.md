@@ -12,22 +12,22 @@ section: gallery
 
 ## Day 1 projects
 
-These three projects were demonstrated on day 1 as examples of the workshop's "inputs → operations → outputs" project structure.
+Three demonstrations of the workshop's core project structure: a defined input, a set of AI operations, and a useful output.
 
-**[04 · Class Schedule Conflict]({{ site.baseurl }}/gallery/04-schedule-conflict/)** — Resolve scheduling conflicts across a department calendar.
+**[Class Schedule Conflict]({{ site.baseurl }}/gallery/04-schedule-conflict/)** — Resolve scheduling conflicts across a department calendar.
 
-**[05 · Makeup Exams]({{ site.baseurl }}/gallery/05-makeup-exams/)** — Generate a calibrated makeup exam for Harvard's Science & Cooking course (GENED 1104), indistinguishable in difficulty and style from the originals.
+**[Makeup Exams]({{ site.baseurl }}/gallery/05-makeup-exams/)** — Generate a calibrated makeup exam for Harvard's Science & Cooking course (GENED 1104), indistinguishable in difficulty and style from the originals.
 
-**[06 · Research Helper]({{ site.baseurl }}/gallery/06-research-helper/)** — Summarize and cross-link a set of research papers.
+**[Research Helper]({{ site.baseurl }}/gallery/06-research-helper/)** — Summarize and cross-link a set of research papers.
 
 ---
 
 ## Day 4 projects
 
-Three capstone demonstrations, each grounded in a distinct academic tradition.
+Three capstone demonstrations from the final session — each grounded in a different academic tradition, each asking what Claude Code opens up for faculty in that field.
 
-**[Physics Interactives]({{ site.baseurl }}/gallery/day-4/becca-interactives/)** — PhET-style interactive simulations authored by faculty using the `/phet-sim` skill. Single-file HTML pages, no build step, runnable anywhere.
+**[Becca's Interactives]({{ site.baseurl }}/gallery/day-4/becca-interactives/)** — PhET-style interactive simulations authored by a faculty member using the `/phet-sim` skill. Dozens of single-file HTML tools for a discrete mathematics and probability course — the kind of artifact that historically required a development team.
 
-**[How to Build an MCP]({{ site.baseurl }}/gallery/day-4/how-to-build-an-mcp/)** — A walkthrough for building a Model Context Protocol server that exposes custom tools to Claude Code.
+**[How to Build an MCP]({{ site.baseurl }}/gallery/day-4/how-to-build-an-mcp/)** — A step-by-step walkthrough for building a Model Context Protocol server in Python using FastMCP — the mechanism that gives Claude Code access to external APIs and tools.
 
-**[Project Overviews]({{ site.baseurl }}/gallery/day-4/project-overviews/)** — Three written project overviews (interview coding, physics interactives, texts & translation), each with summary, tradition, and affordance essays in both HTML and Markdown.
+**[Project Overviews]({{ site.baseurl }}/gallery/day-4/project-overviews/)** — Three written overviews of the day-4 projects: qualitative interview coding (social sciences), interactive simulations (STEM pedagogy), and LLM-assisted work with texts in multiple languages (philology). Each overview has a summary, a tradition essay, and an affordance essay.
