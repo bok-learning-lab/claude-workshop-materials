@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #000;
+      background: #f9f9f7;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 2px solid #cc0000;
+      padding-bottom: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #000;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      color: #000;
+      font-weight: 400;
+      max-width: 680px;
+    }
+
+    header .cheatsheet-ref {
+      margin-top: 0.6rem;
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: #444;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #cc0000;
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #000;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    p {
+      font-weight: 400;
+      margin-bottom: 0.9rem;
+      color: #000;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    pre {
+      background: #111;
+      color: #e5e5e5;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.79rem;
+      font-weight: 400;
+      line-height: 1.55;
+      padding: 1.25rem 1.5rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre;
+      margin: 0.75rem 0 1rem;
+    }
+
+    pre.yaml {
+      background: #0c1821;
+      color: #a3d9ff;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.85em;
+      font-weight: 400;
+      background: #fef2f2;
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: #cc0000;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-top: 0.5rem;
+    }
+
+    thead th {
+      background: #000;
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.6rem 1rem;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(even) { background: #f5f5f3; }
+
+    tbody td {
+      padding: 0.65rem 1rem;
+      vertical-align: top;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 0.92rem;
+      font-weight: 400;
+      color: #000;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    td:first-child {
+      white-space: nowrap;
+      font-weight: 700;
+      width: 1%;
+      color: #cc0000;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.85rem;
+    }
+
+    tr.highlight td {
+      background: #fff5f5;
+    }
+    tr.highlight td:first-child {
+      color: #cc0000;
+    }
+
+    .key-insight {
+      background: #fff5f5;
+      border-left: 3px solid #cc0000;
+      padding: 0.65rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #000;
+      border-radius: 0 4px 4px 0;
+      margin: 0.75rem 0 1rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ccc;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>Markdown Review</h1>
+    <p><strong>Markdown</strong> is a lightweight text-formatting syntax — a way of writing plain text that renders as structured documents. It has become the de facto input/output format for text-based AI work, because large language models like Claude are trained on vast amounts of markdown-formatted text. When you prompt Claude in markdown, it responds in markdown. Many people working with LLMs use markdown as their primary format for both input and output.</p>
+    <p class="cheatsheet-ref">Syntax refresher: <code>_context/day-3/markdown-cheatsheet.md</code></p>
+  </header>
+
+  <!-- MARKDOWN FILE TYPES -->
+  <section>
+    <h2>Markdown File Types</h2>
+    <p>Any markdown file can be used effectively as context in Claude Code — as input, as an operations guide, as a reference document, as a set of tools or instructions. As long as you point the agent to the file by name or path, it will read it. This means you can reuse files across sessions and projects, or generate new ones on the fly. We did this on Day 3, when you created a <code>PLAN.md</code> to help structure your project: that file became a living document Claude could consult and update as the work evolved. You could also make an <code>about-me.md</code> or ask Claude to generate a <code>handoff.md</code> to help keep a project organized across chats.</p>
+
+    <p>As you develop more markdown files — style guides, past syllabi, project information, conceptual schemas from your discipline — and start pointing Claude to dozens of them alongside chat transcripts, book chapters, articles, documentation, and AI-generated drafts, you start to burn through your context window.</p>
+
+    <h3>The Context Window Problem</h3>
+    <p>Claude's context window holds 200,000 tokens — roughly the length of a novel. But the space fills up from the moment the session starts.</p>
+
+<pre>Your 200,000-token context window — start of session
+
+┌──────────────────────────────────────────────────────────────────────┐
+│▓▓▓▓▓▓▓▓▓▓▓│                                                          │
+│  system   │                      (available)                         │
+│  prompt   │                                                          │
+│  ~10K     │                                                          │
+└──────────────────────────────────────────────────────────────────────┘
+
+After "read all my files" — a few prompts in
+
+┌──────────────────────────────────────────────────────────────────────┐
+│▓▓▓▓▓▓▓▓▓▓▓│░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│▒▒▒▒▒▒▒▒▒▒▒▒▒▒│    │
+│  system   │  your files: syllabi, style guides,  │  responses   │    │
+│  prompt   │  plans, PDFs, code, transcripts ...  │  1, 2, 3...  │    │
+└──────────────────────────────────────────────────────────────────────┘
+  ▓ system prompt   ░ your documents   ▒ AI-generated text</pre>
+
+    <p>Context is basically full after only a few prompts — if you load everything at once. Claude then has to start "compacting" (a very intense summarization) or dropping older content, and the model loses access to things it has already read. The solution is not to load less — it is to be smarter about <em>when</em> and <em>how</em> each document enters the window.</p>
+  </section>
+
+  <!-- SPECIAL MARKDOWN FILES -->
+  <section>
+    <h2>Special Markdown Files</h2>
+    <p>Claude has addressed this by creating special types of markdown files that are read at different points in the project lifecycle, with different levels of granularity. All of these use <strong>YAML frontmatter</strong> — a block of structured metadata between <code>---</code> markers at the top of the file:</p>
+
+<pre class="yaml">---
+name: My Style Guide
+description: Prose style rules for this project — voice, citation format, sentence length
+type: reference
+---</pre>
+
+    <p>YAML (Yet Another Markup Language) is a simple key-value format. Claude reads these headers at the beginning of every session — it knows what is in your project — but does not load the full body into the context window until you or Claude explicitly need it for a specific task.</p>
+
+    <div class="key-insight">Key insight: Metadata is cheap; full content is expensive.</div>
+
+    <p>These special types include: CLAUDE.md files, skills, MCP tools, rules, file/path-scoped rules, output style guides, and more. Some are also accessed via slash commands — <code>/compact</code>, for instance, triggers both a markdown summary template and scripts that package the result back into context in structured form.</p>
+  </section>
+
+  <!-- CLAUDE.MD AND SKILLS -->
+  <section>
+    <h2>CLAUDE.md and Skills</h2>
+    <p><strong>CLAUDE.md</strong> is always read in full at the start of every session — automatically, before your first message. Because everything in it costs tokens every time, keep it focused on facts and standing rules: project conventions, commands Claude should know, constraints, anything you would otherwise have to repeat every session.</p>
+
+    <p><strong>Skills</strong> are for specific processes. A skill has a YAML header (read at session start) and a body (read only when triggered). You can attach scripts to a skill, so running <code>/my-skill</code> can both give Claude detailed instructions and execute supporting code.</p>
+
+<pre>Session start — what Claude loads automatically
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  CLAUDE.md (full)  │  skill headers only  │  rule headers only  │   │
+└─────────────────────────────────────────────────────────────────────┘
+
+You run /my-skill — or Claude decides it is relevant
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  CLAUDE.md (full)  │  skill: FULL BODY now loaded  │  ...           │
+└─────────────────────────────────────────────────────────────────────┘</pre>
+
+    <p>The result: a project folder full of rich, specialized documents — none of them flooding the window until they are actually needed.</p>
+  </section>
+
+  <!-- ALL SPECIAL MARKDOWN TYPES -->
+  <section>
+    <h2>All Special Markdown Types</h2>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>When Claude reads it</th><th>Use when</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CLAUDE.md</td>
+          <td>In full, every session, automatically</td>
+          <td>Standing facts, rules, and project conventions. Everything here is always in context, so keep it tight.</td>
+        </tr>
+        <tr>
+          <td>Skill (SKILL.md)</td>
+          <td>YAML header at session start; full body when triggered by <code>/skill-name</code> or Claude</td>
+          <td>Repeatable workflows and processes — generating a report, scaffolding a component, running a deploy checklist. Can have scripts attached.</td>
+        </tr>
+        <tr>
+          <td>Rules</td>
+          <td>Loaded as constraints before tool use</td>
+          <td>Hard limits on what Claude can or cannot do in this project (e.g., "never write to <code>_context/read_only/</code>").</td>
+        </tr>
+        <tr>
+          <td>File/path-scoped rules</td>
+          <td>Loaded only when Claude works in matching files or directories</td>
+          <td>Directory-specific conventions — different rules for <code>src/</code> vs. <code>docs/</code>, for instance.</td>
+        </tr>
+        <tr>
+          <td>Output style</td>
+          <td>Pulled in when generating a document of that type</td>
+          <td>Formatting and voice conventions for a specific deliverable: a syllabus, a lab report, a dataset description.</td>
+        </tr>
+        <tr>
+          <td>MCP tool manifest</td>
+          <td>Read at connection time</td>
+          <td>Defines an external tool (GitHub, a database, an API) Claude can call as if it were a built-in. Not prose — a schema.</td>
+        </tr>
+        <tr class="highlight">
+          <td>append-system-prompt</td>
+          <td>Injected before the session starts, at the settings level</td>
+          <td>Adding instructions at the highest priority level — above even CLAUDE.md. Text here is appended to Claude's system prompt itself, present before any session begins. Use for rules that must always apply across all projects: formatting defaults, persona constraints, absolute prohibitions.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    Day 4 &mdash; Claude for Teaching, Course Development, and Research &mdash; Bok Center, Harvard
+  </footer>
+
+</div>
+</body>
+</html>

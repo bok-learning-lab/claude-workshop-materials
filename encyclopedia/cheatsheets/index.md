@@ -6,14 +6,22 @@ section: encyclopedia
 
 # Cheatsheets
 
-One-screen references for the two main notation systems you'll use throughout the workshop.
+Quick references for the notation systems, commands, and vocabulary you'll encounter in the workshop.
 
 ---
 
-## [Markdown]({{ site.baseurl }}/encyclopedia/cheatsheets/markdown/)
+## [Markdown Intro]({{ site.baseurl }}/encyclopedia/cheatsheets/markdown/)
 
-Everything you need to format text in Claude.ai, CLAUDE.md files, and project docs: headings, bold, code blocks, tables, links. Readable in 5 minutes.
+Markdown for a total beginner: what it is, how it works, and a one-screen symbol reference. Start here if you've never written Markdown.
+
+## [Markdown Review]({{ site.baseurl }}/encyclopedia/cheatsheets/markdown-review/)
+
+A faster reference for participants who've seen Markdown before — just the symbol table and gotchas.
+
+## [Claude Features & Commands]({{ site.baseurl }}/encyclopedia/cheatsheets/claude-features-commands/)
+
+A reference for Claude-specific features, keyboard shortcuts, and slash commands.
 
 ## [Claude Code Tools & Terms]({{ site.baseurl }}/encyclopedia/cheatsheets/claude-code-tools/)
 
-The slash commands, file types, tool names, and vocabulary that come up repeatedly once you're working in Claude Code — agents, hooks, MCP servers, skills, checkpoints, and more.
+The slash commands, file types, tool names, and vocabulary that come up repeatedly in Claude Code — agents, hooks, MCP servers, skills, checkpoints, and more.

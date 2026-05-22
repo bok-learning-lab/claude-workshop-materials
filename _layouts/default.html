@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
   <meta name="description" content="{{ page.description | default: site.description }}">
-  <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css?v=4">
+  <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css?v=5">
 </head>
 <body>
 
@@ -31,6 +31,9 @@
     {% if nav_items %}
       <ul class="sidebar-nav">
         {% for item in nav_items %}
+          {% if item.label %}
+            <li class="sidebar-section-label">{{ item.label }}</li>
+          {% else %}
           <li>
             <a href="{{ site.baseurl }}{{ item.url }}"
                {% if page.url == item.url or page.url == item.url | append: 'index.html' %}class="active"{% endif %}>
@@ -49,6 +52,7 @@
               </ul>
             {% endif %}
           </li>
+          {% endif %}
         {% endfor %}
       </ul>
     {% endif %}

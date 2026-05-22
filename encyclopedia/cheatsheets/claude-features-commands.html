@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Cheatsheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #000;
+      background: #f9f9f7;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 2px solid #cc0000;
+      padding-bottom: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #000;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      color: #000;
+      font-weight: 400;
+      max-width: 680px;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #cc0000;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-note {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #000;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    thead th {
+      background: #000;
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.6rem 1rem;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(even) { background: #f5f5f3; }
+
+    tbody td {
+      padding: 0.6rem 1rem;
+      vertical-align: top;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 0.92rem;
+      font-weight: 400;
+      color: #000;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    td:first-child {
+      white-space: nowrap;
+      font-weight: 700;
+      width: 1%;
+      color: #000;
+    }
+
+    .commands-table td:first-child {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cc0000;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.85em;
+      background: #fef2f2;
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: #cc0000;
+      font-weight: 400;
+    }
+
+    .diagram {
+      background: #111;
+      color: #e5e5e5;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.8rem;
+      font-weight: 400;
+      line-height: 1.55;
+      padding: 1.25rem 1.5rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre;
+      margin-bottom: 1rem;
+    }
+
+    .diagram-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #cc0000;
+      margin-bottom: 0.4rem;
+    }
+
+    .diagram-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .callout {
+      background: #fff5f5;
+      border-left: 3px solid #cc0000;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #000;
+      border-radius: 0 4px 4px 0;
+      margin-top: 0.75rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ccc;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: #555;
+    }
+
+    footer a { color: #cc0000; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>Claude Code: Features and Commands</h1>
+  </header>
+
+  <!-- FEATURES INTRO -->
+  <section>
+    <h2>The Core Features</h2>
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>What it is</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>The model</td>
+          <td>The AI that reads your prompts, reasons about them, and generates responses. This is what you are talking to directly.</td>
+        </tr>
+        <tr>
+          <td>Tools</td>
+          <td>Capabilities the model can invoke mid-response: reading files, editing code, running shell commands, searching the web. Each tool call appears in the transcript so you can see exactly what happened.</td>
+        </tr>
+        <tr>
+          <td>Context management</td>
+          <td>The session, the context window, memory (CLAUDE.md), and compaction. Everything the model "knows" during a session passes through here.</td>
+        </tr>
+        <tr>
+          <td>Permissions and modes</td>
+          <td>Rules governing what Claude can do without asking. Plan mode (read-only), Accept Edits mode (auto-approve file edits), and per-project permission settings all live here.</td>
+        </tr>
+        <tr>
+          <td>MCP</td>
+          <td>Model Context Protocol — an open standard for connecting external systems (GitHub, Jira, databases, internal APIs) as tools Claude can call directly.</td>
+        </tr>
+        <tr>
+          <td>Agents and subagents</td>
+          <td>The ability to spawn secondary Claude instances to handle focused subtasks — running tests, searching a large codebase, reviewing code — in their own context windows, then report back.</td>
+        </tr>
+        <tr>
+          <td>Hooks</td>
+          <td>Shell commands that fire automatically at defined points in Claude's lifecycle: before a tool runs, after an edit, on session start. Used for formatting, linting, or blocking unsafe actions.</td>
+        </tr>
+        <tr>
+          <td>Skills</td>
+          <td>Packaged instructions (and optionally scripts) that teach Claude a specific repeatable workflow. Defined in <code>.claude/skills/&lt;name&gt;/SKILL.md</code> and invoked with <code>/</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:1rem;">Slash commands are the interface to all of this. Type <code>/</code> on an empty prompt and you get a menu of everything reachable — built-in session controls, bundled skills, custom skills your project defines, and tools from connected MCP servers.</div>
+  </section>
+
+  <!-- BIG THREE — before the full commands list -->
+  <section>
+    <h2>The Big Three: Session Commands</h2>
+    <p class="section-note">These three commands all operate on your session history and context window — worth understanding together before diving into the full list.</p>
+
+    <div class="diagram-group">
+      <div class="diagram-label">/resume</div>
+      <div class="diagram">/resume — reopen a previous session and pick up where you left off
+
+  past sessions (oldest → newest):
+
+  session 1  │ ░ │ ▒▒▒ │ ░░ │
+  session 2  │ ░░ │ ▒▒ │ ░ │ ▒ │
+  session 3  │ ░ │ ▒▒▒ │ ░░░ │ ▒▒ │  ←── /resume continues from any of these
+  (current)  │                          new, empty
+
+  ░ your messages   ▒ Claude's responses</div>
+    </div>
+
+    <div class="diagram-group">
+      <div class="diagram-label">/rewind vs. /compact</div>
+      <div class="diagram">/rewind vs. /compact — two ways to handle a full context window
+
+  current session:
+  ┌──────────────────────────────────────────────────┐
+  │ ░ │ ▒▒ │ ░░ │ ▒▒▒ │ ░ │ ▒ │                    │
+  └──────────────────────────────────────────────────┘
+                  ╰──────────────────────────────────╮
+                                          /rewind rolls back to here
+                                          — turns after the checkpoint are gone
+
+  /rewind result:
+  ┌────────────────────┐
+  │ ░ │ ▒▒ │           │
+  └────────────────────┘
+
+  vs. /compact — keeps everything, but compresses it into a summary:
+
+  before:
+  ┌──────────────────────────────────────────────────┐
+  │ ░ │ ▒▒ │ ░░ │ ▒▒▒ │ ░ │ ▒ │                    │
+  └──────────────────────────────────────────────────┘
+
+  after:
+  ┌──────────────────────────────────────────────────┐
+  │ ▓▓▓ │                   (available)              │
+  └──────────────────────────────────────────────────┘
+    ▓ = compressed summary of everything so far; history preserved, space freed</div>
+      <div class="callout">Use <code>/rewind</code> when the session went in the wrong direction and you want to undo it. Use <code>/compact</code> when the session is going well but running long and you need to free up space without losing what happened.</div>
+    </div>
+  </section>
+
+  <!-- ALL COMMANDS -->
+  <section>
+    <h2>Commands</h2>
+    <p class="section-note">Type <code>/</code> on an empty prompt to see every command available in your setup, including custom, plugin, and MCP-provided ones. The list below covers the built-in defaults you will reach for most often. A few entries vary by platform and plan.</p>
+    <table class="commands-table">
+      <thead>
+        <tr><th>Command</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>/help</td><td>List all available commands.</td></tr>
+        <tr><td>/init</td><td>Explore the codebase and generate a starter CLAUDE.md.</td></tr>
+        <tr><td>/clear</td><td>Wipe conversation history and start fresh (project memory stays). Aliases: <code>/reset</code>, <code>/new</code>.</td></tr>
+        <tr><td>/compact</td><td>Summarize the conversation so far to free up context. Accepts optional focus instructions.</td></tr>
+        <tr><td>/btw</td><td>Ask a quick side question without adding it to the main conversation or consuming context.</td></tr>
+        <tr><td>/rewind</td><td>Roll the conversation and/or your code back to an earlier checkpoint.</td></tr>
+        <tr><td>/model</td><td>View or switch the active model.</td></tr>
+        <tr><td>/cost</td><td>Show token usage and spend for this session.</td></tr>
+        <tr><td>/usage</td><td>Show your plan's usage limits and current rate-limit status.</td></tr>
+        <tr><td>/context</td><td>Visualize what is currently loaded into the context window and where it is being spent.</td></tr>
+        <tr><td>/memory</td><td>View or edit the CLAUDE.md files in scope.</td></tr>
+        <tr><td>/add-dir</td><td>Grant Claude file access to an additional directory for this session.</td></tr>
+        <tr><td>/permissions</td><td>View or change which tools require approval.</td></tr>
+        <tr><td>/config</td><td>Open configuration settings (theme, defaults, editor mode). Alias: <code>/settings</code>.</td></tr>
+        <tr><td>/plan</td><td>Drop straight into Plan Mode, optionally with a task description.</td></tr>
+        <tr><td>/diff</td><td>Open an interactive viewer of uncommitted changes and per-turn diffs.</td></tr>
+        <tr><td>/copy</td><td>Copy the last response (or a selected code block) to your clipboard.</td></tr>
+        <tr><td>/export</td><td>Save the current conversation to a file or the clipboard.</td></tr>
+        <tr><td>/mcp</td><td>Manage MCP server connections and authentication.</td></tr>
+        <tr><td>/agents</td><td>List, create, or edit subagents.</td></tr>
+        <tr><td>/hooks</td><td>View hook configuration for tool events.</td></tr>
+        <tr><td>/skills</td><td>List the skills available in this session.</td></tr>
+        <tr><td>/simplify</td><td>Bundled skill: review recently changed files for reuse, quality, and efficiency issues, then apply fixes.</td></tr>
+        <tr><td>/status</td><td>Show account, model, working directory, and version.</td></tr>
+        <tr><td>/doctor</td><td>Diagnose install and environment issues.</td></tr>
+        <tr><td>/feedback</td><td>Report an issue to Anthropic with session context attached. Alias: <code>/bug</code>.</td></tr>
+        <tr><td>/resume</td><td>Reopen a previous session and continue where you left off. Alias: <code>/continue</code>.</td></tr>
+        <tr><td>/login&nbsp;/&nbsp;/logout</td><td>Authenticate, switch accounts, or sign out.</td></tr>
+        <tr><td>/exit</td><td>Quit the CLI. Alias: <code>/quit</code>.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+</div>
+</body>
+</html>

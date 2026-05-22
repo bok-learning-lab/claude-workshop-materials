@@ -74,8 +74,12 @@ encyclopedia:
   - title: Cheatsheets
     url: /encyclopedia/cheatsheets/
     children:
-      - title: Markdown
+      - title: Markdown Intro
         url: /encyclopedia/cheatsheets/markdown/
+      - title: Markdown Review
+        url: /encyclopedia/cheatsheets/markdown-review/
+      - title: Claude Features & Commands
+        url: /encyclopedia/cheatsheets/claude-features-commands/
       - title: Claude Code Tools & Terms
         url: /encyclopedia/cheatsheets/claude-code-tools/
   - title: Documentation
@@ -89,28 +93,31 @@ encyclopedia:
 activities:
   - title: Overview
     url: /activities/
-  - title: 01 · Close Reading
+  - title: Close Reading
     url: /activities/01-close-reading/
-  - title: 02 · Population Pyramids
+  - title: Population Pyramids
     url: /activities/02-population-pyramids/
-  - title: 03 · Recipes
+  - title: Recipes
     url: /activities/03-recipes/
+  - title: Multiplication
+    url: /activities/04-multiplication/
+  - title: Tokenization
+    url: /activities/05-tokenization/
 
 gallery:
   - title: Overview
     url: /gallery/
-  - title: 04 · Schedule Conflict
+  - label: Day 1 Projects
+  - title: Schedule Conflict
     url: /gallery/04-schedule-conflict/
-  - title: 05 · Makeup Exams
+  - title: Makeup Exams
     url: /gallery/05-makeup-exams/
-  - title: 06 · Research Helper
+  - title: Research Helper
     url: /gallery/06-research-helper/
-  - title: Day 4 Projects
-    url: /gallery/day-4/
-    children:
-      - title: Physics Interactives
-        url: /gallery/day-4/becca-interactives/
-      - title: How to Build an MCP
-        url: /gallery/day-4/how-to-build-an-mcp/
-      - title: Project Overviews
-        url: /gallery/day-4/project-overviews/
+  - label: Day 4 Projects
+  - title: Physics Interactives
+    url: /gallery/day-4/becca-interactives/
+  - title: How to Build an MCP
+    url: /gallery/day-4/how-to-build-an-mcp/
+  - title: Project Overviews
+    url: /gallery/day-4/project-overviews/
