@@ -93,16 +93,16 @@ encyclopedia:
 activities:
   - title: Overview
     url: /activities/
+  - title: Multiplication
+    url: /activities/04-multiplication/
+  - title: Tokenization
+    url: /activities/05-tokenization/
   - title: Close Reading
     url: /activities/01-close-reading/
   - title: Population Pyramids
     url: /activities/02-population-pyramids/
   - title: Recipes
     url: /activities/03-recipes/
-  - title: Multiplication
-    url: /activities/04-multiplication/
-  - title: Tokenization
-    url: /activities/05-tokenization/
 
 gallery:
   - title: Overview
@@ -115,9 +115,16 @@ gallery:
   - title: Research Helper
     url: /gallery/06-research-helper/
   - label: Day 4 Projects
-  - title: Physics Interactives
+  - title: Becca's Interactives
     url: /gallery/day-4/becca-interactives/
   - title: How to Build an MCP
     url: /gallery/day-4/how-to-build-an-mcp/
   - title: Project Overviews
     url: /gallery/day-4/project-overviews/
+    children:
+      - title: Interview Coding
+        url: /gallery/day-4/project-overviews/interview-coding/summary/
+      - title: Physics Interactives
+        url: /gallery/day-4/project-overviews/physics-interactives/summary/
+      - title: Texts & Translation
+        url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary/

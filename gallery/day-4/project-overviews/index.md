@@ -1,3 +1,9 @@
+---
+layout: default
+title: Project Overviews
+section: gallery
+---
+
 # Three projects: teaching and research in the age of AI
 
 *Day 4 of the Bok Center workshop "Claude for Teaching, Course Development, and Research."*

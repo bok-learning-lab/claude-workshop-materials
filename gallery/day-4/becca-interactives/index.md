@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Physics Interactives
+title: Becca's Interactives
 section: gallery
 ---
 
-# Physics Interactives
+# Becca's Interactives
 
 <div class="page-lead">PhET-style interactive simulations, authored by faculty in the workshop using the <code>/phet-sim</code> skill. Each is a standalone single-file HTML page — no build step, no dependencies, open in any browser.</div>
 

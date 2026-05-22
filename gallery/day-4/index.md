@@ -10,7 +10,7 @@ section: gallery
 
 ---
 
-## [Physics Interactives]({{ site.baseurl }}/gallery/day-4/becca-interactives/)
+## [Becca's Interactives]({{ site.baseurl }}/gallery/day-4/becca-interactives/)
 
 PhET-style interactive simulations as single-file HTML pages — authored by faculty using the `/phet-sim` skill. The kind of artifact that historically required a development team is now available to a faculty member with an afternoon.
 

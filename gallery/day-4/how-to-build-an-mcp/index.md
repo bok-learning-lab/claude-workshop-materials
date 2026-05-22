@@ -1,3 +1,9 @@
+---
+layout: default
+title: How to Build an MCP
+section: gallery
+---
+
 # How to build an MCP
 
 A worked example: building a small Python MCP server that wraps a public API,
