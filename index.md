@@ -11,6 +11,13 @@ A four-day faculty workshop on using Claude for teaching, course development, an
 
 ---
 
+<div class="cta-block">
+  <a class="btn-primary" href="{{ site.baseurl }}/encyclopedia/get-started/">Get Started</a>
+  <span class="btn-subtext">Install Claude Code, set up your environment, and move beyond the browser.</span>
+</div>
+
+---
+
 <div class="section-cards">
 
 <a class="card" href="{{ site.baseurl }}/encyclopedia/">
