@@ -140,6 +140,22 @@ html, body {
 .sidebar-children a:hover { color: rgba(240,238,230,0.8); }
 .sidebar-children a.active { color: var(--sidebar-active-fg); border-left-color: rgba(240,238,230,0.4); }
 
+.sidebar-grandchildren { list-style: none; }
+
+.sidebar-grandchildren a {
+  display: block;
+  padding: 0.2rem 1.25rem 0.2rem 3rem;
+  color: rgba(190,185,178,0.55);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  border-left: 2px solid transparent;
+  transition: color 0.12s;
+}
+
+.sidebar-grandchildren a:hover { color: rgba(240,238,230,0.75); }
+.sidebar-grandchildren a.active { color: var(--sidebar-active-fg); border-left-color: rgba(240,238,230,0.35); }
+
 /* ── Content ── */
 .content {
   flex: 1;

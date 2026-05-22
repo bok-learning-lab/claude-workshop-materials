@@ -18,9 +18,11 @@ section: encyclopedia
 
 ## Claude Code (terminal)
 
-**[Mac Setup]({{ site.baseurl }}/encyclopedia/get-started/claude-code-mac-setup/)** — Installing Claude Code on macOS, authenticating, and running your first command.
+**[Claude Code — Overview Guide]({{ site.baseurl }}/encyclopedia/get-started/claude-code-setup/)** — What Claude Code is, how it differs from claude.ai and Cowork, how to install it, and how to orient yourself in VS Code. Start here before the platform-specific guides.
 
-**[Windows Setup]({{ site.baseurl }}/encyclopedia/get-started/claude-code-windows-setup/)** — Installing Claude Code on Windows via WSL, authenticating, and running your first command.
+**[Mac Setup]({{ site.baseurl }}/encyclopedia/get-started/claude-code-mac-setup/)** — The exact, copy-pasteable commands for macOS.
+
+**[Windows Setup]({{ site.baseurl }}/encyclopedia/get-started/claude-code-windows-setup/)** — The exact, copy-pasteable commands for Windows via WSL.
 
 ---
 

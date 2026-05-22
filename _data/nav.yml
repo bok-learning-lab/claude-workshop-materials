@@ -6,10 +6,13 @@ encyclopedia:
         url: /encyclopedia/get-started/claude-ai-setup/
       - title: Cowork Setup
         url: /encyclopedia/get-started/claude-cowork-setup/
-      - title: Mac Setup (Claude Code)
-        url: /encyclopedia/get-started/claude-code-mac-setup/
-      - title: Windows Setup (Claude Code)
-        url: /encyclopedia/get-started/claude-code-windows-setup/
+      - title: Claude Code
+        url: /encyclopedia/get-started/claude-code-setup/
+        children:
+          - title: Mac Setup
+            url: /encyclopedia/get-started/claude-code-mac-setup/
+          - title: Windows Setup
+            url: /encyclopedia/get-started/claude-code-windows-setup/
       - title: Setup Checklists
         url: /encyclopedia/get-started/checklists/
   - title: Glossary
