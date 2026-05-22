@@ -72,7 +72,7 @@ This has real consequences:
 
 ## This is a small window into a big subject
 
-We won't go deep on how LLMs actually work in this workshop — that's a course in itself. If you want the best available explanation aimed at people who can read code, Andrej Karpathy's talk [Let's build the GPT Tokenizer](https://www.youtube.com/watch?v=7xTGNNLPyMI) is the place to start. Two hours, no hand-waving, builds it from scratch.
+We won't go deep on how LLMs actually work in this workshop — that's a course in itself. If you want a comprehensive, general-audience treatment, Andrej Karpathy's [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI) is the place to start. It covers the full training stack, how to think about the model's "psychology," and how to use these systems well in practice — no prior ML background required.
 
 What matters for our purposes is this: **the model is, at bottom, a very sophisticated function over sequences of integers.** Not words. Not ideas. Integers.
 
