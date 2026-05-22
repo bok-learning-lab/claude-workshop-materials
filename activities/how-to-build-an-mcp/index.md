@@ -113,10 +113,10 @@ me to confirm. The proposal was:
 
 ### Step 5 — Scaffolding
 
-Claude created the project at `_mcp/replicate_image/`:
+Claude created the project at `activities/how-to-build-an-mcp/_server/`:
 
 ```
-_mcp/replicate_image/
+activities/how-to-build-an-mcp/_server/
 ├── server.py          # FastMCP server, 4 tools
 ├── requirements.txt   # mcp, replicate, pydantic
 ├── .env.example       # placeholder for the token
@@ -158,7 +158,7 @@ started. The questions I asked, in order:
    subprocesses. They live only for the session. No daemon, no port.
 
 5. **"Will dependency versions cause problems if I don't use a venv?"**
-   Yes. We use a venv at `_mcp/replicate_image/.venv/`. The path is
+   Yes. We use a venv at `activities/how-to-build-an-mcp/_server/.venv/`. The path is
    hard-coded in `.mcp.json` so Claude Code knows which Python to spawn.
 
 6. **"Can faculty avoid the terminal entirely?"**
@@ -238,7 +238,7 @@ code. The `/mcp-builder` skill does the heavy lifting for the code itself.
 
 ## Files in the MCP folder, annotated
 
-In `_mcp/replicate_image/`:
+In `activities/how-to-build-an-mcp/_server/`:
 
 - **`server.py`** — the MCP server. Pydantic models define each tool's input
   schema; `@mcp.tool` decorators register the tools. Read this top-to-bottom

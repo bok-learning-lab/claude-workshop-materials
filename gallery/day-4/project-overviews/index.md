@@ -28,7 +28,7 @@ Mary Waters' "flexible coding" approach to qualitative interview research, scale
 
 [Summary](interview-coding/summary.html) · [Tradition](interview-coding/tradition.html) · [Affordance](interview-coding/affordance.html) · [How we built it](interview-coding/walkthrough.html)
 
-**Working project files** (skills, transcripts, CLAUDE.md): [`_source/day-4/projects/interview-coding/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/_source/day-4/projects/interview-coding)
+**Working project files** (skills, transcripts, CLAUDE.md): [`gallery/day-4/_projects/interview-coding/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/interview-coding)
 
 ### [Physics interactives](physics-interactives/summary.md)
 
@@ -36,7 +36,7 @@ PhET-style interactive simulations as single-file HTML pages, authored by facult
 
 [Summary](physics-interactives/summary.html) · [Tradition](physics-interactives/tradition.html) · [Affordance](physics-interactives/affordance.html)
 
-**Working project files** (skills, templates, pedagogy research): [`_source/day-4/projects/physics-interactives/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/_source/day-4/projects/physics-interactives)
+**Working project files** (skills, templates, pedagogy research): [`gallery/day-4/_projects/physics-interactives/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/physics-interactives)
 
 ### [Texts and translation](texts-and-translation-v0/summary.md)
 
@@ -44,7 +44,7 @@ LLM-assisted close textual work across languages. Two corpora in place at the ti
 
 [Summary](texts-and-translation-v0/summary.html) · [Tradition](texts-and-translation-v0/tradition.html) · [Affordance](texts-and-translation-v0/affordance.html)
 
-**Working project files** (skills, Odyssey translations, Sanskrit text): [`_source/day-4/projects/texts-and-translation/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/_source/day-4/projects/texts-and-translation)
+**Working project files** (skills, Odyssey translations, Sanskrit text): [`gallery/day-4/_projects/texts-and-translation/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/texts-and-translation)
 
 ---
 

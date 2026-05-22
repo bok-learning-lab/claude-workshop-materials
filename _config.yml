@@ -3,6 +3,9 @@ description: Bok Center AI faculty workshop — encyclopedia, activities, and pr
 baseurl: "/claude-workshop-materials"
 url: "https://madxwoods.github.io"
 
+layouts_dir: _web/_layouts
+data_dir: _web/_data
+
 markdown: kramdown
 kramdown:
   input: GFM
