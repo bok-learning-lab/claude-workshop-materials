@@ -6,13 +6,7 @@ section: activities
 
 # Moves & Activities
 
-<div class="page-lead">Short exercises and longer projects for building intuitions about how AI works — what it's good at, where it stumbles, and why.</div>
-
----
-
-## Quick activities
-
-Fast exercises (15–30 minutes) that work in Claude.ai or the browser.
+<div class="page-lead">Exercises and projects for building intuitions about how AI works — what it's good at, where it stumbles, and why.</div>
 
 **[Tokenization]({{ site.baseurl }}/activities/tokenization/)** — Paste text into the Tiktokenizer and watch how an LLM actually "reads" — as integers, not words. The fastest way to see what makes these systems strange.
 
@@ -30,15 +24,9 @@ Fast exercises (15–30 minutes) that work in Claude.ai or the browser.
 
 <span class="tag">Claude Code</span> <span class="tag">data visualization</span> <span class="tag">tool use</span>
 
-**[Recipes]({{ site.baseurl }}/activities/recipes/)** — Give Claude a photo, a partial recipe, or a list of ingredients and see how it builds from context. A gentle introduction to multimodal prompting.
+**[Recipes]({{ site.baseurl }}/activities/recipes/)** — A folder of badly-named images becomes a structured recipe website in two prompts. Demonstrates the "messy inputs → structured data" move that transfers to almost every field.
 
-<span class="tag">Claude.ai</span> <span class="tag">multimodal</span> <span class="tag">prompting</span>
-
----
-
-## Longer projects
-
-Worked examples — with full inputs, operations, and outputs — that you can run yourself or adapt to your own course materials.
+<span class="tag">Claude.ai</span> <span class="tag">multimodal</span> <span class="tag">structured output</span>
 
 **[Class Schedule Conflict]({{ site.baseurl }}/activities/schedule-conflict/)** — Load a full course schedule and syllabus, then ask Claude to resolve a real guest-speaker conflict. Demonstrates context-loaded, domain-specific reasoning.
 

@@ -26,7 +26,7 @@ Each project is documented in three short essays:
 
 Mary Waters' "flexible coding" approach to qualitative interview research, scaled with Claude Code skills that index transcripts to a protocol, surface negative cases against a working claim, and generate transparent methods paragraphs. Built around the framework set out in Deterding & Waters (2018, *Sociological Methods & Research*). Mary Waters is herself a workshop participant; the design choices align with her methodological view rather than with grounded theory.
 
-[Summary](interview-coding/summary.html) · [Tradition](interview-coding/tradition.html) · [Affordance](interview-coding/affordance.html) · [How we built it](interview-coding/walkthrough.html)
+[Summary](interview-coding/summary.md) · [Tradition](interview-coding/tradition.md) · [Affordance](interview-coding/affordance.md) · [How we built it](interview-coding/walkthrough.md)
 
 **Working project files** (skills, transcripts, CLAUDE.md): [`gallery/day-4/_projects/interview-coding/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/interview-coding)
 
@@ -34,7 +34,7 @@ Mary Waters' "flexible coding" approach to qualitative interview research, scale
 
 PhET-style interactive simulations as single-file HTML pages, authored by faculty themselves with the `/phet-sim` skill, paired with `/phet-activity`, which produces Wieman-style classroom lesson plans around each simulation. The lineage runs from Carl Wieman's PhET Interactive Simulations project at the University of Colorado Boulder; the new affordance is that the kind of artifact that historically required a development team is now available to a faculty member with an afternoon.
 
-[Summary](physics-interactives/summary.html) · [Tradition](physics-interactives/tradition.html) · [Affordance](physics-interactives/affordance.html)
+[Summary](physics-interactives/summary.md) · [Tradition](physics-interactives/tradition.md) · [Affordance](physics-interactives/affordance.md)
 
 **Working project files** (skills, templates, pedagogy research): [`gallery/day-4/_projects/physics-interactives/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/physics-interactives)
 
@@ -42,7 +42,7 @@ PhET-style interactive simulations as single-file HTML pages, authored by facult
 
 LLM-assisted close textual work across languages. Two corpora in place at the time of the workshop: fourteen English, Spanish, French, Latin, Swedish, and Greek translations of Homer's *Odyssey*, and a 17th-century Sanskrit treatise on poetics by Jagannātha Paṇḍitarāja. Skills are sketched but not yet built; this overview reflects on what they could be, and on what trained philologists will and will not delegate to LLMs.
 
-[Summary](texts-and-translation-v0/summary.html) · [Tradition](texts-and-translation-v0/tradition.html) · [Affordance](texts-and-translation-v0/affordance.html)
+[Summary](texts-and-translation-v0/summary.md) · [Tradition](texts-and-translation-v0/tradition.md) · [Affordance](texts-and-translation-v0/affordance.md)
 
 **Working project files** (skills, Odyssey translations, Sanskrit text): [`gallery/day-4/_projects/texts-and-translation/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/_projects/texts-and-translation)
 

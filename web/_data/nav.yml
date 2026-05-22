@@ -101,7 +101,6 @@ encyclopedia:
 activities:
   - title: Overview
     url: /activities/
-  - label: Quick Activities
   - title: Tokenization
     url: /activities/tokenization/
   - title: Multiplication
@@ -112,7 +111,6 @@ activities:
     url: /activities/population-pyramids/
   - title: Recipes
     url: /activities/recipes/
-  - label: Longer Projects
   - title: Schedule Conflict
     url: /activities/schedule-conflict/
   - title: Makeup Exams
@@ -131,31 +129,31 @@ gallery:
     url: /gallery/day-4/project-overviews/
     children:
       - title: Interview Coding
-        url: /gallery/day-4/project-overviews/interview-coding/summary.html
+        url: /gallery/day-4/project-overviews/interview-coding/summary/
         children:
           - title: Summary
-            url: /gallery/day-4/project-overviews/interview-coding/summary.html
+            url: /gallery/day-4/project-overviews/interview-coding/summary/
           - title: Tradition
-            url: /gallery/day-4/project-overviews/interview-coding/tradition.html
+            url: /gallery/day-4/project-overviews/interview-coding/tradition/
           - title: Affordance
-            url: /gallery/day-4/project-overviews/interview-coding/affordance.html
+            url: /gallery/day-4/project-overviews/interview-coding/affordance/
           - title: Walkthrough
-            url: /gallery/day-4/project-overviews/interview-coding/walkthrough.html
+            url: /gallery/day-4/project-overviews/interview-coding/walkthrough/
       - title: Physics Interactives
-        url: /gallery/day-4/project-overviews/physics-interactives/summary.html
+        url: /gallery/day-4/project-overviews/physics-interactives/summary/
         children:
           - title: Summary
-            url: /gallery/day-4/project-overviews/physics-interactives/summary.html
+            url: /gallery/day-4/project-overviews/physics-interactives/summary/
           - title: Tradition
-            url: /gallery/day-4/project-overviews/physics-interactives/tradition.html
+            url: /gallery/day-4/project-overviews/physics-interactives/tradition/
           - title: Affordance
-            url: /gallery/day-4/project-overviews/physics-interactives/affordance.html
+            url: /gallery/day-4/project-overviews/physics-interactives/affordance/
       - title: Texts & Translation
-        url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary.html
+        url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary/
         children:
           - title: Summary
-            url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary.html
+            url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary/
           - title: Tradition
-            url: /gallery/day-4/project-overviews/texts-and-translation-v0/tradition.html
+            url: /gallery/day-4/project-overviews/texts-and-translation-v0/tradition/
           - title: Affordance
-            url: /gallery/day-4/project-overviews/texts-and-translation-v0/affordance.html
+            url: /gallery/day-4/project-overviews/texts-and-translation-v0/affordance/
