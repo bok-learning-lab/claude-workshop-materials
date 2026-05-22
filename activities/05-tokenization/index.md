@@ -14,15 +14,13 @@ When you read the sentence *"The cat sat on the mat,"* you perceive words. You k
 
 A language model sees none of that. It sees a sequence of integers.
 
-Everything — every poem, every equation, every medical record, every line of code — enters the model as a list of numbers. Tokens are the bridge: short fragments of text (sometimes whole words, sometimes syllable-pieces, sometimes just a few letters) that have been mapped to integers in the model's vocabulary. The model operates entirely on those integers. It never looks at letters.
-
-This is not a technical footnote. It is the thing about LLMs that explains almost everything else — what they're good at, where they fail, and why those failure modes have the particular shape they do.
+Everything — every poem, every equation, every medical record, every line of code — enters the model as a list of numbers. Tokens are the bridge: short fragments of text mapped to integers in the model's vocabulary. The model operates entirely on those integers. It never looks at letters.
 
 ---
 
 ## Try it
 
-Go to **[tiktokenizer.vercel.app](https://tiktokenizer.vercel.app/)** and paste this:
+Go to **[tiktokenizer.vercel.app](https://tiktokenizer.vercel.app/)** and paste this sentence:
 
 ```
 Unsurprisingly, they had to cancel the show. The crowd went home unhappily.
@@ -30,12 +28,7 @@ Unsurprisingly, they had to cancel the show. The crowd went home unhappily.
 
 Watch the model break the text into colored chunks. Each color is one token — one integer.
 
-**What to notice:**
-
-- Common short words ("the", "to", "they") are single tokens — the model has seen them millions of times, they get their own slot
-- "Unsurprisingly" probably splits: the model has seen *parts* of it, not the whole thing
-- Punctuation often gets its own token, or fuses to the preceding word
-- "Unhappily" may or may not split at the morpheme boundary — interesting either way
+Notice how the text fragments. Common short words ("the", "to", "they") get their own slot because the model has seen them millions of times. Longer or rarer words split at boundaries that have nothing to do with meaning — just with what patterns appear together in training data.
 
 Now try the Welsh place name:
 
@@ -43,9 +36,9 @@ Now try the Welsh place name:
 Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
 ```
 
-Watch it fragment. The model has almost certainly never seen this as a unit. It falls back to small sub-word pieces — many more tokens than letters would suggest, many more than a Welsh reader would need.
+Watch it shatter into pieces. The model has almost certainly never encountered this as a unit. It falls back to small sub-word fragments — many more tokens than a Welsh reader would need.
 
-Now try some code:
+Now try some Python:
 
 ```python
 def fibonacci(n):
@@ -54,28 +47,22 @@ def fibonacci(n):
     return fibonacci(n-1) + fibonacci(n-2)
 ```
 
-Notice how cleanly the keywords tokenize. `def`, `return`, `if` — single tokens, no fragmentation. Python keywords are extremely common in training data. The model has a slot for them.
+Notice how cleanly the keywords tokenize. `def`, `return`, `if` — single tokens, no fragmentation. Python keywords appear millions of times in training data. The model has a dedicated slot for them. Code in common languages is, in a specific sense, *more native* to these models than most human language.
 
 ---
 
-## What this tells you
+## What you're looking at
 
-The tokenization is not neutral. It reflects what the model has seen. Common English words: efficient, single tokens. Rare words: fragmented, expensive. Non-English text: often very fragmented — more tokens per idea, more of the context window consumed per sentence. Code in common languages: surprisingly clean.
+The tokenization is not neutral. It reflects what the model has seen. It has an implicit map of what's common and what's rare, what's central to its training data and what's at the margins.
 
-This has real consequences:
+Non-English text: often very fragmented — more tokens per idea, more of the context window consumed per sentence. A sentence in Tamil or Welsh costs more than the same thought in English. This isn't a design decision. It's a fossil record of what the internet looked like when these models were trained.
 
-- **Rare words cost more.** Unusual vocabulary, technical jargon, and non-English text use more tokens and fill the context window faster.
-- **The model predicts the *next token*, not the next word.** Generation is a sequence of choices over ~50,000 possible next integers. That is a fundamentally different operation from how a person writes.
-- **Token count ≠ word count.** A 1,000-word document is probably 1,200–1,500 tokens.
+The model predicts the *next token*, not the next word. Generation is a sequence of choices over roughly 50,000 possible next integers. That is a fundamentally different operation from how a person writes or reads. There is no comprehension at any step. There is pattern completion over a learned distribution of integer sequences.
+
+This is what makes these systems strange — not that they're too human, but that they're not human at all, and yet produce outputs that pattern-match so closely to human language that the difference is easy to miss.
 
 ---
 
-## This is a small window into a big subject
+If you want to go deeper on how this all works — the full training stack, how to think about these models' "psychology," what the integers actually mean — Andrej Karpathy's [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI) is the place to start. General audience, comprehensive, no hand-waving.
 
-We won't go deep on how LLMs actually work in this workshop — that's a course in itself. If you want a comprehensive, general-audience treatment, Andrej Karpathy's [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI) is the place to start. It covers the full training stack, how to think about the model's "psychology," and how to use these systems well in practice — no prior ML background required.
-
-What matters for our purposes is this: **the model is, at bottom, a very sophisticated function over sequences of integers.** Not words. Not ideas. Integers.
-
-Which raises an obvious question. If it's all numbers — if the model is fundamentally doing arithmetic over a vocabulary of integers — maybe it's actually good at math?
-
-**Spoiler: it isn't. [Try the multiplication activity →]({{ site.baseurl }}/activities/04-multiplication/)**
+**Now: [if it's all integers, maybe LLMs are good at math? →]({{ site.baseurl }}/activities/04-multiplication/)**

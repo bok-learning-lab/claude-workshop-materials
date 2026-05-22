@@ -1,31 +1,73 @@
 ---
 layout: default
-title: "04 · Class Schedule Conflict"
+title: "Class Schedule Conflict"
 section: gallery
 ---
 
-# 04 · Class Schedule Conflict
+# Class Schedule Conflict
 
-<div class="page-lead">A demonstration of Claude Code's document-processing loop: load a calendar, detect conflicts, propose resolutions, output a clean schedule.</div>
+<div class="page-lead">When Claude has a full course schedule as context, you can describe a real scheduling problem in plain language and get back a concrete, pedagogically reasoned solution — not a generic response, but one that knows your specific dates, topics, and guest speakers.</div>
 
-## Project structure
+## The project
 
-This project follows the workshop's standard `inputs → operations-tools-commands → outputs` layout.
+Course: **GENED 1104: Science and Cooking** (Pia Sörensen & Dave Weitz, Harvard). The problem: Joanne Chang from Flour Bakery needs to reschedule her guest lecture. She can only come on the 30th — but there's already something on the 30th.
 
-- **`inputs/`** — The source calendar or schedule files
-- **`operations-tools-commands/`** — The prompts and Claude Code sessions used to process them
-- **`outputs/`** — The resolved schedule
+The inputs are the full course schedule and syllabus. The operation is a single prompt that hands Claude both files and asks it to identify the conflict, propose options with pedagogical trade-offs, recommend one, and output a revised schedule in the same format as the original.
+
+## The prompt
+
+```
+I'm teaching GENED 1104: Science and Cooking at Harvard.
+I've shared the course schedule and syllabus with you.
+
+Here's the problem: Joanne Chang from Flour Bakery is scheduled as a guest
+lecturer, but she's just let us know she can't make her assigned date.
+She can only come on the 30th.
+
+Please help me figure out what to do. Specifically:
+
+1. Identify her current scheduled date in the course schedule
+2. Check what's on the 30th — is there already something scheduled that day?
+3. Propose 2–3 concrete options for resolving the conflict. For each option, describe:
+   - What changes would need to be made to the schedule
+   - Any pedagogical trade-offs (does moving her session disrupt a topic sequence?)
+   - How much disruption the change causes to the rest of the schedule
+4. Recommend one option and explain your reasoning
+5. Draft a revised schedule reflecting your recommended solution,
+   in the same format as the original schedule
+
+Be specific — use actual dates and topic names from the schedule.
+```
 
 ## What this demonstrates
 
-- Reading and reasoning over structured data (calendar format, time slots, room assignments)
-- Multi-step reasoning with dependencies (can't resolve conflict B until conflict A is handled)
-- Generating clean human-readable output from a messy input
+The key move here is **context loading**. This is not a generic scheduling assistant — it knows that Joanne Chang's session is tied to Phase Transitions week, that the course has a specific topic sequence, and that Week 3 and Week 4 are adjacent in ways that matter. Claude's response uses actual dates and topic names because it has the full schedule in its context window.
 
-## How to replicate
+The same pattern applies to any course:
 
-1. Put your own schedule file in `inputs/`
-2. Run Claude Code with a CLAUDE.md that describes the conflict-resolution logic you want
-3. Check `outputs/` for the resolved version
+- *A visiting scholar has to move — what's the least disruptive swap?*
+- *We need to add a review session — where does it fit?*
+- *We're losing a week to a holiday — which session can be compressed or dropped with the least damage to the arc?*
 
-*This is a good first project for participants who want to try the inputs/outputs pattern with their own course materials.*
+The heavier the context you provide (full schedule, syllabus, learning objectives), the more specific and pedagogically grounded the response.
+
+## Project structure
+
+```
+inputs/
+  GENED1104_Schedule.md      ← full course schedule with all dates and topics
+  GENED1104_Syllabus.md      ← syllabus with learning goals and course structure
+operations-tools-commands/
+  01-resolve-scheduling-conflict-prompt.md
+outputs/
+  [revised schedule]
+```
+
+## Try it with your own course
+
+1. Copy your course schedule into a text file (Markdown, plain text, or paste directly)
+2. Share it with Claude alongside your syllabus
+3. Describe the problem in plain language — "X needs to move, Y has a hard constraint"
+4. Ask Claude to propose options with trade-offs and produce a revised schedule
+
+The quality of the output scales directly with the quality of the context you provide.
