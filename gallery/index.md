@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Gallery
+title: Project Gallery
 section: gallery
 ---
 

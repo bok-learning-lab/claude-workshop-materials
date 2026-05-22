@@ -19,3 +19,7 @@ Plain-language definitions of every key term: LLM, token, context window, prompt
 ## [Cheatsheets]({{ site.baseurl }}/encyclopedia/cheatsheets/)
 
 One-screen references: Markdown syntax and Claude Code tools and terms.
+
+## [Documentation]({{ site.baseurl }}/encyclopedia/documentation/)
+
+Two sets of reference docs compiled for the workshop: overview guides covering Claude Code from the ground up (quickstart, common workflows, CLI reference, slash commands, settings, prompt engineering), and the official Claude Code documentation pulled directly from the Anthropic docs site.

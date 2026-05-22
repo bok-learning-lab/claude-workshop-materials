@@ -10,11 +10,15 @@ encyclopedia:
         url: /encyclopedia/get-started/claude-code-windows-setup/
       - title: Cowork Setup
         url: /encyclopedia/get-started/claude-cowork-setup/
+      - title: Setup Checklists
+        url: /encyclopedia/get-started/checklists/
   - title: Glossary
     url: /encyclopedia/glossary/
     children:
       - title: agent
         url: /encyclopedia/glossary/agent/
+      - title: Anthropic
+        url: /encyclopedia/glossary/anthropic/
       - title: API
         url: /encyclopedia/glossary/api/
       - title: artifact
@@ -25,6 +29,10 @@ encyclopedia:
         url: /encyclopedia/glossary/claude-code/
       - title: CLAUDE.md
         url: /encyclopedia/glossary/claude-md/
+      - title: Cowork
+        url: /encyclopedia/glossary/claude-cowork/
+      - title: compact
+        url: /encyclopedia/glossary/compact/
       - title: context
         url: /encyclopedia/glossary/context/
       - title: context engineering
@@ -33,16 +41,26 @@ encyclopedia:
         url: /encyclopedia/glossary/context-rot/
       - title: context window
         url: /encyclopedia/glossary/context-window/
+      - title: data classification
+        url: /encyclopedia/glossary/data-classification/
+      - title: hallucination
+        url: /encyclopedia/glossary/hallucination/
       - title: harness
         url: /encyclopedia/glossary/harness/
+      - title: HTML
+        url: /encyclopedia/glossary/html/
       - title: LLM
         url: /encyclopedia/glossary/llm/
       - title: markdown
         url: /encyclopedia/glossary/markdown/
+      - title: markdown cheatsheet
+        url: /encyclopedia/glossary/markdown-cheatsheet/
       - title: memory
         url: /encyclopedia/glossary/memory/
       - title: model
         url: /encyclopedia/glossary/model/
+      - title: project
+        url: /encyclopedia/glossary/project/
       - title: prompt
         url: /encyclopedia/glossary/prompt/
       - title: skill.md
@@ -53,8 +71,6 @@ encyclopedia:
         url: /encyclopedia/glossary/token/
       - title: tool call
         url: /encyclopedia/glossary/tool-call/
-      - title: Anthropic
-        url: /encyclopedia/glossary/anthropic/
   - title: Cheatsheets
     url: /encyclopedia/cheatsheets/
     children:
@@ -62,6 +78,13 @@ encyclopedia:
         url: /encyclopedia/cheatsheets/markdown/
       - title: Claude Code Tools & Terms
         url: /encyclopedia/cheatsheets/claude-code-tools/
+  - title: Documentation
+    url: /encyclopedia/documentation/
+    children:
+      - title: Overview Guides
+        url: /encyclopedia/documentation/overview/
+      - title: Official Docs Reference
+        url: /encyclopedia/documentation/official/
 
 activities:
   - title: Overview

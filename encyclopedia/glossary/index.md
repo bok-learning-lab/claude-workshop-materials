@@ -17,8 +17,11 @@ Plain-language definitions for every key term in the workshop. Each entry is a s
 | [Claude]({{ site.baseurl }}/encyclopedia/glossary/claude/) | The AI assistant you're talking to. |
 | [Anthropic]({{ site.baseurl }}/encyclopedia/glossary/anthropic/) | The company that makes Claude. |
 | [Claude Code]({{ site.baseurl }}/encyclopedia/glossary/claude-code/) | A version of Claude that can work with the files on your computer. |
+| [Cowork]({{ site.baseurl }}/encyclopedia/glossary/claude-cowork/) | The shared session format for group Claude Code work. |
 | [Model (Opus / Sonnet / Haiku)]({{ site.baseurl }}/encyclopedia/glossary/model/) | Which version of Claude is doing the thinking — depth vs. speed. |
 | [API]({{ site.baseurl }}/encyclopedia/glossary/api/) | Using Claude from software instead of a chat window. |
+| [Hallucination]({{ site.baseurl }}/encyclopedia/glossary/hallucination/) | When Claude states something false with full confidence. |
+| [Data Classification]({{ site.baseurl }}/encyclopedia/glossary/data-classification/) | Harvard's sensitivity levels and what's safe to paste into Claude. |
 
 ## How Claude "thinks"
 
@@ -54,9 +57,12 @@ Read these as a chain; each builds on the last.
 | Term | One-line gist |
 |---|---|
 | [Markdown]({{ site.baseurl }}/encyclopedia/glossary/markdown/) | Plain text where simple symbols become formatting. |
+| [HTML]({{ site.baseurl }}/encyclopedia/glossary/html/) | The language web pages are written in — Claude can produce it. |
 | [CLAUDE.md]({{ site.baseurl }}/encyclopedia/glossary/claude-md/) | A notes file Claude reads first, so it knows your project. |
 | [SKILL.md]({{ site.baseurl }}/encyclopedia/glossary/skill-md/) | A reusable instruction packet for a specific task. |
 | [Artifact]({{ site.baseurl }}/encyclopedia/glossary/artifact/) | A finished thing Claude produces — a doc, chart, or web page. |
+| [Project]({{ site.baseurl }}/encyclopedia/glossary/project/) | A long-running Claude.ai workspace with shared instructions and files. |
+| [Compact]({{ site.baseurl }}/encyclopedia/glossary/compact/) | Claude Code's command to summarize and compress the current conversation. |
 
 ---
 

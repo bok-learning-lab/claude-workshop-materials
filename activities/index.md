@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Activities
+title: Activities & Moves
 section: activities
 ---
 
