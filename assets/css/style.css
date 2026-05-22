@@ -11,7 +11,6 @@
   --sidebar-fg:  rgb(190, 185, 178);
   --sidebar-active-fg: rgb(240, 238, 230);
   --header-bg:   rgb(42, 38, 35);
-  --accent:      #A51C30;
   --border:      rgba(128, 128, 128, 0.22);
   --code-bg:     rgba(0, 0, 0, 0.04);
   --muted:       rgba(31, 30, 29, 0.55);
@@ -121,8 +120,8 @@ html, body {
 
 .sidebar-nav > li > a.active {
   color: var(--sidebar-active-fg);
-  border-left-color: var(--accent);
-  background: rgba(165,28,48,0.12);
+  border-left-color: rgba(240, 238, 230, 0.5);
+  background: rgba(255,255,255,0.09);
 }
 
 .sidebar-children { list-style: none; }
@@ -139,7 +138,7 @@ html, body {
 }
 
 .sidebar-children a:hover { color: rgba(240,238,230,0.8); }
-.sidebar-children a.active { color: var(--sidebar-active-fg); border-left-color: var(--accent); }
+.sidebar-children a.active { color: var(--sidebar-active-fg); border-left-color: rgba(240,238,230,0.4); }
 
 /* ── Content ── */
 .content {
@@ -187,8 +186,8 @@ html, body {
 .content ul, .content ol { margin: 0 0 1rem 1.4rem; }
 .content li { margin-bottom: 0.3rem; }
 
-.content a { color: var(--accent); text-decoration: none; }
-.content a:hover { text-decoration: underline; }
+.content a { color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
+.content a:hover { opacity: 0.65; }
 
 .content blockquote {
   border-left: 3px solid var(--fg);
