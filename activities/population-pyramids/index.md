@@ -14,7 +14,14 @@ section: activities
 
 **Step 2 — Code success.** Now switch to Claude Code (or use the Artifacts/tool-use mode in Claude.ai Pro). Give it the CSV file and ask for the same calculation. It will write Python or JavaScript, run it, and produce the correct answer.
 
-**Step 3 — Visualization with code.** Ask Claude Code to *write code* to generate a population pyramid for two countries. The prompt matters: if you say "make me a graph," an LLM might use a generative model to produce something that *looks* like a data visualization — pleasant, plausible, and completely inaccurate. Ask explicitly for an artifact, a chart, or code. The same logic as step 2: the path to reliable output runs through code, not through generation. Sample outputs are linked below.
+**Step 3 — Visualization with code.** Ask Claude Code to *write code* to generate a population pyramid for two countries. The prompt matters. If you say "make me a graph," an LLM might use a generative model to produce something that *looks* like a data visualization — pleasant, plausible, and completely inaccurate. Here's an example of what that looks like:
+
+<figure style="margin: 1rem 0 1.5rem;">
+  <img src="https://files.slack.com/files-pri/T0HTW3H0V-F0B4MNL9RKN/process-black_comparison_of_population_pyramids_for_nigeria_a_87465a7f-14fb-41a8-b3ff-6d10fe4c698f_1.png?pub_secret=8766cdbb2d" alt="A diffusion-model-generated population pyramid — looks credible but the numbers are fiction" style="max-width:100%; border-radius:4px; border: 1px solid rgba(0,0,0,0.12);">
+  <figcaption style="font-size:0.85rem; color: rgba(31,30,29,0.55); margin-top:0.5rem;">A diffusion-model-generated population pyramid. Visually credible. The numbers are fiction.</figcaption>
+</figure>
+
+Ask explicitly for an artifact, a chart, or code. The same logic as step 2: the path to reliable output runs through code, not through generation. Sample outputs are linked below.
 
 ## Data
 
