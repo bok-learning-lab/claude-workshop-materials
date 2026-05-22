@@ -86,4 +86,4 @@ What's the strongest counter-reading of the interpretation you just gave?
 
 ---
 
-*Source: MIT Electronic Text Center edition. Full corpus at `claude-cowork-20260518/literature/shakespeare-complete-works/`.*
+*Source: [MIT Electronic Text Center edition](https://shakespeare.mit.edu/). Scene excerpts used in the workshop: [`activities/close-reading/excerpts/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/activities/close-reading/excerpts).*
