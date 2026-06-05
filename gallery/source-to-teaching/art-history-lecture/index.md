@@ -10,7 +10,9 @@ A small Claude Code project that turns a lecturer's plain-text notes into a sing
 
 **This is the MCP example.** Most of the other projects in this gallery teach Claude a *discipline* through a prompt or a skill: write the neutral summary before the twist, steelman before diagnosing, rank exactly ten things. This one is different. It gives Claude a *new sense* — live, sourced access to an external collection — and lets that change what kind of artifact it can be trusted to build. The leverage is the tool, not the prompt.
 
-Source repo: [github.com/bok-learning-lab/claude-code-20260604/examples/simple-art-history-lecture](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/simple-art-history-lecture)
+> **Live output:** [The Broken Surface — illustrated lecture page](outputs/index.html){:target="_blank"} — opens in a new tab. The twelve plates load live from Harvard Art Museums' IIIF service.
+>
+> **Source repo:** [`claude-code-20260604/examples/simple-art-history-lecture/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/simple-art-history-lecture)
 
 ---
 

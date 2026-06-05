@@ -12,7 +12,12 @@ This is the smallest of the day-4 example projects. There is no overview folder,
 
 **Also exists as a hands-on activity.** The examples page you are reading documents the full pattern; the hands-on exercise version lives at [/activities/research-helper/](../../../activities/research-helper/) and is the version designed for you to run yourself during the workshop.
 
-Source repo: [github.com/bok-learning-lab/claude-code-20260604/examples/research-helper](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/research-helper)
+> **Live outputs (each opens in a new tab):**
+>
+> - **[Index hub — the four-paper landing page](outputs/index.html){:target="_blank"}** — the research-agenda statement plus one-line glosses linking out.
+> - Per-paper summaries: [Context rot (Hong et al. 2025)](outputs/01_context-rot_hong-troynikov-huber_2025.html){:target="_blank"} · [Lost in the middle (Liu et al. 2024)](outputs/02_lost-in-the-middle_liu_2024.html){:target="_blank"} · [Context length alone hurts (Du et al. 2025)](outputs/03_context-length-alone-hurts_du_2025.html){:target="_blank"} · [Fully utilize context (An et al. 2024)](outputs/14_fully-utilize-context_an_2024.html){:target="_blank"}
+>
+> **Source repo:** [`claude-code-20260604/examples/research-helper/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/research-helper)
 
 ---
 

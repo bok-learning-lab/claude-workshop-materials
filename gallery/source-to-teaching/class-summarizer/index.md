@@ -10,7 +10,15 @@ section: activities
 
 A worked example of turning a long session transcript into a **Top 10 Key Takeaways** doc faculty can read in five minutes. The project hands Claude a markdown transcript of a workshop session and asks it to distill the substance into ten numbered takeaways, each leading with a bold one-sentence headline (the mantra or claim itself) and grounded in what *actually happened* in the room — the demos used, the analogies the instructors reached for, the memorable turns of phrase, quoted directly. A separate "secondary points" section catches the smaller details that did not make the top 10.
 
-Source repo: [github.com/bok-learning-lab/claude-code-20260604/examples/class-summarizer](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/class-summarizer)
+> **Live outputs (each opens in a new tab):**
+>
+> - [Day 1 Key Takeaways](outputs/day-1-key-takeaways.html){:target="_blank"}
+> - [Day 2 Key Takeaways](outputs/day-2-key-takeaways.html){:target="_blank"}
+> - [Day 3 Key Takeaways](outputs/day-3-key-takeaways.html){:target="_blank"}
+>
+> All three are also surfaced in the [Daily Recaps]({{ site.baseurl }}/encyclopedia/daily-recaps/) section, alongside the corresponding workshop handouts.
+>
+> **Source repo:** [`claude-code-20260604/examples/class-summarizer/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/class-summarizer)
 
 ---
 

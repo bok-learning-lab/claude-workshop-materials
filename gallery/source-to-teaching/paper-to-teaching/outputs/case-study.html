@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision-subject ethics — a worked Claude Code teaching example</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --soft:#555; --faint:#888; --line:#e2ddd3;
+    --bg:#faf7f0; --panel:#fffdf8; --accent:#b4541f; --accent-soft:#f3e8dd;
+    --code-bg:#f4f1ea; --rule:#d9d3c6;
+    --max:48rem;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:18px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{display:flex; gap:0; max-width:78rem; margin:0 auto;}
+  nav{
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+    width:16rem; flex:none; padding:2.2rem 1.2rem 2rem 1.6rem;
+    border-right:1px solid var(--line); font-size:.82rem; line-height:1.4;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  nav .navtitle{font-weight:700; color:var(--accent); letter-spacing:.02em; margin-bottom:1rem; text-transform:uppercase; font-size:.7rem;}
+  nav a{display:block; color:var(--soft); text-decoration:none; padding:.22rem 0; border-left:2px solid transparent; padding-left:.7rem; margin-left:-.7rem;}
+  nav a:hover{color:var(--accent);}
+  nav a.sub{padding-left:1.6rem; color:var(--faint); font-size:.78rem;}
+  nav .navgap{height:.8rem;}
+  main{flex:1; min-width:0; padding:3rem 2.4rem 6rem; max-width:var(--max);}
+  header.hero{margin-bottom:1.5rem;}
+  .kicker{font-family:-apple-system,sans-serif; text-transform:uppercase; letter-spacing:.08em; font-size:.72rem; color:var(--accent); font-weight:700; margin-bottom:.6rem;}
+  h1{font-size:2.1rem; line-height:1.15; margin:.2rem 0 .8rem; font-weight:700;}
+  h2{font-size:1.5rem; margin:3rem 0 .4rem; padding-top:1.4rem; border-top:1px solid var(--rule); font-weight:700;}
+  h2 .h2tag{font-family:-apple-system,sans-serif; font-size:.7rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--faint); margin-left:.5rem; vertical-align:middle;}
+  h3{font-size:1.15rem; margin:1.8rem 0 .3rem; font-weight:700;}
+  h4{font-size:.96rem; margin:1.2rem 0 .2rem; font-family:-apple-system,sans-serif; color:var(--soft); text-transform:uppercase; letter-spacing:.04em;}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  .lede{font-size:1.18rem; color:var(--soft); line-height:1.55;}
+  blockquote{margin:1rem 0; padding:.6rem 1.1rem; border-left:3px solid var(--accent); background:var(--accent-soft); border-radius:0 6px 6px 0; color:#4a3526;}
+  blockquote.prompt{font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:.86rem; line-height:1.5; background:#2c2620; color:#f0e9dd; border-left-color:var(--accent);}
+  blockquote.prompt::before{content:"PROMPT"; display:block; font-size:.6rem; letter-spacing:.12em; color:#c9a; margin-bottom:.4rem;}
+  code{background:var(--code-bg); padding:.08em .35em; border-radius:4px; font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:.82em;}
+  pre{background:#2c2620; color:#f0e9dd; padding:1.1rem 1.3rem; border-radius:8px; overflow-x:auto; font-size:.8rem; line-height:1.5;}
+  pre code{background:none; padding:0; color:inherit; font-size:1em;}
+  .callout{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1.1rem 1.3rem; margin:1.4rem 0;}
+  .callout.warn{border-color:#d9b48f; background:#fbf2e6;}
+  .callout .label{font-family:-apple-system,sans-serif; font-size:.66rem; text-transform:uppercase; letter-spacing:.1em; font-weight:700; color:var(--accent); margin-bottom:.4rem;}
+  .notice{font-family:-apple-system,sans-serif; color:var(--soft); margin:.45rem 0 1rem; font-size:.96rem;}
+  .moves{font-size:.93rem; color:var(--soft); font-style:italic;}
+  /* skill cards */
+  .skill{border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:10px; padding:1rem 1.2rem; margin:1rem 0; background:var(--panel);}
+  .skill .cmd{font-family:"SF Mono",ui-monospace,Menlo,monospace; font-weight:700; color:var(--accent); font-size:1rem;}
+  .skill .role{font-family:-apple-system,sans-serif; font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--faint); float:right; margin-top:.2rem;}
+  .skill p{margin:.5rem 0 0; font-size:.96rem;}
+  /* example output */
+  .sample{border:1px solid var(--rule); border-radius:10px; margin:1rem 0 1.6rem; overflow:hidden; background:#fffefb;}
+  .sample .head{background:#2c2620; color:#f0e9dd; font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:.78rem; padding:.55rem .9rem; display:flex; justify-content:space-between; align-items:center;}
+  .sample .head .lbl{color:#e8c9b3; font-size:.62rem; letter-spacing:.12em;}
+  .sample .body{padding:.9rem 1.2rem 1.1rem;}
+  .sample .body h5{font-family:-apple-system,sans-serif; font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); margin:1rem 0 .2rem; font-weight:700;}
+  .sample .body h5:first-child{margin-top:.2rem;}
+  .sample .body p,.sample .body li{font-size:.92rem; margin:.35rem 0;}
+  .sample .body ul,.sample .body ol{margin:.3rem 0; padding-left:1.3rem;}
+  details.card{border:1px solid var(--line); border-radius:10px; margin:.8rem 0; background:var(--panel); overflow:hidden;}
+  details.card>summary{cursor:pointer; padding:.85rem 1.1rem; font-family:-apple-system,sans-serif; font-weight:600; font-size:.92rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:1rem;}
+  details.card>summary::-webkit-details-marker{display:none}
+  details.card>summary::after{content:"+"; color:var(--accent); font-size:1.2rem; font-weight:400;}
+  details.card[open]>summary::after{content:"\2212";}
+  details.card>summary .tag{font-weight:400; font-size:.72rem; color:var(--faint); text-transform:none;}
+  details.card .body{padding:0 1.3rem 1rem; border-top:1px solid var(--line);}
+  details.card .body p:first-child{margin-top:.8rem;}
+  .filename{font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:.74rem; color:var(--faint); margin-top:.9rem;}
+  table{border-collapse:collapse; width:100%; margin:1rem 0; font-size:.86rem;}
+  th,td{text-align:left; padding:.5rem .6rem; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{font-family:-apple-system,sans-serif; font-size:.74rem; text-transform:uppercase; letter-spacing:.04em; color:var(--soft);}
+  .pill{display:inline-block; font-family:-apple-system,sans-serif; font-size:.66rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:.12rem .5rem; border-radius:999px; background:var(--accent-soft); color:var(--accent);}
+  .tree{font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:.78rem; line-height:1.7;}
+  .appendix{margin-top:4rem; padding-top:1rem; border-top:3px double var(--rule);}
+  .appendix-note{font-family:-apple-system,sans-serif; font-size:.8rem; color:var(--faint); text-transform:uppercase; letter-spacing:.08em; font-weight:700;}
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--rule); font-size:.82rem; color:var(--faint); font-family:-apple-system,sans-serif;}
+  hr{border:none; border-top:1px solid var(--rule); margin:2rem 0;}
+  @media (max-width:820px){
+    nav{display:none}
+    main{padding:2rem 1.3rem 4rem}
+    body{font-size:17px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <div class="navtitle">The project</div>
+  <a href="#top">What it is</a>
+  <a href="#teaching">What we're teaching &amp; why</a>
+  <a href="#skills">The skills</a>
+  <a href="#examples">What they produce</a>
+  <a href="#ex-case" class="sub">/teaching-case output</a>
+  <a href="#ex-plan" class="sub">/discussion-plan output</a>
+  <a href="#ex-audit" class="sub">/objection-audit output</a>
+  <a href="#ex-quiz" class="sub">/quiz output</a>
+  <a href="#material">The material it draws on</a>
+  <a href="#cases" class="sub">The cases</a>
+  <a href="#students" class="sub">Student arguments</a>
+  <a href="#constraints">The rules it follows</a>
+  <div class="navgap"></div>
+  <div class="navtitle">Appendix</div>
+  <a href="#paper">The paper, in brief</a>
+  <a href="#build">How we built it</a>
+  <a href="#why">Why a Day-3 anchor</a>
+</nav>
+
+<main>
+<header class="hero" id="top">
+  <div class="kicker">Summer of Claude · Day 3 · A worked teaching example</div>
+  <h1>A Claude Code project that helps a professor teach from their own paper</h1>
+  <p class="lede">An ethics instructor opens this project to prepare and run a class
+  session. Inside are three custom skills that do the repetitive parts of teaching:
+  one <strong>generates classroom cases</strong>, one <strong>builds Socratic discussion
+  plans</strong> around them, and one <strong>stress-tests student arguments</strong>. All
+  three are pinned to one source — <strong>Jeff Behrends'</strong> (Harvard) co-authored
+  paper on the ethics of automated decision-making — so what Claude produces makes the
+  moves <em>that</em> paper makes, not a textbook's.</p>
+  <p class="notice">The point of the example: your own scholarship is the raw material. An
+  afternoon's work turns a paper you already wrote into tools you can teach with the next
+  day. Start at the top to see what the project is and what it produces; the
+  <a href="#build">build story</a> is in the appendix.</p>
+</header>
+
+<section id="teaching">
+<h2>What we're teaching — and why this way <span class="h2tag">orientation</span></h2>
+
+<h3>What we're teaching</h3>
+<p>Behrends' paper (Grant, Behrends &amp; Basl 2025) argues that we are often morally
+obligated <em>not</em> to base consequential decisions about people — bail, hiring,
+lending — on black-box AI. The striking part is the reason: it is <em>not</em> mainly
+that we can't explain such systems. The deeper reason is a duty of <strong>due
+consideration</strong> — our decision procedures must be responsive to the moral claims
+people have on how they're treated. That splits two ways. <strong>Evidential</strong>
+duties govern how we find facts: being accurate on average isn't enough if the system
+ignores evidence that bears on <em>this</em> person, or leans on evidence it should set
+aside. <strong>Practical</strong> duties govern how we decide: some judgments must be made
+by a responsible moral agent, not handed to a system that can't take responsibility. That
+distinction — and the cases that make it bite — is what students should leave
+understanding. (Fuller summary in the <a href="#paper">appendix</a>.)</p>
+
+<h3>Why an activity built from cases and argument</h3>
+<p>The paper does its work through <em>distinctions</em> (evidential vs. practical,
+substantive vs. procedural) and <em>concrete cases</em> (a defendant whose risk score
+traces to a since-removed brain tumor; a résumé tool that learned to penalize "women's";
+perfectly accurate juror models). Those distinctions are slippery stated abstractly and
+obvious inside a case. So the activity is <strong>case-based Socratic argument</strong>:
+students confront cases engineered to isolate one move, stake out positions, and have
+those positions stress-tested — internalizing the distinctions by <em>using</em> them, not
+by hearing them defined. Claude's job is to let a single instructor generate enough
+well-engineered cases, discussion plans, and counter-arguments to run that kind of session
+at scale, on demand, in their own course's idiom.</p>
+
+<h3>Our constraint as designers</h3>
+<div class="callout warn">
+  <div class="label">Obey the paper you're teaching</div>
+  <p>We are using AI to teach a paper about the limits of using AI for consequential
+  decisions. So we hold the design to the paper's own argument: the consequential
+  judgments — whether a case is any good, whether a student's argument really fails, what a
+  piece of work deserves — <strong>stay with the human instructor.</strong> Claude drafts,
+  surfaces, and stress-tests; the instructor decides. Let the tool make those calls and the
+  medium would contradict the message. Holding the line is also the cleanest way to
+  <em>demonstrate</em> the thesis — faculty watch us practice what the paper preaches.</p>
+</div>
+</section>
+
+<section id="skills">
+<h2>The skills <span class="h2tag">what's in the project</span></h2>
+<p>They map onto what a teacher actually does around a session — make the material, plan
+the conversation, anticipate the pushback, and check what landed. Each is a small,
+single-purpose tool (a <code>SKILL.md</code> plus supporting files) that lives in the
+project and travels with it.</p>
+
+<div class="skill">
+  <span class="role">make the material</span>
+  <span class="cmd">/teaching-case</span>
+  <p>Generates a <strong>student-facing case</strong> — an automated-decision-system
+  dossier or a thought experiment — plus separate <strong>instructor notes</strong>.
+  You tell it which move to surface (e.g. "ignoring available evidence," "morally
+  inadmissible evidence") and optionally a domain (bail, hiring, lending, medicine); it
+  writes a case engineered to make that move legible, tagged to the section of the paper
+  it illustrates.</p>
+</div>
+
+<div class="skill">
+  <span class="role">plan the conversation</span>
+  <span class="cmd">/discussion-plan</span>
+  <p>Takes a case (or a section of the paper) and produces a <strong>Socratic discussion
+  sequence</strong>: a warm-up that elicits the intuitive answer, the core dilemma, the
+  positions students will likely take, the objection to steer toward, and the move in the
+  paper that addresses it — plus an honest note on what the case can and can't show.</p>
+</div>
+
+<div class="skill">
+  <span class="role">anticipate the pushback</span>
+  <span class="cmd">/objection-audit</span>
+  <p>Takes a student's argument and <strong>steelmans it first</strong>, then diagnoses it
+  against the framework — which distinction it misses or which objection it falls to, with
+  citations — and ends by inviting the student's reply. Always "right about X, misses Y,"
+  never a flat "wrong."</p>
+</div>
+
+<div class="skill">
+  <span class="role">check what landed</span>
+  <span class="cmd">/quiz</span>
+  <p>Generates a short-answer <strong>comprehension check</strong> on the paper's core
+  argument — a student version plus a separate instructor answer key with section
+  references, the common error to watch for per item, and a scoring band. Defaults to a
+  closed-book, ~10–15 minute end-of-class quiz.</p>
+</div>
+
+<p class="notice">All four are <strong>built and validated against the corpus</strong>
+(<code>SKILL.md</code> + worked <code>examples/</code> under <code>.claude/skills/</code>),
+and all four obey the same line we set <a href="#teaching">as designers</a>:
+Claude drafts and surfaces, the instructor decides. The full set of project rules is
+<a href="#constraints">below</a>.</p>
+</section>
+
+<section id="examples">
+<h2>What they produce <span class="h2tag">actual output</span></h2>
+<p>One real run per skill — every excerpt below is from a file actually generated by the
+skill and shipped in the project (links go to the full versions). Each was validated
+against the corpus and checked against the paper.</p>
+
+<h3 id="ex-case">/teaching-case</h3>
+<div class="sample">
+  <div class="head"><span>$ /teaching-case --move ignoring-evidence --domain medicine</span><span class="lbl">ACTUAL OUTPUT</span></div>
+  <div class="body">
+    <h5>Student-facing case — "DischargePredict"</h5>
+    <p>A hospital uses <strong>DischargePredict</strong> to flag which admitted patients can
+    be safely sent home. A patient with many prior admissions is scored <strong>high
+    risk</strong> and slated to stay — but their physician notes that nearly all those prior
+    admissions stemmed from a medication interaction since identified and corrected, a fact
+    recorded only in a free-text note the model doesn't read. The hospital: "The model
+    outperforms our clinicians on average. Overriding it for anecdotes reintroduces the bias
+    we adopted it to remove."</p>
+    <h5>Question for discussion</h5>
+    <p>If the model is genuinely more accurate on average, what — if anything — is wrong with
+    deferring to it here? Would publishing the model's reasoning fix the problem?</p>
+    <h5>Instructor notes (not student-facing)</h5>
+    <ul>
+      <li><strong>Move surfaced:</strong> ignoring readily available evidence (§5.2) — a
+      procedural failure to <em>this</em> patient, independent of average accuracy.</li>
+      <li><strong>Trap to expect:</strong> the "anecdotes vs. data" framing (the S1 move in
+      clinical dress). Press the substantive/procedural distinction.</li>
+      <li><strong>Keep distinct:</strong> disclosure would <em>not</em> fix it — the evidence
+      never entered the model. Separates transparency from due consideration.</li>
+    </ul>
+    <p class="moves">Full case, plus a <code>--decoy</code> example that an audit should
+    return clean: <a href="../operations/skills/teaching-case/examples/case-medical-bail-5.2.md"><code>operations/skills/teaching-case/examples/</code></a>.</p>
+  </div>
+</div>
+
+<h3 id="ex-plan">/discussion-plan</h3>
+<div class="sample">
+  <div class="head"><span>$ /discussion-plan --case C1 --length 45</span><span class="lbl">ACTUAL OUTPUT</span></div>
+  <div class="body">
+    <h5>Discussion plan — pretrial recidivism scorer (C1)</h5>
+    <p><strong>1 · Warm-up (5 min).</strong> "A risk tool is more accurate than your
+    judges. Is there any reason not to use it?" Most students say no — surface the
+    intuition that accuracy is what we owe people.</p>
+    <p><strong>2 · The core dilemma (10 min).</strong> Introduce the defendant whose high
+    score traces to a brain tumor since removed — evidence the model can't ingest. Now the
+    accurate-on-average tool is wrong about <em>this</em> person.</p>
+    <p><strong>3 · Positions to expect.</strong></p>
+    <ul>
+      <li>"Accuracy still wins on balance" — the <a href="#students">S1</a> position.</li>
+      <li>"Then add the tumor as a feature" — push back: you can't anticipate every such
+      fact; a human wouldn't overlook it.</li>
+    </ul>
+    <p><strong>4 · Objection to steer toward.</strong> Ignoring readily available evidence
+    is a <em>procedural</em> failure (§5.2) — distinct from average accuracy. Bring in the
+    substantive/procedural distinction here.</p>
+    <p><strong>5 · The move that resolves it.</strong> Due consideration is broader than
+    accuracy: a fair-on-average procedure can still wrong an individual by being insensitive
+    to evidence that bears on their case.</p>
+    <p><strong>Honest note.</strong> The case shows a procedural failure, not that the tool
+    is useless. Don't let the room conclude "never use risk scores" — the paper doesn't.</p>
+    <p class="moves">Full plan: <a href="discussion-plans/discussion-plan-C1.md"><code>outputs/discussion-plans/discussion-plan-C1.md</code></a>.</p>
+  </div>
+</div>
+
+<h3 id="ex-audit">/objection-audit</h3>
+<div class="sample">
+  <div class="head"><span>$ /objection-audit --argument S1</span><span class="lbl">ACTUAL OUTPUT</span></div>
+  <div class="body">
+    <h5>Audit — "If it's more accurate, using it is what we owe people" (S1)</h5>
+    <h5>Steelman</h5>
+    <p>The argument is right about something real: accuracy <em>does</em> bear on due
+    consideration. The paper grants this (§5.1) — a court that knowingly uses a random,
+    inaccurate method wrongs the defendant it detains. So preferring the more accurate tool
+    is not a confusion; it tracks a genuine duty.</p>
+    <h5>Where it falls short</h5>
+    <p>It treats accuracy as the <em>whole</em> of evidential consideration. The paper shows
+    two ways a more-accurate-on-average system still fails: it can ignore readily available
+    evidence that benefits a particular subject (§5.2), and it can rely on morally
+    inadmissible evidence (§5.3). Both are <em>procedural</em> failures the
+    substantive/procedural distinction makes visible — an aggregate accuracy gain doesn't
+    license them.</p>
+    <h5>Back to you</h5>
+    <p>Can you reformulate the claim so it captures what's right (accuracy matters) without
+    implying that a procedure fair on average can never wrong an individual? That
+    reformulation is most of the paper's §5.</p>
+    <p class="moves">Full audit, plus audits of S2 and S3:
+    <a href="objection-audits/audit-S1.md"><code>outputs/objection-audits/</code></a>.</p>
+  </div>
+</div>
+
+<h3 id="ex-quiz">/quiz <span class="pill">actual output</span></h3>
+<div class="sample">
+  <div class="head"><span>$ /quiz</span><span class="lbl">SHIPPED IN PROJECT</span></div>
+  <div class="body">
+    <h5>End-of-class short-answer quiz — student version (excerpt)</h5>
+    <p><em>Closed-book, ~10–15 min. Answer in your own words, one or two sentences each.</em></p>
+    <ol>
+      <li>State the paper's main thesis in one sentence — it <strong>must include one of the
+      authors' hedges</strong> ("in many contexts," "often," "prima facie") — then explain in
+      a second sentence why that hedge matters.</li>
+      <li>The standard defense appeals to <em>duties of transparency</em>; the authors ground
+      the thesis instead in <em>due consideration</em>. Explain the difference, and give one
+      reason transparency alone can't carry the thesis.</li>
+      <li>The "Juror Substitution" models are stipulated to be perfectly accurate, fully
+      transparent, and to use the same reasoning as the humans. What is the authors'
+      remaining objection — and what duty does it invoke?</li>
+      <li class="moves" style="list-style:none; margin-left:-1.3rem;">…three more items: evidential vs. practical, an accuracy-isn't-enough application, and the double-standard reply.</li>
+    </ol>
+    <h5>Answer key — instructor (excerpt for Q1)</h5>
+    <p><strong>Thesis (1 pt):</strong> in many contexts, decision-makers are obligated
+    <em>not</em> to base decisions about people on black-box AI outputs. <strong>Hedge
+    (1 pt):</strong> any of "often / prima facie / overridable," with a reason — the claim is
+    context-sensitive, <em>not</em> "never use black boxes." <strong>Common error:</strong>
+    "AI is unexplainable, so never use it" — dock the hedge point.</p>
+    <p class="moves">Full instrument with all six items and the complete key:
+    <a href="end-of-class-quiz.md"><code>outputs/end-of-class-quiz.md</code></a>.</p>
+  </div>
+</div>
+</section>
+
+<section id="material">
+<h2>The material it draws on <span class="h2tag">the project's inputs</span></h2>
+<p>The skills are validated against — and the instructor teaches from — a small
+<strong>synthetic corpus</strong> bundled in the project. Each item is engineered to make
+one move in the framework legible, the way a good seminar case does. Nothing here is a
+real institution or person.</p>
+
+<h3 id="cases">The cases</h3>
+<p>Decision-system dossiers and thought experiments. <strong>C3 is a decoy</strong> — an
+interpretable system that should largely <em>pass</em> an audit, there to catch a skill
+that wrongly equates "algorithm" with "black box."</p>
+
+<details class="card"><summary>C1 — Pretrial recidivism scorer <span class="tag">ignoring available evidence · §5.1–5.2</span></summary>
+<div class="body">
+<p>A county weighs <strong>RiskPredict</strong>, a 140-feature ensemble scoring defendants'
+pretrial risk; strong test accuracy, undisclosed internals. A flagged defendant scores
+high, but a neurologist testifies his past behavior was caused by a <strong>brain tumor
+since successfully removed</strong> — evidence the system can't ingest. No field
+re-validation after deployment.</p>
+<p class="moves">The seductive move is "accuracy settles it." The paper grants accuracy is
+relevant (§5.1) but shows it isn't sufficient — the system can degrade in the field and can
+ignore readily available evidence a human wouldn't (§5.2).</p>
+<div class="filename">output/cases/C1-recidivism.md</div>
+</div></details>
+
+<details class="card"><summary>C2 — Résumé screening model <span class="tag">morally inadmissible evidence · §5.3</span></summary>
+<div class="body">
+<p><strong>ScreenFit</strong> ranks résumés for "likely strong performer," trained on a
+decade of the firm's hiring data with demographic fields stripped. Audit finds it rewards
+certain clubs and ZIP codes and penalizes the token <strong>"women's"</strong> (modeled on
+Amazon's scrapped tool).</p>
+<p class="moves">The key idea is <strong>redundant encoding</strong> — removing a protected
+feature doesn't remove it, because proxies remain and a high-dimensional model exploits
+them.</p>
+<div class="filename">output/cases/C2-resume-screener.md</div>
+</div></details>
+
+<details class="card"><summary>C3 — Interpretable alternative <span class="tag">the decoy; should PASS · §4, §6</span></summary>
+<div class="body">
+<p><strong>ClearScore</strong>: a sparse, monotonic six-input model, every point's
+contribution published and inspectable — but with <strong>modestly lower</strong> field
+accuracy.</p>
+<p class="moves">The stress test. A naive audit that equates "algorithm" with "black box,"
+or treats any accuracy loss as a failure, will wrongly condemn it. The §6 point: the
+interpretable model is the safer <em>third option</em> — safer, not immune.</p>
+<div class="filename">output/cases/C3-interpretable-alt.md</div>
+</div></details>
+
+<details class="card"><summary>C4 — Personalized "juror model" <span class="tag">agential consideration · §7.2–7.3</span></summary>
+<div class="body">
+<p>A thought experiment from the paper: perfectly accurate <strong>juror models</strong>
+replicate how a person would vote and disclose their "deliberations," so selected jurors
+can go home. Every other objection — rule content, transparency, accuracy — is closed off
+by construction.</p>
+<p class="moves">What remains is <strong>agential consideration</strong>: some decisions
+must be made by full-blown moral agents who take responsibility and thereby respect the
+subject as a fellow member of the community. A model can't; no one owns the verdict.</p>
+<div class="filename">output/cases/C4-juror-model.md</div>
+</div></details>
+
+<h3 id="students">Student arguments</h3>
+<p>Positions a student might submit — each wrong in a way the paper diagnoses precisely, so
+<code>/objection-audit</code> (and the instructor) have something real to work on.</p>
+
+<details class="card"><summary>S1 — "If it's more accurate, using it is what we owe people." <span class="tag">conflates accuracy with due consideration · §5</span></summary>
+<div class="body">
+<p>Collapses evidential consideration into overall accuracy. The paper concedes accuracy
+matters (§5.1) but shows a more-accurate-on-average system can still ignore evidence that
+benefits <em>this</em> subject (§5.2) and rely on inadmissible evidence (§5.3).</p>
+<div class="filename">output/student-arguments/S1-accuracy-is-all.md</div>
+</div></details>
+
+<details class="card"><summary>S2 — "Humans are black boxes too, so this is a double standard." <span class="tag">the Double Standard Problem · §6</span></summary>
+<div class="body">
+<p>The paper concedes the generalization in part — but deploys the third option
+(interpretable models) and humans' agential capacities (§7). So the standards differ for a
+reason; that's not a double standard.</p>
+<div class="filename">output/student-arguments/S2-humans-too.md</div>
+</div></details>
+
+<details class="card"><summary>S3 — "A human in the loop fixes the problem." <span class="tag">automation bias · §7.3</span></summary>
+<div class="body">
+<p>Mere inclusion of a human isn't sufficient (§7.3). If the human defers without genuine
+deliberation, the juror-model wrong reappears, and automation bias makes that likely. The
+distinction is <strong>consulting vs. deferring</strong>.</p>
+<div class="filename">output/student-arguments/S3-human-in-the-loop.md</div>
+</div></details>
+</section>
+
+<section id="constraints">
+<h2>The rules it follows <span class="h2tag">from CLAUDE.md</span></h2>
+<p>A project-scoped <code>CLAUDE.md</code> loads automatically and binds everything Claude
+does in the project, keeping its output aligned to the paper:</p>
+<div class="callout">
+<ul>
+  <li><strong>Claude is never the decision-maker about a person</strong> — it augments the instructor and generates material.</li>
+  <li><strong>Don't collapse transparency into due consideration</strong> — the paper's central move is that the second is broader.</li>
+  <li><strong>The thesis is not absolute</strong> — "often," "prima facie," "overridable," context-sensitive. Never "never use black boxes."</li>
+  <li><strong>Interpretable models are safer, not a panacea</strong> (§6).</li>
+  <li><strong>Black box &ne; any AI</strong> — the target is high-flexibility, high-dimensional, low-rule-transparency systems (§4).</li>
+  <li><strong>Cite by section; give a page number only if verified</strong> against the PDF.</li>
+</ul>
+</div>
+</section>
+
+<!-- ============== APPENDIX ============== -->
+<div class="appendix">
+<p class="appendix-note">Appendix — background &amp; build</p>
+
+<section id="paper">
+<h2>The paper, in brief</h2>
+<p><strong>Grant, D. G., Behrends, J., &amp; Basl, J. (2025).</strong> "What we owe to
+decision-subjects: beyond transparency and explanation in automated decision-making."
+<em>Philosophical Studies</em> 182, 55–85.</p>
+<p>It defends the <strong>Explainability Thesis</strong>: in many contexts, decision-makers
+are morally obligated <em>not</em> to base decisions about people on the outputs of
+black-box AI. Its novelty is the grounding — not <strong>duties of transparency</strong>
+("you must be able to explain it"), which only reach special cases, but the duty to show
+<strong>due consideration</strong>: adopting procedures appropriately responsive to the
+moral claims subjects have on how they're treated.</p>
+<table>
+  <tr><th>Family of duty</th><th>Constrains</th><th>How black-box reliance fails</th></tr>
+  <tr><td><strong>Evidential</strong> (§5)</td><td>Fact-finding</td><td>Field accuracy / overfitting (the "Jared" screener); ignoring available evidence (the brain-tumor neurologist); inadmissible evidence (the Amazon "women's" tool, proxies)</td></tr>
+  <tr><td><strong>Practical</strong> (§7)</td><td>Decision-making</td><td>Prohibited decision rules / Kantian injunction; <strong>agential consideration</strong> — some calls must be made by full-blown moral agents (the Juror Substitution case)</td></tr>
+</table>
+<p class="moves">It also solves the <strong>Definition Problem</strong> (a "black box" = high
+flexibility + high dimensionality + limited rule transparency) and the <strong>Double
+Standard Problem</strong> (why hold machines to a higher bar than humans — partly it
+generalizes, but interpretable models are the safer third option and humans have agential
+capacities). Full digest: <a href="../inputs/grant_behrends_basl.md"><code>inputs/grant_behrends_basl.md</code></a>.</p>
+</section>
+
+<section id="build">
+<h2>How we built it</h2>
+<p>The shape follows the gallery's interview-coding project: a dense source text, the
+author named as the human in the room, a synthetic corpus engineered for specific moves,
+citation-tied skills, and a self-introducing <code>CLAUDE.md</code>. Each prompt is short —
+a goal plus one or two alignment constraints — then trusts Claude to produce the artifact.</p>
+
+<h3>1 · Brief Claude on the source and name the human in the room</h3>
+<blockquote class="prompt">Read this PDF and keep it in context: the Grant, Behrends &amp; Basl paper on what we owe to decision-subjects. Jeff Behrends is a participant in our workshop, so I want to build a teaching project grounded in <em>his</em> paper. Help me think of ways a philosopher could use Claude Code to teach the ethics of automated decision-making — aligned with his framework, not a generic AI-ethics take.</blockquote>
+<p class="moves">A single dense source plus a named human whose view must be respected
+produces far more aligned output than "help me teach AI ethics."</p>
+
+<h3>2 · Capture the thinking in a document</h3>
+<blockquote class="prompt">Put the brainstorm in a claude-thoughts doc, with a skills catalog and a section on what to avoid given that this is Jeff's own paper.</blockquote>
+<p>Produced <code>claude-thoughts.md</code>: teaching use cases, a six-skill catalog tied to
+sections, and a "what to avoid in front of Jeff" section.</p>
+
+<h3>3 · Find the constraint the source itself dictates</h3>
+<p>The paper is about the limits of relying on AI for consequential decisions; the workshop
+is about relying on an AI tool. So the hard constraint wrote itself —
+<strong>Claude makes teaching material, it never adjudicates</strong> — and went to the top
+of <code>CLAUDE.md</code>. Let the source text tell you what the tool must <em>not</em> do.</p>
+
+<h3>4 · Build a synthetic teaching corpus</h3>
+<blockquote class="prompt">Generate the cases and sample student arguments we'll teach against.</blockquote>
+<p>The four cases and three student arguments above — each engineered to surface one move,
+including a decoy designed to pass and student arguments designed to be wrong in
+diagnosable ways.</p>
+
+<h3>5 · Turn the brainstorm into a parallelizable plan</h3>
+<blockquote class="prompt">Put the three demo skills into a PLAN.md so different Claudes can build them in parallel.</blockquote>
+<p><code>PLAN.md</code>: shared context and hard constraints up top, then three
+self-contained build tasks, each with behavior, what-good-looks-like, what-to-avoid, build
+location, and validation against the corpus.</p>
+
+<h3>6 · Build the skills in parallel, then audit <span class="pill">live in the session</span></h3>
+<p>We opened fresh Claude Code sessions, ran the three tasks, then audited each return
+against the corpus and verified every citation against the paper — the characteristic
+failure mode here is a plausible but slightly-off citation. All three are now built
+(<code>SKILL.md</code> + validated <code>examples/</code> under <code>.claude/skills/</code>),
+with their demo runs promoted to <code>output/</code> (the discussion plan to
+<code>output/discussion-plans/</code>, the audits to <code>output/objection-audits/</code>).
+The samples in <a href="#examples">What they produce</a> are those actual runs.</p>
+
+<h3>7 · Ship the quiz the same way</h3>
+<blockquote class="prompt">Also generate a short-answer quiz students could do on paper at the end of class to check whether they grasped the core argument — then turn it into a reusable /quiz skill.</blockquote>
+<p>We built <code>/quiz</code> end-to-end too — a <code>SKILL.md</code> plus a worked example
+(the end-of-class quiz with its instructor key, promoted to
+<code>output/end-of-class-quiz.md</code>). Its hard constraint follows the project's line:
+Claude writes the instrument and the key, but the instructor owns grading and final marks.</p>
+
+<h3>The project tree</h3>
+<div class="tree">
+decision-subject-ethics/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">— inputs → prompts → output</span><br>
+├── <strong>index.html</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">this page — the only file at the root</span><br>
+├── inputs/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">the source — Behrends' paper (pdf + md digest)</span><br>
+├── prompts/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">the planning docs</span><br>
+│&nbsp;&nbsp;&nbsp;├── CLAUDE.md &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">framework + hard constraints</span><br>
+│&nbsp;&nbsp;&nbsp;├── claude-thoughts.md &nbsp;<span style="color:#888">brainstorm · skill catalog · what to avoid</span><br>
+│&nbsp;&nbsp;&nbsp;└── PLAN.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">how the four skills were built</span><br>
+├── .claude/skills/ &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">the operations — all four built, with examples/</span><br>
+│&nbsp;&nbsp;&nbsp;└── <span style="color:#888">teaching-case · discussion-plan · objection-audit · quiz</span><br>
+└── output/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">the generated teaching materials</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── README.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">corpus design rationale</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── cases/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">C1–C4</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── student-arguments/ &nbsp;&nbsp;&nbsp;<span style="color:#888">S1–S3</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── discussion-plans/ &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">C1 plan</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── objection-audits/ &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#888">S1–S3 audits</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── end-of-class-quiz.md<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── walkthrough.md &nbsp;&nbsp;&nbsp;<span style="color:#888">the process narrative (a modeled deliverable)</span><br>
+</div>
+</section>
+
+<section id="why">
+<h2>Why this is a good Day-3 anchor</h2>
+<p>Day 3's ethics block is where the values conversation is meant to land — on the work
+participants just did. These three skills are narrow, repeatable, and single-purpose, and
+the paper they implement is <em>about</em> when a narrow automated system should and should
+not be trusted with a decision. So the ethics conversation and the skills lesson become the
+same conversation — and because the project keeps Claude in the augmentation role the paper
+prescribes, the demo <em>shows</em> the thesis instead of just citing it.</p>
+</section>
+</div>
+
+<footer>
+  <p>Summer of Claude · Harvard Bok Center / Learning Lab. Built on Grant, Behrends &amp;
+  Basl, "What we owe to decision-subjects," <em>Philosophical Studies</em> 182 (2025),
+  CC BY 4.0. The cases and student arguments are synthetic; the skill outputs shown are
+  real artifacts generated by the project's skills.</p>
+</footer>
+</main>
+</div>
+</body>
+</html>

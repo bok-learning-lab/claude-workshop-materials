@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Day 2 / Session 1 — Top 10 Key Takeaways — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+.footnotes {
+  font-size: 16px;
+  opacity: 0.85;
+  margin-top: 32px;
+}
+
+.footnotes li {
+  margin-bottom: 6px;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>Day 2 / Session 1 — Top 10 Key Takeaways</h1>
+      <p class="subtitle">Distilled from the diarized transcript (<a href="../inputs/day_2_transcript.md"><code>day_2_transcript.md</code></a>), Chunks 1–9 (~13:20–14:46). Instructors: Madeleine (MW) and Marlon (MK), with Becca on Git and guests (Jung Yoon, Natasha) on real faculty projects.</p>
+
+      <hr>
+
+      <ol>
+        <li><strong>"Claude Code" is a misnomer — treat it as the most powerful way to use the LLM, not a coding tool.</strong> MK's framing up front: despite the name, it's an <em>authoring environment</em> for any output — academic research, course materials, writing of all kinds. Not all faculty are developers, and that's fine; the point of the day is that Code is "the most sophisticated and powerful way of interacting with Claude," code or no code.</li>
+        <li><strong>Two on-ramps, no one left behind: desktop app vs. IDE/terminal.</strong> Non-developers stay in the <strong>Code panel of the desktop app</strong> (Mac users just click in; Windows users pay a "tax" — <code>git</code> + virtualization, with staff help). Developers comfortable with a terminal set up the <strong>CLI / VS Code (IDE)</strong> path (~15 min of installs). MW and MK deliberately <strong>alternated interfaces</strong> all session to show the <em>same operations</em> in both — and that you can move back and forth freely.</li>
+        <li><strong>A GitHub repo is "just a bundle of files" — Google Drive for code.</strong> Everything was distributed as a Git repo (date-coded <code>claude-code-20260602</code>). Two ways in: <strong>download the green "Code → zip"</strong> button (when in doubt, just grab the zip and drop it in your dev folder), or <strong>clone via HTTPS</strong>. MK's desktop-app trick: paste the URL and literally ask Claude <em>"can you clone this repository for me?"</em> — then grant permission.</li>
+        <li><strong>Point Claude at one dedicated folder — never your whole desktop.</strong> MK created a fresh <code>MK today</code> folder to clone into, with the explicit warning: don't hand Claude access to everything ("my desktop's got a lot of stuff I don't want it to see"). The recurring discipline from Day 1 — <em>one specific folder</em> — carries straight into Code.</li>
+        <li><strong>The repo mirrors the recipe: inputs / prompts / outputs.</strong> The tour walked the file structure — <code>my-recipe</code> (your ingredients, prompts, tools, then outputs), stock <code>learning-lab-examples</code>, <code>faculty-recipes</code> built from attendees' recipe cards, plus <code>resources</code> (glossary, handouts, checklists, the Day 1 recap). Same ingredients → instructions → dish mental model, now as folders on disk.</li>
+        <li><strong>The mystery limerick = proof that one line of text rules an entire folder.</strong> Every answer in the repo kept ending in a limerick ("The model's not magic, just text…"). The reveal: a <strong>CLAUDE.md at the repo root</strong> with one silly instruction — <em>always end with a limerick</em>. MW's payoff: "This isn't a script… this is just one line of text I put into a markdown document. That is how influential text is in these systems. One sentence can change the behaviour for an entire system of folders."</li>
+        <li><strong>CLAUDE.md is an automatic, project-level system prompt.</strong> It gets read in <em>every time</em> you work in that folder — on top of Claude's own system prompt and memory. MK showed editing it live (limerick → rhyming couplet), with Git's diff showing exactly the red removed / green added. Quirks that bit people: <strong>save the file</strong>, and <strong>open a new session</strong> for it to load (the session must be opened <em>in</em> the folder that holds the CLAUDE.md). Bonus: Claude walks <em>up</em> the folder tree to your home directory, reading every CLAUDE.md along the way.</li>
+        <li><strong>Git is for everyone who writes anything — Becca's four reasons.</strong> Not just code. (1) <strong>Protects against loss/damage</strong> — roll back when Claude "messed up this file"; a private remote doubles as backup against the blue screen of death. (2) <strong>Claude deeply understands Git</strong> — it reconstructs what a project is about from the commit history, getting around the limited context window across sessions. (3) <strong>Collaboration</strong> — branches let multiple people (or multiple Claude sessions of "ten-windows-out-of-spite" Madeleine) work without overwriting each other. Core moves: clone / init / <strong>commit often</strong> (each commit is a rewind point) / push / pull request.</li>
+        <li><strong>Two safety rails Becca flagged: pull requests and <code>.gitignore</code>.</strong> Code's interface nudges you toward <strong>"create a pull request"</strong> — work on a copy/branch, then merge into main — good practice even solo. And <strong><code>.gitignore</code></strong> keeps secrets (API keys, passwords, proprietary docs, huge files) out of a shared repo; you can just ask Claude to make one and it will.</li>
+        <li><strong>Context windows are the same everywhere — and Code is where you spend them at scale.</strong> Every chat / Cowork session / Code session is a context window; <code>/context</code> shows exactly what's loaded (system prompt, messages, tools) and how many of your 1M tokens are spent. Two ways to feed files: let Claude <strong>search</strong> the whole structure (burns lots of tokens) or <strong>copy the exact path</strong> and hand it over (a precise, cheap sliver). MW's Finn McCool / Natasha example: PDFs, audio transcripts, scans, and book chapters all arranged into one folder structure become — <em>in an afternoon</em> — a whole interrelated system of HTML files. That's the "superpower," and "it can only happen in Claude Code."</li>
+      </ol>
+
+      <hr>
+
+      <h2>Secondary points worth keeping</h2>
+
+      <ul>
+        <li><strong>The day's core question Claude was asked over and over:</strong> <em>"I missed the session yesterday — what are 10 things I should know? Here's the path to the transcript."</em> The summarizer pattern itself was the running demo.</li>
+        <li><strong>Two ways to give Claude a file</strong>, restated: search vs. copy-path. Harvard free accounts have a daily token ceiling, so reckless searching of a big folder (e.g. "all the Harvard concentrations") wastes your budget — be direct.</li>
+        <li><strong>Find your files in the desktop app:</strong> the file-browser icon (top right) only appears <em>after</em> you've started a chat; click it → Files to see CLAUDE.md and everything else.</li>
+        <li><strong>CLAUDE.md as a zero-code prototype:</strong> the "question anticipation" faculty recipe became interactive <strong>student personas</strong> you can converse with — a hacky, no-UI stand-in for a Slack app, useful as a testing ground before committing to real code (teased for Day 4).</li>
+        <li><strong>Tomorrow (Day 3):</strong> more file types beyond CLAUDE.md — <strong>skills</strong> and the rest of the system that gets auto-read.</li>
+        <li><strong>Tmux</strong> lets power users (MW) run many Claude sessions at once across terminal panes; hooks "that sound like birds" announce what's happening.</li>
+      </ul>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># Day 2 / Session 1 — Top 10 Key Takeaways
+
+_Distilled from the diarized transcript ([`day_2_transcript.md`](../inputs/day_2_transcript.md)), Chunks 1–9 (~13:20–14:46). Instructors: Madeleine (MW) and Marlon (MK), with Becca on Git and guests (Jung Yoon, Natasha) on real faculty projects._
+
+---
+
+1. **"Claude Code" is a misnomer — treat it as the most powerful way to use the LLM, not a coding tool.** MK's framing up front: despite the name, it's an *authoring environment* for any output — academic research, course materials, writing of all kinds. Not all faculty are developers, and that's fine; the point of the day is that Code is "the most sophisticated and powerful way of interacting with Claude," code or no code.
+
+2. **Two on-ramps, no one left behind: desktop app vs. IDE/terminal.** Non-developers stay in the **Code panel of the desktop app** (Mac users just click in; Windows users pay a "tax" — `git` + virtualization, with staff help). Developers comfortable with a terminal set up the **CLI / VS Code (IDE)** path (~15 min of installs). MW and MK deliberately **alternated interfaces** all session to show the *same operations* in both — and that you can move back and forth freely.
+
+3. **A GitHub repo is "just a bundle of files" — Google Drive for code.** Everything was distributed as a Git repo (date-coded `claude-code-20260602`). Two ways in: **download the green "Code → zip"** button (when in doubt, just grab the zip and drop it in your dev folder), or **clone via HTTPS**. MK's desktop-app trick: paste the URL and literally ask Claude *"can you clone this repository for me?"* — then grant permission.
+
+4. **Point Claude at one dedicated folder — never your whole desktop.** MK created a fresh `MK today` folder to clone into, with the explicit warning: don't hand Claude access to everything ("my desktop's got a lot of stuff I don't want it to see"). The recurring discipline from Day 1 — *one specific folder* — carries straight into Code.
+
+5. **The repo mirrors the recipe: inputs / prompts / outputs.** The tour walked the file structure — `my-recipe` (your ingredients, prompts, tools, then outputs), stock `learning-lab-examples`, `faculty-recipes` built from attendees' recipe cards, plus `resources` (glossary, handouts, checklists, the Day 1 recap). Same ingredients → instructions → dish mental model, now as folders on disk.
+
+6. **The mystery limerick = proof that one line of text rules an entire folder.** Every answer in the repo kept ending in a limerick ("The model's not magic, just text…"). The reveal: a **CLAUDE.md at the repo root** with one silly instruction — *always end with a limerick*. MW's payoff: "This isn't a script… this is just one line of text I put into a markdown document. That is how influential text is in these systems. One sentence can change the behaviour for an entire system of folders."
+
+7. **CLAUDE.md is an automatic, project-level system prompt.** It gets read in *every time* you work in that folder — on top of Claude's own system prompt and memory. MK showed editing it live (limerick → rhyming couplet), with Git's diff showing exactly the red removed / green added. Quirks that bit people: **save the file**, and **open a new session** for it to load (the session must be opened *in* the folder that holds the CLAUDE.md). Bonus: Claude walks *up* the folder tree to your home directory, reading every CLAUDE.md along the way.
+
+8. **Git is for everyone who writes anything — Becca's four reasons.** Not just code. (1) **Protects against loss/damage** — roll back when Claude "messed up this file"; a private remote doubles as backup against the blue screen of death. (2) **Claude deeply understands Git** — it reconstructs what a project is about from the commit history, getting around the limited context window across sessions. (3) **Collaboration** — branches let multiple people (or multiple Claude sessions of "ten-windows-out-of-spite" Madeleine) work without overwriting each other. Core moves: clone / init / **commit often** (each commit is a rewind point) / push / pull request.
+
+9. **Two safety rails Becca flagged: pull requests and `.gitignore`.** Code's interface nudges you toward **"create a pull request"** — work on a copy/branch, then merge into main — good practice even solo. And **`.gitignore`** keeps secrets (API keys, passwords, proprietary docs, huge files) out of a shared repo; you can just ask Claude to make one and it will.
+
+10. **Context windows are the same everywhere — and Code is where you spend them at scale.** Every chat / Cowork session / Code session is a context window; `/context` shows exactly what's loaded (system prompt, messages, tools) and how many of your 1M tokens are spent. Two ways to feed files: let Claude **search** the whole structure (burns lots of tokens) or **copy the exact path** and hand it over (a precise, cheap sliver). MW's Finn McCool / Natasha example: PDFs, audio transcripts, scans, and book chapters all arranged into one folder structure become — *in an afternoon* — a whole interrelated system of HTML files. That's the "superpower," and "it can only happen in Claude Code."
+
+---
+
+## Secondary points worth keeping
+
+- **The day's core question Claude was asked over and over:** *"I missed the session yesterday — what are 10 things I should know? Here's the path to the transcript."* The summarizer pattern itself was the running demo.
+- **Two ways to give Claude a file**, restated: search vs. copy-path. Harvard free accounts have a daily token ceiling, so reckless searching of a big folder (e.g. "all the Harvard concentrations") wastes your budget — be direct.
+- **Find your files in the desktop app:** the file-browser icon (top right) only appears *after* you've started a chat; click it → Files to see CLAUDE.md and everything else.
+- **CLAUDE.md as a zero-code prototype:** the "question anticipation" faculty recipe became interactive **student personas** you can converse with — a hacky, no-UI stand-in for a Slack app, useful as a testing ground before committing to real code (teased for Day 4).
+- **Tomorrow (Day 3):** more file types beyond CLAUDE.md — **skills** and the rest of the system that gets auto-read.
+- **Tmux** lets power users (MW) run many Claude sessions at once across terminal panes; hooks "that sound like birds" announce what's happening.</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

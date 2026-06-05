@@ -12,7 +12,9 @@ A worked example of using Claude Code to **build and run teaching material** for
 
 Built for the *Summer of Claude* faculty workshop at Harvard's Bok Center. Jeff Behrends is among the workshop participants, so the design choices throughout are made to align with **his** paper's framework and its careful hedges — not with a generic "AI ethics" take.
 
-Source repo: [github.com/bok-learning-lab/claude-code-20260604/examples/paper-to-teaching-materials](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/paper-to-teaching-materials)
+> **Live output:** [The case study, as a landing page](outputs/case-study.html){:target="_blank"} — opens in a new tab.
+>
+> **Source repo:** [`claude-code-20260604/examples/paper-to-teaching-materials/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/paper-to-teaching-materials)
 
 ---
 

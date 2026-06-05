@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Broken Surface &middot; A Lecture on Late Nineteenth-Century Painting</title>
+<style>
+  :root{
+    --ink:#1c1a17;
+    --paper:#f4f0e8;
+    --paper-2:#ece6da;
+    --line:#cfc6b4;
+    --accent:#8c2f1d;
+    --accent-2:#3f5d54;
+    --muted:#6d655a;
+    --max:1180px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* ---- Masthead ---- */
+  header.hero{
+    background:var(--ink);
+    color:var(--paper);
+    padding:5.5rem 1.5rem 4rem;
+    text-align:center;
+    border-bottom:6px double var(--accent);
+  }
+  .kicker{
+    font-family:ui-sans-serif,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.34em;
+    font-size:.72rem;
+    color:#caa;
+    margin:0 0 1.4rem;
+  }
+  header.hero h1{
+    font-size:clamp(2.3rem,6vw,4.3rem);
+    line-height:1.04;
+    margin:0 auto .9rem;
+    max-width:14ch;
+    font-weight:600;
+  }
+  header.hero .sub{
+    font-style:italic;
+    font-size:clamp(1.05rem,2.4vw,1.4rem);
+    color:#ded6c6;
+    max-width:46ch;
+    margin:0 auto;
+  }
+  header.hero .meta{
+    margin-top:2.2rem;
+    font-family:ui-sans-serif,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    font-size:.78rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#a99;
+  }
+
+  /* ---- Layout ---- */
+  main{max-width:var(--max);margin:0 auto;padding:0 1.5rem}
+  .lede{
+    font-size:clamp(1.15rem,2.6vw,1.5rem);
+    line-height:1.55;
+    max-width:62ch;
+    margin:3.5rem auto 1rem;
+    color:#332f29;
+  }
+  .lede .drop{
+    float:left;
+    font-size:4.4rem;
+    line-height:.78;
+    padding:.35rem .55rem 0 0;
+    color:var(--accent);
+    font-weight:600;
+  }
+
+  section.movement{
+    margin:4.5rem auto;
+    max-width:62ch;
+  }
+  .num{
+    font-family:ui-sans-serif,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    font-size:.74rem;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--accent-2);
+    display:block;
+    margin-bottom:.5rem;
+  }
+  section.movement h2{
+    font-size:clamp(1.7rem,4vw,2.5rem);
+    line-height:1.1;
+    margin:.1rem 0 1.2rem;
+    font-weight:600;
+  }
+  section.movement p{margin:0 0 1.15rem;font-size:1.08rem}
+
+  /* ---- Plates ---- */
+  figure.plate{
+    margin:2.6rem auto;
+    max-width:var(--max);
+    width:100%;
+  }
+  figure.plate img{
+    display:block;
+    width:100%;
+    height:auto;
+    background:var(--paper-2);
+    box-shadow:0 1px 0 rgba(0,0,0,.04),0 24px 50px -28px rgba(28,26,23,.55);
+  }
+  figure.plate.tall img{max-height:78vh;width:auto;margin:0 auto}
+  figcaption{
+    margin-top:1rem;
+    font-size:.95rem;
+    color:var(--muted);
+    max-width:60ch;
+  }
+  figcaption .work{font-style:italic;color:var(--ink)}
+  figcaption .artist{font-variant:small-caps;letter-spacing:.04em;color:var(--ink);font-style:normal;font-weight:600}
+  figcaption .gloss{display:block;margin-top:.5rem;line-height:1.55}
+  figcaption a.src{
+    font-family:ui-sans-serif,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent-2);
+  }
+
+  /* two-up comparison */
+  .duo{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1.4rem;
+    max-width:var(--max);
+    margin:2.6rem auto;
+  }
+  .duo figure{margin:0}
+  .duo img{width:100%;height:auto;display:block;box-shadow:0 18px 40px -26px rgba(28,26,23,.55)}
+  .duo figcaption{margin-top:.7rem;font-size:.85rem}
+  @media(max-width:640px){.duo{grid-template-columns:1fr}}
+
+  blockquote.pull{
+    border-left:3px solid var(--accent);
+    margin:2.4rem auto;
+    padding:.2rem 0 .2rem 1.4rem;
+    font-size:1.3rem;
+    font-style:italic;
+    color:#2a2622;
+    max-width:60ch;
+  }
+
+  hr.rule{
+    border:0;
+    border-top:1px solid var(--line);
+    max-width:62ch;
+    margin:3.5rem auto;
+  }
+
+  /* ---- Plate index ---- */
+  section.index-wrap{background:var(--ink);color:var(--paper);margin-top:5rem;padding:4rem 1.5rem 5rem}
+  section.index-wrap .inner{max-width:var(--max);margin:0 auto}
+  section.index-wrap h2{font-size:1.8rem;margin:0 0 .4rem;text-align:center;font-weight:600}
+  section.index-wrap p.note{text-align:center;color:#b7ad9c;font-size:.92rem;max-width:54ch;margin:0 auto 2.6rem}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:1.1rem;
+  }
+  .grid a{display:block;color:var(--paper);text-decoration:none}
+  .grid img{width:100%;height:170px;object-fit:cover;display:block;background:#2a2723;filter:grayscale(.15)}
+  .grid a:hover img{filter:none}
+  .grid .t{font-size:.78rem;margin-top:.45rem;line-height:1.3;color:#ded6c6}
+  .grid .t b{display:block;color:#fff;font-variant:small-caps}
+
+  footer{background:var(--ink);color:#9c9384;text-align:center;padding:2.5rem 1.5rem 3.5rem;font-size:.82rem;border-top:1px solid #36322c}
+  footer a{color:#caa}
+
+  /* ---- Print: keep titles attached to their content, never split a plate ---- */
+  @media print{
+    /* A heading must never be the last thing on a page — glue it to what follows. */
+    section.movement h2,
+    section.movement .num,
+    section.index-wrap h2{
+      break-after:avoid;
+      page-break-after:avoid;   /* legacy alias for older print engines */
+    }
+    /* The "Part One" label + its <h2> + the first paragraph travel together. */
+    section.movement{
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+    /* A plate (image + caption) is an atomic unit — don't orphan a caption or
+       split an image across a page break. */
+    figure.plate,
+    figure.plate figcaption,
+    .duo,
+    .duo figure,
+    blockquote.pull{
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+    /* Don't strand a single line of a paragraph alone at a page top/bottom. */
+    p{ orphans:3; widows:3; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="kicker">A Lecture &middot; Nineteenth-Century Art</p>
+  <h1>The Broken Surface</h1>
+  <p class="sub">How a generation of painters in France took the picture apart&mdash;light, then structure, then feeling&mdash;and never quite put it back together.</p>
+  <p class="meta">Twelve works from the Harvard Art Museums &middot; c.&nbsp;1872&ndash;1897</p>
+</header>
+
+<main>
+
+  <p class="lede"><span class="drop">I</span>magine the lecture begins with a complaint. In 1874 a critic stood before a hazy Monet harbor and sneered the word that would name a movement: <em>Impression</em>. He meant it as an insult&mdash;unfinished, a sketch passed off as a painting. Our hour together is the story of how that insult became a program, and then how a younger generation, restless with mere light, broke the surface open again in search of structure, science, and the soul. Every work I point to today hangs in the Harvard Art Museums, so you can walk down and test my claims against the canvas itself.</p>
+
+  <!-- ============ MOVEMENT I ============ -->
+  <section class="movement">
+    <span class="num">Part One</span>
+    <h2>The Quarrel with Finish</h2>
+    <p>The first thing to notice about Impressionism is that it is a quarrel about <em>where a painting should stop</em>. The academic picture was finished in the studio, its brushwork polished out of sight. Monet does the opposite. He paints the Seine on the spot, in a single sitting, chasing a light that will not hold still&mdash;and he lets you see every decision he made.</p>
+  </section>
+
+  <figure class="plate">
+    <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:53602_dynmc/full/1400,/0/default.jpg" alt="Claude Monet, View of the Seine, Lavacourt, 1880">
+    <figcaption>
+      <span class="artist">Claude Monet</span>, <span class="work">View of the Seine, Lavacourt</span>, 1880. Oil on canvas.<br>
+      <span class="gloss">Stand close and the water dissolves into separate, loaded strokes; step back and it resolves into a shimmering river. That gap&mdash;between the touch and the illusion&mdash;is the whole argument. Monet trusts your eye to do the finishing he refused to do.</span>
+      <a class="src" href="https://www.harvardartmuseums.org/collections/object/227541" target="_blank" rel="noopener">Harvard Art Museums &middot; 1979.4 &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <p class="lede" style="margin-top:1rem">Light, for these painters, is not a neutral medium that reveals color&mdash;it <em>is</em> the color. Look at how Pissarro paints snow.</p>
+
+  <figure class="plate">
+    <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:30227_dynmc/full/1400,/0/default.jpg" alt="Camille Pissarro, The Hermitage, Effect of Snow, 1874">
+    <figcaption>
+      <span class="artist">Camille Pissarro</span>, <span class="work">The Hermitage, Effect of Snow</span>, 1874. Oil on canvas.<br>
+      <span class="gloss">There is almost no white here. The snow is built from lavender, ochre, pale green, and grey, set side by side so the eye mixes them into cold winter light. This is the Impressionist creed in a single field: shadow has color, and color is relative to its neighbors.</span>
+      <a class="src" href="https://www.harvardartmuseums.org/collections/object/229065" target="_blank" rel="noopener">Harvard Art Museums &middot; 1953.105 &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <p class="lede" style="margin-top:1rem">But Impressionism was never only landscape. It was equally a painting of <em>modern life</em>&mdash;the city, its theaters, its bodies, caught as if glimpsed in passing.</p>
+
+  <div class="duo">
+    <figure>
+      <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:77644_dynmc/full/900,/0/default.jpg" alt="Edgar Degas, Singer with a Glove, c. 1878">
+      <figcaption>
+        <span class="artist">Edgar Degas</span>, <span class="work">Singer with a Glove</span>, c.&nbsp;1878. Pastel.<br>
+        <span class="gloss">A caf&eacute;-concert performer lit from below by footlights, mouth open mid-note, one gloved hand thrust toward us. Degas crops her like a photograph and freezes a gesture no academy would have dignified.</span>
+        <a class="src" href="https://www.harvardartmuseums.org/collections/object/228652" target="_blank" rel="noopener">HAM &middot; 1951.68 &rarr;</a>
+      </figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC252042_dynmc/full/900,/0/default.jpg" alt="Pierre-Auguste Renoir, Seated Bather, c. 1883-1884">
+      <figcaption>
+        <span class="artist">Pierre-Auguste Renoir</span>, <span class="work">Seated Bather</span>, c.&nbsp;1883&ndash;84. Oil on canvas.<br>
+        <span class="gloss">Even Renoir grew uneasy with pure dissolution. Here he firms up the figure's contour&mdash;the flesh modeled, the drawing reasserted. It is Impressionism beginning to doubt itself.</span>
+        <a class="src" href="https://www.harvardartmuseums.org/collections/object/228651" target="_blank" rel="noopener">HAM &middot; 1951.59 &rarr;</a>
+      </figcaption>
+    </figure>
+  </div>
+
+  <hr class="rule">
+
+  <!-- ============ MOVEMENT II ============ -->
+  <section class="movement">
+    <span class="num">Part Two</span>
+    <h2>The Same Place, Again and Again</h2>
+    <p>By the 1890s Monet has pressed his own logic to its limit. If a painting records light at one moment, then to paint the <em>same</em> motif repeatedly is to paint time itself. The subject thins almost to a pretext; what remains is atmosphere, surface, sensation.</p>
+  </section>
+
+  <figure class="plate">
+    <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:761028/full/1400,/0/default.jpg" alt="Claude Monet, Gorge of the Petit Ailly, Varengeville, 1897">
+    <figcaption>
+      <span class="artist">Claude Monet</span>, <span class="work">Gorge of the Petit Ailly, Varengeville</span>, 1897. Oil on canvas.<br>
+      <span class="gloss">One of a series painted on the Normandy cliffs. The cleft of land is barely described; the painting is really about the weight of haze and the vibration of warm light against cool. The motif has become an excuse for pure looking.</span>
+      <a class="src" href="https://www.harvardartmuseums.org/collections/object/228061" target="_blank" rel="noopener">Harvard Art Museums &middot; 1972.31 &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <blockquote class="pull">&ldquo;Impressionism had won the argument about light&mdash;and in winning it, exhausted it. The next generation asked: is that <em>all</em> a painting can be?&rdquo;</blockquote>
+
+  <hr class="rule">
+
+  <!-- ============ MOVEMENT III ============ -->
+  <section class="movement">
+    <span class="num">Part Three</span>
+    <h2>Four Ways Out</h2>
+    <p>We call the answer <em>Post-Impressionism</em>, but that word hides how little its members agreed. They shared a dissatisfaction, not a method. Four painters, four exits&mdash;structure, science, emotion, symbol.</p>
+    <p><strong>Structure.</strong> C&eacute;zanne keeps the bright Impressionist palette but wants the permanence the academy had and Monet threw away. He builds form from planes of color, each brushstroke a small architectural decision.</p>
+  </section>
+
+  <figure class="plate">
+    <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:784088/full/1400,/0/default.jpg" alt="Paul Cézanne, Still Life with Game Birds, c. 1872-1873">
+    <figcaption>
+      <span class="artist">Paul C&eacute;zanne</span>, <span class="work">Still Life with Game Birds</span>, c.&nbsp;1872&ndash;73. Oil.<br>
+      <span class="gloss">Note how solidly the forms sit&mdash;weighed, constructed, almost sculptural&mdash;compared with Monet's dissolving river. C&eacute;zanne wanted &ldquo;to make of Impressionism something solid and durable, like the art of the museums.&rdquo; This instinct will run straight into Cubism a generation later.</span>
+      <a class="src" href="https://www.harvardartmuseums.org/collections/object/227822" target="_blank" rel="noopener">Harvard Art Museums &middot; 1976.70 &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <section class="movement">
+    <p><strong>Science.</strong> Seurat takes the Impressionist insight about optical color mixing and makes it a discipline. If the eye blends adjacent colors, why not place them deliberately&mdash;dot by dot, by law rather than by feeling?</p>
+  </section>
+
+  <figure class="plate">
+    <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC251930_dynmc/full/1400,/0/default.jpg" alt="Georges Seurat, Seated Figures, study for La Grande Jatte, 1884-1885">
+    <figcaption>
+      <span class="artist">Georges Seurat</span>, <span class="work">Seated Figures</span>, study for <span class="work">A Sunday Afternoon on the Island of La Grande Jatte</span>, 1884&ndash;85. Oil on panel.<br>
+      <span class="gloss">A working study for one of the era's great machines. Where Monet's stroke is loose and instinctive, Seurat's is calculated&mdash;the spontaneity of Impressionism refrozen into method. The result feels eternal and a little airless, which is exactly the point.</span>
+      <a class="src" href="https://www.harvardartmuseums.org/collections/object/229049" target="_blank" rel="noopener">Harvard Art Museums &middot; 1951.62 &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <section class="movement">
+    <p><strong>Emotion.</strong> For Van Gogh, color and stroke are not optical facts to be recorded but feelings to be discharged. The brush no longer describes a surface&mdash;it carries a pulse.</p>
+  </section>
+
+  <div class="duo">
+    <figure>
+      <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC251942_dynmc/full/900,/0/default.jpg" alt="Vincent van Gogh, Self-Portrait Dedicated to Paul Gauguin, 1888">
+      <figcaption>
+        <span class="artist">Vincent van Gogh</span>, <span class="work">Self-Portrait Dedicated to Paul Gauguin</span>, 1888.<br>
+        <span class="gloss">Painted as a gift before their fateful months together in Arles. The face is carved from restless strokes; the eyes turn slightly aslant, watchful. The paint is the man.</span>
+        <a class="src" href="https://www.harvardartmuseums.org/collections/object/299843" target="_blank" rel="noopener">HAM &middot; 1951.65 &rarr;</a>
+      </figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC231470_dynmc/full/900,/0/default.jpg" alt="Vincent van Gogh, Three Pairs of Shoes, 1886-1887">
+      <figcaption>
+        <span class="artist">Vincent van Gogh</span>, <span class="work">Three Pairs of Shoes</span>, 1886&ndash;87.<br>
+        <span class="gloss">Worn boots, painted with the gravity of a portrait. Humble objects become carriers of a life&mdash;the kind of charged ordinariness that later thinkers wrote whole essays about.</span>
+        <a class="src" href="https://www.harvardartmuseums.org/collections/object/228744" target="_blank" rel="noopener">HAM &middot; 1951.66 &rarr;</a>
+      </figcaption>
+    </figure>
+  </div>
+
+  <section class="movement">
+    <p><strong>Symbol.</strong> Gauguin abandons European optical truth altogether. Flattened shape, arbitrary color, and a hunger for the &ldquo;primitive&rdquo; carry the painting toward dream and myth&mdash;and, we should say plainly, toward a colonial fantasy of Tahiti that the lecture must hold up for scrutiny, not simply admire.</p>
+  </section>
+
+  <figure class="plate">
+    <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC252014_dynmc/full/1400,/0/default.jpg" alt="Paul Gauguin, Poèmes Barbares, 1896">
+    <figcaption>
+      <span class="artist">Paul Gauguin</span>, <span class="work">Po&egrave;mes Barbares</span>, 1896. Oil on canvas.<br>
+      <span class="gloss">Painted in Tahiti. The color is unhitched from observation, the space compressed into decorative bands, a small idol set against the figure. Beauty and ideology are tangled here; a good lecture lets students feel both the pull of the picture and the trouble in it.</span>
+      <a class="src" href="https://www.harvardartmuseums.org/collections/object/229043" target="_blank" rel="noopener">Harvard Art Museums &middot; 1951.49 &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <hr class="rule">
+
+  <!-- ============ MOVEMENT IV ============ -->
+  <section class="movement">
+    <span class="num">Part Four</span>
+    <h2>Montmartre, and the Painting of the Night</h2>
+    <p>Alongside these grand experiments ran a sharper, more worldly current&mdash;the painters of the modern city after dark. Toulouse-Lautrec made the cabarets and brothels of Montmartre his subject, and he did so without sentiment.</p>
+  </section>
+
+  <figure class="plate">
+    <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC252007_dynmc/full/1400,/0/default.jpg" alt="Henri de Toulouse-Lautrec, The Hangover (Suzanne Valadon), 1887-1889">
+    <figcaption>
+      <span class="artist">Henri de Toulouse-Lautrec</span>, <span class="work">The Hangover (Suzanne Valadon)</span>, 1887&ndash;89. Oil on canvas.<br>
+      <span class="gloss">A woman slumps at a caf&eacute; table beside a half-empty bottle&mdash;the model Suzanne Valadon, herself a painter. The drawing is fast and unsparing; the mood, modern in a way that reaches forward to the twentieth century. No mythology, no flattery&mdash;just a person and a bad morning.</span>
+      <a class="src" href="https://www.harvardartmuseums.org/collections/object/229060" target="_blank" rel="noopener">Harvard Art Museums &middot; 1951.63 &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <hr class="rule">
+
+  <!-- ============ MOVEMENT V ============ -->
+  <section class="movement">
+    <span class="num">Part Five</span>
+    <h2>The Anglo-American Coda</h2>
+    <p>Finally, two cosmopolitans who worked between Paris, London, and Boston&mdash;and who remind us that &ldquo;late nineteenth-century painting&rdquo; was never only French. Whistler pushes toward pure aesthetic arrangement; Sargent toward bravura performance.</p>
+  </section>
+
+  <div class="duo">
+    <figure>
+      <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:51376_dynmc/full/900,/0/default.jpg" alt="James McNeill Whistler, Harmony in Grey and Peach Colour, 1872-1874">
+      <figcaption>
+        <span class="artist">James McNeill Whistler</span>, <span class="work">Harmony in Grey and Peach Colour</span>, 1872&ndash;74.<br>
+        <span class="gloss">The musical title is the manifesto: Whistler titles by color, not by sitter, insisting a painting is first an arrangement of tones&mdash;&ldquo;art for art's sake.&rdquo; This is the road that ends in abstraction.</span>
+        <a class="src" href="https://www.harvardartmuseums.org/collections/object/230025" target="_blank" rel="noopener">HAM &middot; 1943.165 &rarr;</a>
+      </figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:78760_dynmc/full/900,/0/default.jpg" alt="John Singer Sargent, The Honorable Laura Lister, 1896">
+      <figcaption>
+        <span class="artist">John Singer Sargent</span>, <span class="work">The Honorable Laura Lister</span>, 1896.<br>
+        <span class="gloss">Sargent absorbs the Impressionist touch but turns it to the service of grand portraiture&mdash;the loaded, confident stroke that flatters and dazzles. Tradition, modernized rather than overthrown.</span>
+        <a class="src" href="https://www.harvardartmuseums.org/collections/object/12550" target="_blank" rel="noopener">HAM &middot; 1943.156 &rarr;</a>
+      </figcaption>
+    </figure>
+  </div>
+
+  <hr class="rule">
+
+  <section class="movement">
+    <span class="num">In Closing</span>
+    <h2>What the Broken Surface Left Behind</h2>
+    <p>So: we began with a complaint about a painting that looked unfinished, and we end three decades later with the picture surface deliberately, permanently open&mdash;to light, to method, to feeling, to symbol. Each painter we met today loosened a different joint. C&eacute;zanne's planes lead to Cubism; Van Gogh's and Gauguin's color leads to the Fauves and the Expressionists; Whistler's harmonies lead to abstraction.</p>
+    <p>The lesson I would leave you with is this: a movement is not a style you memorize but an <em>argument you can still see being made</em>, stroke by stroke, if you stand close enough. Harvard owns every one of these arguments. Go look.</p>
+  </section>
+
+</main>
+
+<!-- ============ PLATE INDEX ============ -->
+<section class="index-wrap">
+  <div class="inner">
+    <h2>The Twelve Plates</h2>
+    <p class="note">Every work shown today, in order, with a direct link to its catalogue record at the Harvard Art Museums. Images served live from the museum's IIIF endpoint.</p>
+    <div class="grid">
+      <a href="https://www.harvardartmuseums.org/collections/object/227541" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:53602_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Monet</b>View of the Seine, Lavacourt &middot; 1880</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/229065" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:30227_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Pissarro</b>The Hermitage, Effect of Snow &middot; 1874</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/228652" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:77644_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Degas</b>Singer with a Glove &middot; c.1878</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/228651" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC252042_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Renoir</b>Seated Bather &middot; c.1883&ndash;84</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/228061" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:761028/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Monet</b>Gorge of the Petit Ailly &middot; 1897</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/227822" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:784088/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>C&eacute;zanne</b>Still Life with Game Birds &middot; c.1872&ndash;73</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/229049" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC251930_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Seurat</b>Study for La Grande Jatte &middot; 1884&ndash;85</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/299843" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC251942_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Van Gogh</b>Self-Portrait (for Gauguin) &middot; 1888</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/228744" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC231470_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Van Gogh</b>Three Pairs of Shoes &middot; 1886&ndash;87</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/229043" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC252014_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Gauguin</b>Po&egrave;mes Barbares &middot; 1896</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/229060" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:DDC252007_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Toulouse-Lautrec</b>The Hangover &middot; 1887&ndash;89</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/230025" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:51376_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Whistler</b>Harmony in Grey and Peach &middot; 1872&ndash;74</span></a>
+      <a href="https://www.harvardartmuseums.org/collections/object/12550" target="_blank" rel="noopener">
+        <img loading="lazy" src="https://nrs.harvard.edu/urn-3:HUAM:78760_dynmc/full/400,/0/default.jpg" alt="">
+        <span class="t"><b>Sargent</b>The Honorable Laura Lister &middot; 1896</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>An <em>imaginary</em> lecture, written to test the Harvard Art Museums MCP server.<br>
+  All works belong to the <a href="https://www.harvardartmuseums.org/" target="_blank" rel="noopener">Harvard Art Museums</a>; images delivered via their public IIIF service. Catalogue text and dates per the museum records; interpretation is the lecturer's own.</p>
+</footer>
+
+</body>
+</html>
