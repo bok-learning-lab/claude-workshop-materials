@@ -31,7 +31,9 @@ Plain-language definitions for every key term in the workshop. Each entry is a s
 | [Token / Tokenization]({{ site.baseurl }}/encyclopedia/glossary/token/) | The chunks of text Claude reads and writes in. |
 | [Tool Call]({{ site.baseurl }}/encyclopedia/glossary/tool-call/) | When Claude *does* something (runs code, reads a file) instead of just talking. |
 | [Agent]({{ site.baseurl }}/encyclopedia/glossary/agent/) | Claude pursuing a goal over multiple steps. |
+| [Sub-agents]({{ site.baseurl }}/encyclopedia/glossary/sub-agents/) | Helper Claudes spawned to handle parts of a task in parallel. |
 | [Harness]({{ site.baseurl }}/encyclopedia/glossary/harness/) | The program around Claude that runs the loop and its tools. |
+| [RAG]({{ site.baseurl }}/encyclopedia/glossary/rag/) | Showing Claude only the relevant chunks of a large document instead of the whole thing. |
 
 ## How Claude remembers — the context story
 
@@ -42,8 +44,10 @@ Read these as a chain; each builds on the last.
 | [Context]({{ site.baseurl }}/encyclopedia/glossary/context/) | Everything Claude can "see" right now — the basis for every reply. |
 | [Context Window]({{ site.baseurl }}/encyclopedia/glossary/context-window/) | The fixed amount of context Claude can hold at once. |
 | [Context Rot]({{ site.baseurl }}/encyclopedia/glossary/context-rot/) | How answers degrade as the window fills with clutter. |
+| [Primacy Effect]({{ site.baseurl }}/encyclopedia/glossary/primacy-effect/) | Why what's at the *start* of the context pulls hardest on the answer. |
 | [Context Engineering]({{ site.baseurl }}/encyclopedia/glossary/context-engineering/) | Deliberately choosing what goes into the context. |
 | [Memory]({{ site.baseurl }}/encyclopedia/glossary/memory/) | Optional saved notes re-read at the start of new conversations. |
+| [Hand-off doc]({{ site.baseurl }}/encyclopedia/glossary/hand-off-doc/) | A written record so the next session — yours or another Claude's — can pick up. |
 
 ## Talking to Claude
 
@@ -51,6 +55,9 @@ Read these as a chain; each builds on the last.
 |---|---|
 | [Prompt]({{ site.baseurl }}/encyclopedia/glossary/prompt/) | What you send to Claude. |
 | [System Prompt]({{ site.baseurl }}/encyclopedia/glossary/system-prompt/) | Background instructions Claude has before you start typing. |
+| [Prompt Chaining]({{ site.baseurl }}/encyclopedia/glossary/prompt-chaining/) | Making the output of one prompt the input to the next. |
+| [Structured Output]({{ site.baseurl }}/encyclopedia/glossary/structured-output/) | Asking Claude to return its answer in a fixed shape (table, JSON, fields). |
+| [Prompt Injection]({{ site.baseurl }}/encyclopedia/glossary/prompt-injection/) | When text Claude reads contains hidden instructions trying to hijack it. |
 
 ## Files, formats, and outputs
 
@@ -59,6 +66,7 @@ Read these as a chain; each builds on the last.
 | [Markdown]({{ site.baseurl }}/encyclopedia/glossary/markdown/) | Plain text where simple symbols become formatting. |
 | [HTML]({{ site.baseurl }}/encyclopedia/glossary/html/) | The language web pages are written in — Claude can produce it. |
 | [CLAUDE.md]({{ site.baseurl }}/encyclopedia/glossary/claude-md/) | A notes file Claude reads first, so it knows your project. |
+| [plan.md]({{ site.baseurl }}/encyclopedia/glossary/plan-md/) | A markdown plan for the project, written before any real work begins. |
 | [SKILL.md]({{ site.baseurl }}/encyclopedia/glossary/skill-md/) | A reusable instruction packet for a specific task. |
 | [Artifact]({{ site.baseurl }}/encyclopedia/glossary/artifact/) | A finished thing Claude produces — a doc, chart, or web page. |
 | [Project]({{ site.baseurl }}/encyclopedia/glossary/project/) | A long-running Claude.ai workspace with shared instructions and files. |

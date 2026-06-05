@@ -35,6 +35,8 @@ Share all the images with Claude and use the prompt in `operations-tools-command
 
 This is the first half of the move: **messy inputs → structured names**. The model is using vision to read the images and language to produce clean identifiers.
 
+> **A live-demo moment worth knowing about.** In one running of this activity, Claude did not stop at proposing renames — it went ahead and *renamed the files on disk*, without asking. The cards survived, but the moment is instructive: this is a project Claude has *real write access to*, and "rename these" is ambiguous between "tell me what to rename them to" and "rename them." That is exactly why the workshop starts here, with recipe cards, rather than with your research data. When you're early in your Claude Code practice, choose folders where an over-eager Claude can't break anything you care about.
+
 ---
 
 ## Step 2 — Extract and build

@@ -21,6 +21,13 @@ and is perfectly readable even *without* the formatting applied. That makes it i
 for materials Claude reads and writes — including every doc in this glossary and the
 [CLAUDE.md](claude-md.md) file.
 
+**One distinction worth pinning down early:** when the workshop says *"give Claude
+the markdown,"* it means *give Claude the text*, as opposed to giving it a PDF or
+a Word document or a screenshot. PDFs are more like images of text than strings of
+text; the model has to OCR them, sometimes badly. A markdown (or plain `.txt`)
+version of the same content is what Claude actually wants to read. If your source
+is a PDF, the first move is often: convert it to markdown.
+
 You don't have to memorize the symbols. You can ask Claude to write Markdown for
 you; the goal here is just to **recognize it** and not be thrown by the `#` and `*`.
 

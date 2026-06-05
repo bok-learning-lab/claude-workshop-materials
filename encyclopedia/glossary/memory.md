@@ -24,6 +24,10 @@ Practical notes:
 - You can view and edit what it's keeping.
 - It's a convenience, not a guarantee: important standing facts about a project
   belong in a [CLAUDE.md](claude-md.md), which is explicit and under your control.
+- As of mid-2026, memory in the consumer Claude interfaces is still light:
+  it doesn't actually *accumulate* much across sessions yet, despite what the
+  name suggests. Don't expect it to remember what you talked about yesterday in
+  any detail. For real continuity, write a [hand-off doc](hand-off-doc.md).
 
 ## Why it matters in this workshop
 

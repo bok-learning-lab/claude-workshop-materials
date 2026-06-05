@@ -33,5 +33,6 @@ work." The skill of steering it well is, again, context engineering.
 ## See also
 
 - [Tool Call](tool-call.md) — the steps an agent takes
+- [Sub-agents](sub-agents.md) — helper agents spawned to handle parts of a task in parallel
 - [Harness](harness.md) — the program that runs the agent loop
 - [Claude Code](claude-code.md) — an agent you'll actually use

@@ -268,6 +268,16 @@ External to that folder but part of the system:
 
 ---
 
+## Caveats from real faculty runs
+
+A few things workshop cohorts hit that are worth flagging up front:
+
+- **Platform fragmentation.** Many MCPs that "just work" on Mac require WSL or a Linux VM on Windows. The Canvas MCP is the most common example. If you're on Windows, check the target MCP's README before assuming setup parity. WSL is the path of least resistance.
+- **Desktop app vs. CLI.** The Claude Code CLI handles `.mcp.json` natively. The Claude desktop app needs you to edit a developer config file by hand to register an MCP — a much friskier path. If you have the option, do MCP work in the CLI.
+- **Permission fatigue.** Once an MCP is wired up and Claude starts calling it, you'll see permission prompts for every tool call. The temptation is to "yes yes yes" through them, or to grant "always allow." Resist this with anything that *writes* — sending email, posting to Slack, modifying Canvas, charging an API. Read-only is safe; write needs deliberation, every time. (See the [Prompt Injection]({{ site.baseurl }}/encyclopedia/glossary/prompt-injection/) glossary entry for *why* this matters beyond bookkeeping.)
+
+---
+
 ## When this approach is the wrong fit
 
 This pattern works well for read/write APIs with HTTP endpoints and an
