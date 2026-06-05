@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Oral Exam Practice Bot
-section: gallery
+section: activities
 ---
 
 # Oral Exam Practice Bot

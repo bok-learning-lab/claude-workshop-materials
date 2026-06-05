@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Interactive Concept Simulations
-section: gallery
+section: activities
 ---
 
 # Interactive Concept Simulations

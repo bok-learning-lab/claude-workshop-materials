@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Source → Teaching Materials"
-section: gallery
+section: activities
 ---
 
 # Source → Teaching Materials

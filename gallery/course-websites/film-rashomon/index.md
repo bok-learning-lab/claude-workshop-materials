@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Film course concepts website — Rashomon / GENED 1049
-section: gallery
+section: activities
 ---
 
 # Film course concepts website — *Rashomon* / GENED 1049

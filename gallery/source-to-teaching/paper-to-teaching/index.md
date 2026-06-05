@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Paper to teaching materials"
-section: gallery
+section: activities
 ---
 
 # Paper to teaching materials

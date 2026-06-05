@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Research helper"
-section: gallery
+section: activities
 ---
 
 # Research helper

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Smart text search — Finnegans Wake"
-section: gallery
+section: activities
 ---
 
 # Finding Finn in *Finnegans Wake*

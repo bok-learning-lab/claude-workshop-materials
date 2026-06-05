@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Recentering Academics
-section: gallery
+section: activities
 ---
 
 # Recentering Academics — source-grounded curricular recommendations

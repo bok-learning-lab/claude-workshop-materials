@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Smart text search — Bob Dylan"
-section: gallery
+section: activities
 ---
 
 # Smart text search — writers named in Bob Dylan's lyrics

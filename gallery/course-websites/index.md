@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Course Websites with Interactive Demos
-section: gallery
+section: activities
 ---
 
 # Course Websites with Interactive Demos

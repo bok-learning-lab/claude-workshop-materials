@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Literature course concept website — Love Songs / CompLit 126x
-section: gallery
+section: activities
 ---
 
 # Literature course concept website — Love Songs / CompLit 126x

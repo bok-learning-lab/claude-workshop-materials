@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Physics Interactives
-section: gallery
+section: activities
 ---
 
 # Physics Interactives

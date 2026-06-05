@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Exam Make-up Generator
-section: gallery
+section: activities
 ---
 
 # Exam Make-up Generator — a standalone Claude Code skill

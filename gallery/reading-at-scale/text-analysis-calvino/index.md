@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Text analysis — Calvino's Memos"
-section: gallery
+section: activities
 ---
 
 # The Memos, by the numbers — Calvino's *Six Memos for the Next Millennium*

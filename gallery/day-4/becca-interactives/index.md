@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Becca's Interactives
-section: gallery
+section: activities
 ---
 
 # Becca's Interactives

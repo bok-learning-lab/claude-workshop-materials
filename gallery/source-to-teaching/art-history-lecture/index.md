@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Art history lecture"
-section: gallery
+section: activities
 ---
 
 # Art history lecture

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Day 4 Projects
-section: gallery
+section: activities
 ---
 
 # Day 4 Projects

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Project Overviews
-section: gallery
+section: activities
 ---
 
 # Three projects: teaching and research in the age of AI

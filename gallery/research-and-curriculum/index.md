@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Research & Curriculum Synthesis
-section: gallery
+section: activities
 ---
 
 # Research & Curriculum Synthesis

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Research Paper Site
-section: gallery
+section: activities
 ---
 
 # Research Paper Site — a thin viewer over a research-in-progress folder

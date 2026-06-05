@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Class summarizer"
-section: gallery
+section: activities
 ---
 
 # Class summarizer

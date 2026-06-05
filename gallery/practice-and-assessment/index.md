@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Practice & Assessment Tools
-section: gallery
+section: activities
 ---
 
 # Practice & Assessment Tools

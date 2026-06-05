@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Image API widget — The Virtual Camera
-section: gallery
+section: activities
 ---
 
 # Image API widget — The Virtual Camera

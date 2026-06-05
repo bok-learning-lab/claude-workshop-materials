@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Reading at Scale"
-section: gallery
+section: activities
 ---
 
 # Reading at Scale
