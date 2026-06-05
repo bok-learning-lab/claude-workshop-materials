@@ -73,5 +73,5 @@ The [full set of ~25 interactives](../../day-4/becca-interactives/) is the most 
 ## Source repo and live examples
 
 - **Project repo (self-contained, grabbable):** [`claude-code-20260604/examples/physics-interactives/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/physics-interactives)
-- **Day-4 overview essays (tradition, affordance, summary):** [`gallery/day-4/project-overviews/physics-interactives/`](https://github.com/bok-learning-lab/claude-workshop-materials/tree/main/gallery/day-4/project-overviews/physics-interactives)
+- **Day-4 overview essays:** [Summary]({{ site.baseurl }}/gallery/day-4/project-overviews/physics-interactives/summary/) · [Tradition]({{ site.baseurl }}/gallery/day-4/project-overviews/physics-interactives/tradition/) · [Affordance]({{ site.baseurl }}/gallery/day-4/project-overviews/physics-interactives/affordance/)
 - **Live faculty-authored examples:** [Becca Belofsky's discrete-math interactives](../../day-4/becca-interactives/)

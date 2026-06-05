@@ -15,7 +15,7 @@ Drawn from the pre-workshop site for **CompLit 126x: *Love Songs at the Learning
 >
 > **Source repo:** <https://github.com/bok-learning-lab/complit126x-lovesongs-draft> — production Next.js app, deployed to Vercel.
 >
-> **Full project summary:** [`examples/literature-course-concept-website/summary.md`](https://github.com/bok-learning-lab/claude-code-20260604/blob/main/examples/literature-course-concept-website/summary.md)
+> **Workshop example:** [`claude-code-20260604/examples/literature-course-concept-website/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/literature-course-concept-website) — the three-demo arc operations (analyze prompt, generate-from-scores prompt, stuffing-the-prompt, voice-cloning step) and the illustrative outputs as a portable folder.
 
 ## What the site does
 

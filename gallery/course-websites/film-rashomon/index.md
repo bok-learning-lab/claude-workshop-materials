@@ -14,7 +14,7 @@ Drawn from the production site for **GENED 1049 *East Asian Cinema*** at Harvard
 >
 > **Source repo:** <https://github.com/bok-learning-lab/gened-1049> — production Next.js app, deployed to Vercel.
 >
-> **Full project summary:** [`examples/film-course-concepts-website/summary.md`](https://github.com/bok-learning-lab/claude-code-20260604/blob/main/examples/film-course-concepts-website/summary.md)
+> **Workshop example:** [`claude-code-20260604/examples/film-course-concepts-website/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/film-course-concepts-website) — full project summary, demo descriptions, and the architectural patterns as a portable folder.
 
 ## What the site does
 

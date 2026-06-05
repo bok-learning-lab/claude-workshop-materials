@@ -14,6 +14,8 @@ A worked example of **deterministic textual analysis** + **2D semantic-embedding
 >
 > **Source repo:** <https://github.com/bok-learning-lab/a-project-on-calvino>
 >
+> **Workshop example:** [`claude-code-20260604/examples/text-analysis-and-datavis/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/text-analysis-and-datavis) — the deterministic-analysis operations, the OCR pipeline, and the embedding-map approach as a portable folder.
+>
 > **The unwritten sixth memo.** Calvino died in September 1985 while drafting the lecture on **Consistency**. The page treats this as a pedagogical opportunity — the student writes the sixth memo themselves, and the same measurements that characterize Calvino's five extant lectures characterize the student's draft, side by side.
 
 ## What it is

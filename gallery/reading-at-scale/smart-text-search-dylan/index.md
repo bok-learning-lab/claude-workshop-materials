@@ -12,6 +12,8 @@ A worked example of using Claude as a **close reader at scale**. The project han
 
 The point of the project is not the Dylan corpus specifically. It is the move: **close reading, at corpus scale, by an LLM that has been told to read like a close reader and refuse to grep.**
 
+> **Source repo:** [`claude-code-20260604/examples/smart-text-search/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/smart-text-search) — the prompt, the corpus, the aggregated findings, and the prose writeup.
+
 ## What it is
 
 One prompt, one corpus, two outputs.

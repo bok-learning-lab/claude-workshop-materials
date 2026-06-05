@@ -12,7 +12,7 @@ section: activities
 >
 > **Source repo:** <https://github.com/bok-learning-lab/stable-diffusion-widget> — production Next.js app, deployed to Vercel.
 >
-> **Full project summary:** [`examples/image-API-widget/summary.md`](https://github.com/bok-learning-lab/claude-code-20260604/blob/main/examples/image-API-widget/summary.md)
+> **Workshop example:** [`claude-code-20260604/examples/image-API-widget/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/image-API-widget) — the Kluge rules input, the generate-operation doc, and the illustrative session outputs as a portable folder.
 
 ## What the site does
 

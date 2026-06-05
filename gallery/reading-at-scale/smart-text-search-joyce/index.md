@@ -8,6 +8,8 @@ section: activities
 
 *One of five projects in [Reading at Scale](../). Built to support Prof. Natasha Sumner's research on the Fenian tradition.*
 
+> **Source repo:** [`claude-code-20260604/examples/smart-text-search-joyce/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/smart-text-search-joyce) — the slicing strategy, the close-reader prompt, and the 277 surfaced references.
+
 ## The research question behind the demo
 
 Prof. Natasha Sumner's *Heroes of the Gael: A History of Fionn and the Fianna* (Harvard, Feb. 2026) traces stories of **Fionn mac Cumhaill** — Finn McCool — and his warrior band the Fianna across 1,400 years of Gaelic oral and written tradition. One late, strange, and very dense node in that tradition is James Joyce's *Finnegans Wake* (1939), a book whose very title puns on **Finn-again** — the hero who falls and rises.

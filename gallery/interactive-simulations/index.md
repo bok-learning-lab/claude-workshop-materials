@@ -22,7 +22,7 @@ What LLMs change is the cost of *prototyping* the artifact, not the cost of the 
 
 A self-contained bundle of four Claude Code skills — `/phet-sim`, `/phet-activity`, `/phet-accessibility-audit`, `/phet-rationale` — single-file HTML templates, an 8-dimension quality rubric, and a sample teaching brief (heat pumps). The skills enforce the PhET design grammar by running a structured pedagogical interview before any code is generated, then refuse to declare a simulation done until it passes the rubric and an accessibility audit. The natural reference implementation of the pattern.
 
-[Project page](physics-interactives/) · [Tradition essay](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/project-overviews/physics-interactives/tradition.md) · [Affordance essay](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/project-overviews/physics-interactives/affordance.md) · [Day-4 summary](https://github.com/bok-learning-lab/claude-workshop-materials/blob/main/gallery/day-4/project-overviews/physics-interactives/summary.md)
+[Project page](physics-interactives/) · [Day-4 summary]({{ site.baseurl }}/gallery/day-4/project-overviews/physics-interactives/summary/) · [Tradition essay]({{ site.baseurl }}/gallery/day-4/project-overviews/physics-interactives/tradition/) · [Affordance essay]({{ site.baseurl }}/gallery/day-4/project-overviews/physics-interactives/affordance/)
 
 ### [Becca Belofsky's Discrete Math Interactives](../day-4/becca-interactives/)
 

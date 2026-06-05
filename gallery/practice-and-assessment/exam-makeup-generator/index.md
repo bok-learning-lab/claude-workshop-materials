@@ -15,6 +15,8 @@ A worked example of a **Claude Code skill** that turns the laborious task of wri
 > Drop `operations/skill.md` and `operations/skill.json` into your project's `.claude/skills/exam-makeup/` (or your user-level `~/.claude/skills/exam-makeup/`). Rename `skill.md` → `SKILL.md` if your Claude Code version expects the uppercase filename. Then invoke the skill in any Claude Code session with `Use exam-makeup to ...` or pass an exam path directly.
 >
 > **No external service required.** The skill operates entirely through Claude Code's file tools — `Read` for the exam, `Write` for the candidate file, `Edit` for iteration. There is no API endpoint, no inference provider beyond the model Claude Code is already using.
+>
+> **Source repo:** [`claude-code-20260604/examples/exam-makeup-generator/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/exam-makeup-generator) — the skill, the CS20 spring-2026 worked run, and the three-mode state machine doc.
 
 This is the Examples section's first **standalone-skill** project. Where the oral exam bot ships a deployed Vercel page and other projects ship CLI-style Claude Code folders with skills nested inside, this one ships **only the skill** plus a worked run. It's the cleanest demonstration in the Examples section of what a project-scoped or user-scoped skill can look like at substantial scale (~400 lines, three modes, an interview phase, dated audit trail, format-agnostic I/O).
 

@@ -10,6 +10,8 @@ A worked example of **publishing research-in-progress with about 150 lines of Ne
 
 Drawn from the production site at **[harvest-times.vercel.app](https://harvest-times.vercel.app/)**, the public research site for an investigation into Anglo-Saxon harvest-time pharmacology. Source repository: **[github.com/ll-catacomb/harvest-times](https://github.com/ll-catacomb/harvest-times)**. The repo *is* the research; the site is the viewer.
 
+> **Workshop example:** [`claude-code-20260604/examples/research-white-paper-website/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/research-white-paper-website) — the architecture doc, the agent-output firebreak convention, and the route code as a portable folder.
+
 ## What it is
 
 A single Next.js app with three routes that together produce a navigable research site:
