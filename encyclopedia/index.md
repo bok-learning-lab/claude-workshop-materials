@@ -6,7 +6,11 @@ section: encyclopedia
 
 # Encyclopedia
 
-<div class="page-lead">The reference layer of the workshop. Plain-language glossary entries, one-screen cheatsheets, and two tiers of documentation. Setup guides have moved to their own section — see <a href="{{ site.baseurl }}/encyclopedia/get-started/">Get Started</a> if you haven't activated your Harvard Edu account or installed Claude Code yet.</div>
+<div class="page-lead">The reference layer of the workshop. Plain-language glossary entries, one-screen cheatsheets, two tiers of documentation, and the printable handouts and Key Takeaways docs from each day of the workshop. Setup guides have moved to their own section — see <a href="{{ site.baseurl }}/encyclopedia/get-started/">Get Started</a> if you haven't activated your Harvard Edu account or installed Claude Code yet.</div>
+
+## [Daily Recaps]({{ site.baseurl }}/encyclopedia/daily-recaps/)
+
+Printable handouts and Key Takeaways docs from each day of the workshop, organized by day. Includes the welcome roadmap, the "it's all text" framing, the recipe-card walkthrough, the terminal refresher, the git mental model, the Claude Code commands handout, the MCP overview and deep-dive, and the security-concerns handout. All in the Learning Lab house style, ready to print or share.
 
 ## [Glossary]({{ site.baseurl }}/encyclopedia/glossary/)
 

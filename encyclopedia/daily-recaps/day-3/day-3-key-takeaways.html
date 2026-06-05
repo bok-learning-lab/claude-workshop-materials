@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Day 3 / Session 1 — Top 10 Key Takeaways — Bok Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+/* Standalone "Deep thoughts" essay styling.
+   Mirrors components/essay-layout.module.css from
+   /Users/mk/Development/ai-enhancement-stories (screen + mobile + print)
+   with the TOC sidebar and footer-links stripped, plus a floating
+   Print/Copy-MD control pair in the header. Light-mode only. */
+
+:root {
+  --bg: rgb(240, 238, 230);
+  --fg: rgb(31, 30, 29);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+}
+
+.author-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  position: absolute;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: "Newsreader", "Times New Roman", serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  opacity: 1;
+}
+
+/* Layout */
+.essay-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  gap: 64px;
+}
+
+/* Main content */
+.essay-content {
+  flex: 1;
+  max-width: 680px;
+}
+
+.essay-content h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  opacity: 0.6;
+}
+
+.essay-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  line-height: 1.3;
+}
+
+.essay-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+}
+
+.essay-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 32px 0 12px 0;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.essay-content p {
+  margin: 0 0 20px 0;
+}
+
+.essay-content em {
+  font-style: italic;
+}
+
+.essay-content strong {
+  font-weight: 600;
+}
+
+.essay-content ul,
+.essay-content ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+}
+
+.essay-content li {
+  margin-bottom: 8px;
+}
+
+.essay-content blockquote {
+  border-left: 3px solid var(--fg);
+  margin: 24px 0;
+  padding: 0 0 0 20px;
+  opacity: 0.85;
+}
+
+.essay-content a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.essay-content hr {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  margin: 40px 0;
+}
+
+.essay-content pre {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.essay-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.essay-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.essay-content table {
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  width: 100%;
+  font-size: 17px;
+}
+
+.essay-content th,
+.essay-content td {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.essay-content th {
+  font-weight: 600;
+}
+
+.footnotes {
+  font-size: 16px;
+  opacity: 0.85;
+  margin-top: 32px;
+}
+
+.footnotes li {
+  margin-bottom: 6px;
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .essay-layout {
+    padding: 32px 20px;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 100%;
+  }
+
+  .essay-content h1 {
+    font-size: 36px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .header-controls {
+    right: 20px;
+    gap: 10px;
+  }
+}
+
+/* Print */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+    min-height: 0;
+  }
+
+  .site-header,
+  .header-controls {
+    display: none !important;
+  }
+
+  .essay-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .essay-content {
+    max-width: 6.5in;
+    margin: 0 auto;
+  }
+
+  .essay-content h1 {
+    font-size: 22pt;
+    line-height: 1.15;
+    margin: 0 0 6pt 0;
+  }
+
+  .subtitle {
+    font-size: 12pt;
+    margin: 0 0 6pt 0;
+    opacity: 1;
+  }
+
+  .date {
+    font-size: 10pt;
+    margin: 0 0 18pt 0;
+    opacity: 1;
+  }
+
+  .essay-content h2 {
+    font-size: 16pt;
+    margin: 20pt 0 6pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h3 {
+    font-size: 13pt;
+    margin: 16pt 0 4pt 0;
+    line-height: 1.25;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content h4 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .essay-content p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .essay-content ul,
+  .essay-content ol {
+    margin: 0 0 8pt 0;
+  }
+
+  .essay-content li {
+    margin-bottom: 3pt;
+  }
+
+  .essay-content blockquote {
+    margin: 10pt 0;
+    padding-left: 14pt;
+    border-left-color: #000;
+    opacity: 1;
+  }
+
+  .essay-content hr {
+    margin: 18pt 0;
+  }
+
+  .essay-content a {
+    color: #000;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <span class="author-name">Bok Center</span>
+    <div class="header-controls">
+      <button type="button" class="ctrl-btn" id="print-btn">Print</button>
+      <button type="button" class="ctrl-btn" id="copy-btn">Copy MD</button>
+    </div>
+  </header>
+
+  <main class="essay-layout">
+    <article class="essay-content">
+      <h1>Day 3 / Session 1 — Top 10 Key Takeaways</h1>
+      <p class="subtitle">Distilled from the diarized rough-cut transcript (<a href="../inputs/day_3_transcript.md"><code>day_3_transcript.md</code></a>), Chunks 1–9 (~14:04–15:33). Instructors: Madeleine (MW), Marlon (MK), with faculty demos from Jungyoon, and the room including Jeff Behrends, Natasha Sumner, and Jason.</p>
+
+      <hr>
+
+      <ol>
+        <li><strong>The class-summarizer demo <em>is</em> the move — every recording you have is now a transcript a chat can interrogate.</strong> Marlon copy-pastes the path to the day's transcript and asks for "the top three most important takeaways." The teaching point: every faculty member already has hours of recorded classes piling up — "they're probably just taking you all the time, whether you want it or not." Hand the transcript to a student who missed class. Hand it to yourself when you're prepping next week's session. <em>"This I think is a model of a lot of things we could do that would be quite interesting in teaching."</em></li>
+        <li><strong>The triptych — <code>inputs/</code> → <code>operations/</code> → <code>outputs/</code> — is the recipe pattern, and it's how you start every new project.</strong> "We're just gonna keep hitting this." Faculty who want to build their own project from scratch: open Claude and say <em>"in the examples folder please make me a new example, please mirror the folder structure of the other documents, make sure there's inputs, operations and outputs."</em> Recipe cards from Day 1, back as the load-bearing structure for everything you build.</li>
+        <li><strong>Keep AI-generated outputs separated from human-authored content — the outputs/ folder is the firebreak.</strong> Marlon's index-card analogy: "I remember there were a lot of plagiarism controversies when I was young for people that were always working on index cards — they forgot whether that index card was a note I had copied from a text or if I really wrote it." Same problem with fifty thousand floating markdown docs. "As soon as you're dealing with AI generation based on AI generation based on AI generation, there's gonna be a falloff."</li>
+        <li><strong>Don't substitute Claude's fluency for your own expertise.</strong> MW, to a faculty member starting to lean on Claude for assessment design: <em>"It gets very tempting because Claude seems so smart and fluent and capable at things that we can't do as quickly to start substituting its intelligence for our own. But don't forget that you're the expert as a teacher and in your discipline."</em> The whole workshop's posture toward AI in three sentences.</li>
+        <li><strong>The paper-to-teaching-materials pattern, with Jeff Behrends in the room.</strong> Start with grounded material you trust — a paper you wrote, a paper you teach — and generate the <em>class</em> out of it: a teaching case, a discussion plan, an objection audit that anticipates student arguments, a ten-to-fifteen-minute quiz. "You wouldn't stop here, but this is a great kind of starting point." The audit step is the discipline: Marlon and MW both flag that the <em>instructor</em> is the one who decides whether the output is good enough for their classroom.</li>
+        <li><strong>The grade-policy demo (Jungyoon's recentering-academics example) is "the spell book."</strong> A folder of source material — Bok advice, Harvard's grade-inflation reports, the external research on grading — plus a prompt that asks Claude to recommend changes to <em>your</em> syllabus or <em>your</em> concentration description against that evidence. MW: <em>"This is like the spell book — it's not gonna magically make everything perfect, but it's a great place to start. And you can keep adding to this with your own educational research or previous courses you really liked."</em></li>
+        <li><strong>CLAUDE.md = truths. Skills = behaviors.</strong> A CLAUDE.md is <em>always</em> loaded into context (the limerick CLAUDE.md from yesterday — <em>every</em> output was a limerick because that one sentence sat at the top of every chat). So MW's rule: "make sure these are absolute truths," keep it under ~200 lines. Skills are conditional — load only when Claude judges the task matches the skill's description. The CLAUDE.md goes in the root of the project (and there's a <em>global</em> one at <code>~/.claude/CLAUDE.md</code> for things true across all your projects).</li>
+        <li><strong>CLAUDE.md walks up the file tree, and the global one has primacy.</strong> MW: "Claude walks up your file structure to look for all the CLAUDE MDs." Project CLAUDE.md is loaded first, then the development-folder one (if any), then <code>~/.claude/CLAUDE.md</code> (the global). The global is what gets focused on most often — so put genuinely cross-cutting preferences there, not per-project rules. <em>"I would never put a CLAUDE.md that says only code with R at the root of my user profile, because I'm constantly working in JS, Python, etcetera, and it will really follow that."</em></li>
+        <li><strong>Skills are SOPs — recurrent processes you want done exactly the same way every time.</strong> MK: "the recurrent processes you have to perform that are kind of low level — formatting processes, transcription, things you've gotta do again and again and again, you wanna do them exactly the same way every time. In industry they talk about SOPs, standard operating procedures." His sonnet-reader example: every Shakespeare sonnet analyzed into the same fields (rhyme scheme, type, year, author) so they land in an Excel-able spreadsheet. <em>"I don't just want Claude to vibe that anew for every single sonnet."</em> Structured output is the whole point.</li>
+        <li><strong>Skills in the desktop app save to the cloud; skills in Claude Code save locally to <code>.claude/</code>. Anthropic is candidly still figuring this out.</strong> MK, plainly: <em>"Anthropic is confused about what to do here. And I kinda get it — they're trying to make this user-friendly, but this is a place where it actually is legit confusing what they want."</em> If you make a skill in the desktop app's chat, it lives in your account in the cloud and follows you to any machine you log into. If you make it from the CLI or VS Code, it lives in <code>.claude/skills/</code> in either the project root (project-scoped) or <code>~/.claude/</code> (user-scoped, global). A skills <em>marketplace</em> for orgs (e.g. Harvard FAS publishing internal skills) is on the roadmap but not yet live.</li>
+      </ol>
+
+      <hr>
+
+      <h2>Secondary points worth keeping</h2>
+
+      <ul>
+        <li><strong>Three ways to clone a repo</strong> for faculty who came in on different OSes: download the zip and move it; paste the URL into Claude desktop and ask it to clone; or <code>git clone</code> in the terminal. All do the same thing.</li>
+        <li><strong><code>cd</code> into a <em>specific</em> folder, not your whole desktop.</strong> MW: <em>"You don't want to give it access to your whole desktop, right, or your whole computer. So just get it in some folder you have to be using for this learning experience today."</em> Day 1's reactor-Homer-Simpson warning, made concrete.</li>
+        <li><strong>First move in any new folder: ask Claude "what's in this folder?"</strong> MW: <em>"A great first thing to do is just ask Claude what's there. And so that's what I'm gonna do."</em> You're orienting yourself and Claude at the same time.</li>
+        <li><strong>You can start a new example by <em>copying an existing one</em>.</strong> MW: <em>"You could copy the entire folder itself in a new project, and just say hey, this paper-to-teaching-materials is an example from philosophy, but I'm teaching in X department, can you look at the structure of this folder and completely duplicate it but with this new PDF."</em> Faster than writing structure from scratch.</li>
+        <li><strong>The Dylan and Joyce examples are "close reading at scale."</strong> MK: <em>"You can't use simple word search to find every author in the lyrics, because authors have thousands and thousands of names — how on earth can you do it? Well that's what LLMs are cool for."</em> And for Joyce's puns on Finn MacCool: 277 references including misspellings, puns, mythic landscape. <em>"This is faster than a summer research intern would be finding these things."</em></li>
+        <li><strong>Force-trigger a skill with <code>/skillname</code>.</strong> MW: <em>"If I don't trust Claude to just pick it up by vibes, I can type slash and then the word skill-creator, and I can force Claude to use that skill."</em> The slash syntax is the manual override on Claude's relevance judgment.</li>
+        <li><strong>Skills can carry <em>scripts</em>, not just text.</strong> Shell, Python, JavaScript. MK: <em>"We may take a video and extract the audio from it and then send that audio to a transcription service and then summarize that."</em> Skills are not constrained to text generation — they can perform operations.</li>
+        <li><strong>Sub-agents got a brief preview.</strong> <em>"Some of you, just in the course of asking for things in the chat, saw some sub-agents spawn and do some work."</em> Coming in more depth tomorrow.</li>
+        <li><strong><code>md-to-deepthoughts-html</code></strong> — Marlon and Madeleine's own house-style skill that converts the day's markdown handouts into the cream-and-Newsreader HTML you see printed every morning. <em>"Markdown to deep thoughts — it's called that because it's based on the styling Dario Amodei uses whenever he writes one of his philosophical blog posts."</em> MW: <em>"If you have a house style for your class handouts, you could turn that into a skill with CSS and scripts, and just run it on the documents wherever you've been drafting them."</em></li>
+        <li><strong>Chunk 6 was breakout time.</strong> Most of the talking in that stretch is faculty experimenting in their own folders; the substance picks back up in Chunk 7 with the skills demo. Worth flagging because the rough-cut transcript catches a lot of cross-talk in that window.</li>
+      </ul>
+    </article>
+  </main>
+
+  <script type="text/x-markdown-source" id="source-md"># Day 3 / Session 1 — Top 10 Key Takeaways
+
+_Distilled from the diarized rough-cut transcript ([`day_3_transcript.md`](../inputs/day_3_transcript.md)), Chunks 1–9 (~14:04–15:33). Instructors: Madeleine (MW), Marlon (MK), with faculty demos from Jungyoon, and the room including Jeff Behrends, Natasha Sumner, and Jason._
+
+---
+
+1. **The class-summarizer demo *is* the move — every recording you have is now a transcript a chat can interrogate.** Marlon copy-pastes the path to the day's transcript and asks for "the top three most important takeaways." The teaching point: every faculty member already has hours of recorded classes piling up — "they're probably just taking you all the time, whether you want it or not." Hand the transcript to a student who missed class. Hand it to yourself when you're prepping next week's session. *"This I think is a model of a lot of things we could do that would be quite interesting in teaching."*
+
+2. **The triptych — `inputs/` → `operations/` → `outputs/` — is the recipe pattern, and it's how you start every new project.** "We're just gonna keep hitting this." Faculty who want to build their own project from scratch: open Claude and say *"in the examples folder please make me a new example, please mirror the folder structure of the other documents, make sure there's inputs, operations and outputs."* Recipe cards from Day 1, back as the load-bearing structure for everything you build.
+
+3. **Keep AI-generated outputs separated from human-authored content — the outputs/ folder is the firebreak.** Marlon's index-card analogy: "I remember there were a lot of plagiarism controversies when I was young for people that were always working on index cards — they forgot whether that index card was a note I had copied from a text or if I really wrote it." Same problem with fifty thousand floating markdown docs. "As soon as you're dealing with AI generation based on AI generation based on AI generation, there's gonna be a falloff."
+
+4. **Don't substitute Claude's fluency for your own expertise.** MW, to a faculty member starting to lean on Claude for assessment design: *"It gets very tempting because Claude seems so smart and fluent and capable at things that we can't do as quickly to start substituting its intelligence for our own. But don't forget that you're the expert as a teacher and in your discipline."* The whole workshop's posture toward AI in three sentences.
+
+5. **The paper-to-teaching-materials pattern, with Jeff Behrends in the room.** Start with grounded material you trust — a paper you wrote, a paper you teach — and generate the *class* out of it: a teaching case, a discussion plan, an objection audit that anticipates student arguments, a ten-to-fifteen-minute quiz. "You wouldn't stop here, but this is a great kind of starting point." The audit step is the discipline: Marlon and MW both flag that the *instructor* is the one who decides whether the output is good enough for their classroom.
+
+6. **The grade-policy demo (Jungyoon's recentering-academics example) is "the spell book."** A folder of source material — Bok advice, Harvard's grade-inflation reports, the external research on grading — plus a prompt that asks Claude to recommend changes to *your* syllabus or *your* concentration description against that evidence. MW: *"This is like the spell book — it's not gonna magically make everything perfect, but it's a great place to start. And you can keep adding to this with your own educational research or previous courses you really liked."*
+
+7. **CLAUDE.md = truths. Skills = behaviors.** A CLAUDE.md is *always* loaded into context (the limerick CLAUDE.md from yesterday — *every* output was a limerick because that one sentence sat at the top of every chat). So MW's rule: "make sure these are absolute truths," keep it under ~200 lines. Skills are conditional — load only when Claude judges the task matches the skill's description. The CLAUDE.md goes in the root of the project (and there's a *global* one at `~/.claude/CLAUDE.md` for things true across all your projects).
+
+8. **CLAUDE.md walks up the file tree, and the global one has primacy.** MW: "Claude walks up your file structure to look for all the CLAUDE MDs." Project CLAUDE.md is loaded first, then the development-folder one (if any), then `~/.claude/CLAUDE.md` (the global). The global is what gets focused on most often — so put genuinely cross-cutting preferences there, not per-project rules. *"I would never put a CLAUDE.md that says only code with R at the root of my user profile, because I'm constantly working in JS, Python, etcetera, and it will really follow that."*
+
+9. **Skills are SOPs — recurrent processes you want done exactly the same way every time.** MK: "the recurrent processes you have to perform that are kind of low level — formatting processes, transcription, things you've gotta do again and again and again, you wanna do them exactly the same way every time. In industry they talk about SOPs, standard operating procedures." His sonnet-reader example: every Shakespeare sonnet analyzed into the same fields (rhyme scheme, type, year, author) so they land in an Excel-able spreadsheet. *"I don't just want Claude to vibe that anew for every single sonnet."* Structured output is the whole point.
+
+10. **Skills in the desktop app save to the cloud; skills in Claude Code save locally to `.claude/`. Anthropic is candidly still figuring this out.** MK, plainly: *"Anthropic is confused about what to do here. And I kinda get it — they're trying to make this user-friendly, but this is a place where it actually is legit confusing what they want."* If you make a skill in the desktop app's chat, it lives in your account in the cloud and follows you to any machine you log into. If you make it from the CLI or VS Code, it lives in `.claude/skills/` in either the project root (project-scoped) or `~/.claude/` (user-scoped, global). A skills *marketplace* for orgs (e.g. Harvard FAS publishing internal skills) is on the roadmap but not yet live.
+
+---
+
+## Secondary points worth keeping
+
+- **Three ways to clone a repo** for faculty who came in on different OSes: download the zip and move it; paste the URL into Claude desktop and ask it to clone; or `git clone` in the terminal. All do the same thing.
+- **`cd` into a *specific* folder, not your whole desktop.** MW: *"You don't want to give it access to your whole desktop, right, or your whole computer. So just get it in some folder you have to be using for this learning experience today."* Day 1's reactor-Homer-Simpson warning, made concrete.
+- **First move in any new folder: ask Claude "what's in this folder?"** MW: *"A great first thing to do is just ask Claude what's there. And so that's what I'm gonna do."* You're orienting yourself and Claude at the same time.
+- **You can start a new example by *copying an existing one*.** MW: *"You could copy the entire folder itself in a new project, and just say hey, this paper-to-teaching-materials is an example from philosophy, but I'm teaching in X department, can you look at the structure of this folder and completely duplicate it but with this new PDF."* Faster than writing structure from scratch.
+- **The Dylan and Joyce examples are "close reading at scale."** MK: *"You can't use simple word search to find every author in the lyrics, because authors have thousands and thousands of names — how on earth can you do it? Well that's what LLMs are cool for."* And for Joyce's puns on Finn MacCool: 277 references including misspellings, puns, mythic landscape. *"This is faster than a summer research intern would be finding these things."*
+- **Force-trigger a skill with `/skillname`.** MW: *"If I don't trust Claude to just pick it up by vibes, I can type slash and then the word skill-creator, and I can force Claude to use that skill."* The slash syntax is the manual override on Claude's relevance judgment.
+- **Skills can carry *scripts*, not just text.** Shell, Python, JavaScript. MK: *"We may take a video and extract the audio from it and then send that audio to a transcription service and then summarize that."* Skills are not constrained to text generation — they can perform operations.
+- **Sub-agents got a brief preview.** *"Some of you, just in the course of asking for things in the chat, saw some sub-agents spawn and do some work."* Coming in more depth tomorrow.
+- **`md-to-deepthoughts-html`** — Marlon and Madeleine's own house-style skill that converts the day's markdown handouts into the cream-and-Newsreader HTML you see printed every morning. *"Markdown to deep thoughts — it's called that because it's based on the styling Dario Amodei uses whenever he writes one of his philosophical blog posts."* MW: *"If you have a house style for your class handouts, you could turn that into a skill with CSS and scripts, and just run it on the documents wherever you've been drafting them."*
+- **Chunk 6 was breakout time.** Most of the talking in that stretch is faculty experimenting in their own folders; the substance picks back up in Chunk 7 with the skills demo. Worth flagging because the rough-cut transcript catches a lot of cross-talk in that window.</script>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var printBtn = document.getElementById('print-btn');
+      var src = document.getElementById('source-md');
+
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = src.textContent;
+        var done = function () {
+          var prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied';
+          setTimeout(function () { copyBtn.textContent = prev === 'Copied' ? 'Copy MD' : prev; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text); done();
+          });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    })();
+  </script>
+</body>
+</html>

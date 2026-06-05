@@ -21,6 +21,17 @@ get-started:
         url: /encyclopedia/get-started/checklists/windows/
 
 encyclopedia:
+  - title: Daily Recaps
+    url: /encyclopedia/daily-recaps/
+    children:
+      - title: Day 1 — Recap
+        url: /encyclopedia/daily-recaps/day-1/
+      - title: Day 2 — Recap
+        url: /encyclopedia/daily-recaps/day-2/
+      - title: Day 3 — Recap
+        url: /encyclopedia/daily-recaps/day-3/
+      - title: Day 4 — Recap
+        url: /encyclopedia/daily-recaps/day-4/
   - title: Glossary
     url: /encyclopedia/glossary/
     children:
