@@ -16,7 +16,7 @@ A worked example of a **Claude Code skill** that turns the laborious task of wri
 >
 > **No external service required.** The skill operates entirely through Claude Code's file tools — `Read` for the exam, `Write` for the candidate file, `Edit` for iteration. There is no API endpoint, no inference provider beyond the model Claude Code is already using.
 
-This is the gallery's first **standalone-skill** example. Where the oral exam bot ships a deployed Vercel page and other projects ship CLI-style Claude Code folders with skills nested inside, this one ships **only the skill** plus a worked run. It's the cleanest demonstration in the gallery of what a project-scoped or user-scoped skill can look like at substantial scale (~400 lines, three modes, an interview phase, dated audit trail, format-agnostic I/O).
+This is the Examples section's first **standalone-skill** project. Where the oral exam bot ships a deployed Vercel page and other projects ship CLI-style Claude Code folders with skills nested inside, this one ships **only the skill** plus a worked run. It's the cleanest demonstration in the Examples section of what a project-scoped or user-scoped skill can look like at substantial scale (~400 lines, three modes, an interview phase, dated audit trail, format-agnostic I/O).
 
 ---
 

@@ -16,7 +16,7 @@ A worked example of a **reflective-tutor webapp** — an oral-exam rehearsal bot
 >
 > **Course:** CL 126x / Hum 5, *Literature and Artificial Intelligence*, taught at Harvard. The course pairs canonical literary texts (Genesis, Homer, Hesiod, Frankenstein, Freud, Benjamin, Rankine) with contemporary questions about AI and machine creativity. The oral exam is the final assessment; this bot is the rehearsal tool. There is a small irony worth noting: the oral exam is about literature on artificial intelligence, and the rehearsal tool is itself built with AI.
 
-This is the gallery's first example drawn from a **deployed production webapp** rather than from a CLI-style Claude Code session. The pattern it demonstrates ports cleanly to any course where students rehearse spoken assessments and where the teacher wants the rehearsal tool to *coach* rather than to *grade*.
+This is the Examples section's first project drawn from a **deployed production webapp** rather than from a CLI-style Claude Code session. The pattern it demonstrates ports cleanly to any course where students rehearse spoken assessments and where the teacher wants the rehearsal tool to *coach* rather than to *grade*.
 
 ---
 

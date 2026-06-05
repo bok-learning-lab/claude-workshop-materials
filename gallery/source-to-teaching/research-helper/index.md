@@ -10,7 +10,7 @@ A small Claude Code project that turns a folder of research papers — mostly ar
 
 This is the smallest of the day-4 example projects. There is no overview folder, no plan document, no parallel-build pattern. The whole project is one careful prompt applied to a corpus of source papers — and the discipline it enforces about not inflating a paper's relevance to the agenda.
 
-**Also exists as a hands-on activity.** The gallery page you are reading documents the full pattern; the hands-on exercise version lives at [/activities/research-helper/](../../../activities/research-helper/) and is the version designed for you to run yourself during the workshop.
+**Also exists as a hands-on activity.** The examples page you are reading documents the full pattern; the hands-on exercise version lives at [/activities/research-helper/](../../../activities/research-helper/) and is the version designed for you to run yourself during the workshop.
 
 Source repo: [github.com/bok-learning-lab/claude-code-20260604/examples/research-helper](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/research-helper)
 

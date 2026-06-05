@@ -24,7 +24,7 @@ A course website with interactive demos is the right move when the course has *p
 
 ## What it costs
 
-This is the most infrastructure-heavy pattern in the gallery. A deployed Vercel + Next.js app is real frontend work: a routing layer, a layout, a data-file convention per demo, deployment configuration, and (for the LLM-driven examples) server-side API key handling. This is not a single-file HTML artifact you can email. The good news is that the *engine* — the dynamic content route, the demo data-file pattern — is general across courses; only the content and the demo data change. The film site notes that the hard thing is not the technology but *deciding what to put in it*: the engine made the second hard thing (per-page styling, navigation) cheap, which forced the first hard thing (what's worth writing) into the foreground.
+This is the most infrastructure-heavy pattern in the Examples section. A deployed Vercel + Next.js app is real frontend work: a routing layer, a layout, a data-file convention per demo, deployment configuration, and (for the LLM-driven examples) server-side API key handling. This is not a single-file HTML artifact you can email. The good news is that the *engine* — the dynamic content route, the demo data-file pattern — is general across courses; only the content and the demo data change. The film site notes that the hard thing is not the technology but *deciding what to put in it*: the engine made the second hard thing (per-page styling, navigation) cheap, which forced the first hard thing (what's worth writing) into the foreground.
 
 ---
 

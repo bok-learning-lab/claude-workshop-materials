@@ -14,7 +14,7 @@ The workshop version of this project was built around a specific research questi
 
 The [`CLAUDE.md`]({{ site.baseurl }}/activities/research-helper/CLAUDE.md) for this project defines the entire workflow: how to summarize faithfully, how to write the pedagogical bridge as a second pass (so the agenda doesn't distort the neutral summary), and what constraints the output HTML must meet.
 
-> **A note on the move.** The instinct this activity sharpens has a long pedigree in literary studies: Franco Moretti's *distant reading* asked what we learn when we treat a corpus as a measurable shape rather than reading each text in full. The research helper is hybrid — it does *close* read each paper (faithfully, on its own terms), and *then* reports back as a body. The two-pass discipline (neutral summary → pedagogical twist) is what keeps the hybrid honest. For the full pattern with prompts, source repos, and adapting notes, see the gallery entry: [Source → Teaching Materials · Research helper]({{ site.baseurl }}/gallery/source-to-teaching/research-helper/).
+> **A note on the move.** The instinct this activity sharpens has a long pedigree in literary studies: Franco Moretti's *distant reading* asked what we learn when we treat a corpus as a measurable shape rather than reading each text in full. The research helper is hybrid — it does *close* read each paper (faithfully, on its own terms), and *then* reports back as a body. The two-pass discipline (neutral summary → pedagogical twist) is what keeps the hybrid honest. For the full pattern with prompts, source repos, and adapting notes, see the examples entry: [Source → Teaching Materials · Research helper]({{ site.baseurl }}/gallery/source-to-teaching/research-helper/).
 
 ## The corpus
 

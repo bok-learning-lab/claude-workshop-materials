@@ -32,7 +32,7 @@ move predates LLMs; LLMs just make it cheap.
 
 ## Why it matters in this workshop
 
-Most of the worked-example projects in the gallery use this pattern. The
+Most of the worked-example projects in the Examples section use this pattern. The
 research-helper does *neutral summary first, pedagogical twist second*. The
 exam-makeup generator does *read original → interview about scope → generate
 candidates → assemble*. Once you see the pattern, you can spot it everywhere.

@@ -1,22 +1,23 @@
 # Claude Workshop Materials
 
-Bok Center AI faculty workshop — reference encyclopedia, activities, and project gallery. Hosted on GitHub Pages via Jekyll.
+Bok Center AI faculty workshop — get started, encyclopedia, activities, and examples. Hosted on GitHub Pages via Jekyll.
 
 ## Structure
 
 ```
-activities/          workshop activities and moves (web pages + source)
-encyclopedia/        setup guides, glossary, cheatsheets, docs (web pages)
-gallery/             project gallery — Becca's interactives + Day 4 projects (web pages + source)
-web/                 site infrastructure (not content)
-  _data/nav.yml      sidebar navigation data
-  _layouts/          Jekyll HTML layout template
-  assets/css/        stylesheet
-_config.yml          Jekyll config (points layouts and data at web/)
-index.md             homepage
+encyclopedia/get-started/  setup guides (Harvard Edu account, Cowork, Claude Code Mac/Windows)
+encyclopedia/              glossary, cheatsheets, documentation
+activities/                workshop activities and walkthroughs (web pages + source)
+gallery/                   example projects grouped into six pattern families (web pages + source)
+web/                       site infrastructure (not content)
+  _data/nav.yml            sidebar navigation data
+  _layouts/                Jekyll HTML layout template
+  assets/css/              stylesheet (Learning Lab house style — white/red/Inter)
+_config.yml                Jekyll config (points layouts and data at web/)
+index.md                   homepage
 ```
 
-Content lives in `activities/`, `encyclopedia/`, and `gallery/`. Each section has its own sidebar defined in `web/_data/nav.yml`. Source materials (skills, transcripts, CLAUDE.md files) live alongside the web pages inside each section — in underscore-prefixed subfolders (`_projects/`, `_server/`) so Jekyll skips them but they're browseable on GitHub.
+The site has three top-level navigation entries: **Get Started**, **Encyclopedia**, and **Activities & Examples** (which unifies `activities/` and `gallery/` under one sidebar). URLs preserve the underlying folder structure even where the navigation regroups things. Source materials (skills, transcripts, CLAUDE.md files) live alongside the web pages inside each section — in underscore-prefixed subfolders (`_projects/`, `_server/`) so Jekyll skips them but they're browseable on GitHub.
 
 ## Local development
 
