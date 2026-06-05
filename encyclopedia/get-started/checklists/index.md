@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Setup Checklists
-section: encyclopedia
+section: get-started
 ---
 
 # Setup Checklists

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Get Started
-section: encyclopedia
+section: get-started
 ---
 
 # Get Started

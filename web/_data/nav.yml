@@ -1,25 +1,26 @@
-encyclopedia:
-  - title: Get Started
+get-started:
+  - title: Overview
     url: /encyclopedia/get-started/
+  - title: Claude.ai Setup
+    url: /encyclopedia/get-started/claude-ai-setup/
+  - title: Cowork Setup
+    url: /encyclopedia/get-started/claude-cowork-setup/
+  - title: Claude Code
+    url: /encyclopedia/get-started/claude-code-setup/
     children:
-      - title: Claude.ai Setup
-        url: /encyclopedia/get-started/claude-ai-setup/
-      - title: Cowork Setup
-        url: /encyclopedia/get-started/claude-cowork-setup/
-      - title: Claude Code
-        url: /encyclopedia/get-started/claude-code-setup/
-        children:
-          - title: Mac Setup
-            url: /encyclopedia/get-started/claude-code-mac-setup/
-          - title: Windows Setup
-            url: /encyclopedia/get-started/claude-code-windows-setup/
-      - title: Setup Checklists
-        url: /encyclopedia/get-started/checklists/
-        children:
-          - title: Mac Checklist
-            url: /encyclopedia/get-started/checklists/mac/
-          - title: Windows Checklist
-            url: /encyclopedia/get-started/checklists/windows/
+      - title: Mac Setup
+        url: /encyclopedia/get-started/claude-code-mac-setup/
+      - title: Windows Setup
+        url: /encyclopedia/get-started/claude-code-windows-setup/
+  - title: Setup Checklists
+    url: /encyclopedia/get-started/checklists/
+    children:
+      - title: Mac Checklist
+        url: /encyclopedia/get-started/checklists/mac/
+      - title: Windows Checklist
+        url: /encyclopedia/get-started/checklists/windows/
+
+encyclopedia:
   - title: Glossary
     url: /encyclopedia/glossary/
     children:
@@ -53,6 +54,8 @@ encyclopedia:
         url: /encyclopedia/glossary/data-classification/
       - title: hallucination
         url: /encyclopedia/glossary/hallucination/
+      - title: hand-off doc
+        url: /encyclopedia/glossary/hand-off-doc/
       - title: harness
         url: /encyclopedia/glossary/harness/
       - title: HTML
@@ -67,12 +70,26 @@ encyclopedia:
         url: /encyclopedia/glossary/memory/
       - title: model
         url: /encyclopedia/glossary/model/
+      - title: plan.md
+        url: /encyclopedia/glossary/plan-md/
+      - title: primacy effect
+        url: /encyclopedia/glossary/primacy-effect/
       - title: project
         url: /encyclopedia/glossary/project/
       - title: prompt
         url: /encyclopedia/glossary/prompt/
+      - title: prompt chaining
+        url: /encyclopedia/glossary/prompt-chaining/
+      - title: prompt injection
+        url: /encyclopedia/glossary/prompt-injection/
+      - title: RAG
+        url: /encyclopedia/glossary/rag/
       - title: skill.md
         url: /encyclopedia/glossary/skill-md/
+      - title: structured output
+        url: /encyclopedia/glossary/structured-output/
+      - title: sub-agents
+        url: /encyclopedia/glossary/sub-agents/
       - title: system prompt
         url: /encyclopedia/glossary/system-prompt/
       - title: token
@@ -101,6 +118,7 @@ encyclopedia:
 activities:
   - title: Overview
     url: /activities/
+  - label: Activities
   - title: Tokenization
     url: /activities/tokenization/
   - title: Multiplication
@@ -111,49 +129,67 @@ activities:
     url: /activities/population-pyramids/
   - title: Recipes
     url: /activities/recipes/
+  - label: Examples
+  - title: Interactive Simulations
+    url: /gallery/interactive-simulations/
+    children:
+      - title: Physics Interactives
+        url: /gallery/interactive-simulations/physics-interactives/
+      - title: Becca's Interactives
+        url: /gallery/day-4/becca-interactives/
+  - title: Course Websites
+    url: /gallery/course-websites/
+    children:
+      - title: Film (Rashomon · GENED 1049)
+        url: /gallery/course-websites/film-rashomon/
+      - title: Literature (Love Songs · CompLit 126x)
+        url: /gallery/course-websites/literature-lovesongs/
+      - title: Image API Widget
+        url: /gallery/course-websites/image-api-widget/
+  - title: Practice & Assessment
+    url: /gallery/practice-and-assessment/
+    children:
+      - title: Oral Exam Bot
+        url: /gallery/practice-and-assessment/oral-exam-bot/
+      - title: Exam Makeup Generator
+        url: /gallery/practice-and-assessment/exam-makeup-generator/
+  - title: Source → Teaching Materials
+    url: /gallery/source-to-teaching/
+    children:
+      - title: Paper to Teaching
+        url: /gallery/source-to-teaching/paper-to-teaching/
+      - title: Class Summarizer
+        url: /gallery/source-to-teaching/class-summarizer/
+      - title: Art History Lecture
+        url: /gallery/source-to-teaching/art-history-lecture/
+      - title: Research Helper
+        url: /gallery/source-to-teaching/research-helper/
+  - title: Reading at Scale
+    url: /gallery/reading-at-scale/
+    children:
+      - title: Smart Text Search — Dylan
+        url: /gallery/reading-at-scale/smart-text-search-dylan/
+      - title: Smart Text Search — Joyce
+        url: /gallery/reading-at-scale/smart-text-search-joyce/
+      - title: Text Analysis — Calvino
+        url: /gallery/reading-at-scale/text-analysis-calvino/
+      - title: Interview Coding
+        url: /gallery/day-4/project-overviews/interview-coding/summary/
+      - title: Texts & Translation
+        url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary/
+  - title: Research & Curriculum
+    url: /gallery/research-and-curriculum/
+    children:
+      - title: Research Paper Site
+        url: /gallery/research-and-curriculum/research-paper-site/
+      - title: Recentering Academics
+        url: /gallery/research-and-curriculum/recentering-academics/
+  - label: Workshop Project Walkthroughs
   - title: Schedule Conflict
     url: /activities/schedule-conflict/
   - title: Makeup Exams
     url: /activities/makeup-exams/
-  - title: Research Helper
+  - title: Research Helper (small)
     url: /activities/research-helper/
   - title: How to Build an MCP
     url: /activities/how-to-build-an-mcp/
-
-gallery:
-  - title: Overview
-    url: /gallery/
-  - title: Becca's Interactives
-    url: /gallery/day-4/becca-interactives/
-  - title: Project Overviews
-    url: /gallery/day-4/project-overviews/
-    children:
-      - title: Interview Coding
-        url: /gallery/day-4/project-overviews/interview-coding/summary/
-        children:
-          - title: Summary
-            url: /gallery/day-4/project-overviews/interview-coding/summary/
-          - title: Tradition
-            url: /gallery/day-4/project-overviews/interview-coding/tradition/
-          - title: Affordance
-            url: /gallery/day-4/project-overviews/interview-coding/affordance/
-          - title: Walkthrough
-            url: /gallery/day-4/project-overviews/interview-coding/walkthrough/
-      - title: Physics Interactives
-        url: /gallery/day-4/project-overviews/physics-interactives/summary/
-        children:
-          - title: Summary
-            url: /gallery/day-4/project-overviews/physics-interactives/summary/
-          - title: Tradition
-            url: /gallery/day-4/project-overviews/physics-interactives/tradition/
-          - title: Affordance
-            url: /gallery/day-4/project-overviews/physics-interactives/affordance/
-      - title: Texts & Translation
-        url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary/
-        children:
-          - title: Summary
-            url: /gallery/day-4/project-overviews/texts-and-translation-v0/summary/
-          - title: Tradition
-            url: /gallery/day-4/project-overviews/texts-and-translation-v0/tradition/
-          - title: Affordance
-            url: /gallery/day-4/project-overviews/texts-and-translation-v0/affordance/

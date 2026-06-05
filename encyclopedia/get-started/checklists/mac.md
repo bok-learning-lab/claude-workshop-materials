@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Mac Setup Checklist
-section: encyclopedia
+section: get-started
 ---
 
 # Claude Code Setup Checklist — macOS

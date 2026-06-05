@@ -4,13 +4,9 @@ title: Encyclopedia
 section: encyclopedia
 ---
 
-# AI Encyclopedia
+# Encyclopedia
 
-<div class="page-lead">Reference materials for the workshop. Organized like documentation — start with setup, then dip into terms and cheatsheets as you need them.</div>
-
-## [Get Started]({{ site.baseurl }}/encyclopedia/get-started/)
-
-Four setup guides covering Claude.ai, Claude Code on Mac, Claude Code on Windows, and the Cowork environment. If you're in the workshop, start here before anything else.
+<div class="page-lead">The reference layer of the workshop. Plain-language glossary entries, one-screen cheatsheets, and two tiers of documentation. Setup guides have moved to their own section — see <a href="{{ site.baseurl }}/encyclopedia/get-started/">Get Started</a> if you haven't activated your Harvard Edu account or installed Claude Code yet.</div>
 
 ## [Glossary]({{ site.baseurl }}/encyclopedia/glossary/)
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting Started with Claude Code
-section: encyclopedia
+section: get-started
 ---
 
 # Getting Started with Claude Code

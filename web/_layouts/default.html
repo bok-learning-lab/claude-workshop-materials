@@ -13,12 +13,12 @@
   <a class="site-title" href="{{ site.baseurl }}/">Claude <span>Workshop</span></a>
   <nav>
     <ul class="top-nav">
+      <li><a href="{{ site.baseurl }}/encyclopedia/get-started/"
+             {% if page.section == 'get-started' %}class="active"{% endif %}>Get Started</a></li>
       <li><a href="{{ site.baseurl }}/encyclopedia/"
              {% if page.section == 'encyclopedia' %}class="active"{% endif %}>Encyclopedia</a></li>
       <li><a href="{{ site.baseurl }}/activities/"
-             {% if page.section == 'activities' %}class="active"{% endif %}>Activities &amp; Moves</a></li>
-      <li><a href="{{ site.baseurl }}/gallery/"
-             {% if page.section == 'gallery' %}class="active"{% endif %}>Project Gallery</a></li>
+             {% if page.section == 'activities' %}class="active"{% endif %}>Activities &amp; Examples</a></li>
     </ul>
   </nav>
 </header>

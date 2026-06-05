@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Windows Setup (Claude Code)
-section: encyclopedia
+section: get-started
 ---
 
 # Claude Code Setup (Windows)

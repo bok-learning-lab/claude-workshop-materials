@@ -11,32 +11,24 @@ An ongoing faculty workshop on using Claude for teaching, course development, an
 
 ---
 
-<a class="cta-banner" href="{{ site.baseurl }}/encyclopedia/get-started/">
-  <span class="cta-banner-label">Start here</span>
-  <span class="cta-banner-title">Get Started →</span>
-  <span class="cta-banner-sub">Install Claude Code, set up your environment, and move beyond the browser.</span>
-</a>
-
----
-
 <div class="section-cards">
 
-<a class="card" href="{{ site.baseurl }}/encyclopedia/">
+<a class="card" href="{{ site.baseurl }}/encyclopedia/get-started/">
   <div class="card-num">Section 1</div>
-  <h3>AI Encyclopedia</h3>
-  <p>New to AI tools? Start here. Setup guides, glossary, cheatsheets, and documentation — everything you need before your first session.</p>
+  <h3>Get Started</h3>
+  <p>Activate your Harvard Edu Claude account, install Claude Code on Mac or Windows, set up the Cowork environment, and move beyond the browser. Start here on your first day.</p>
+</a>
+
+<a class="card" href="{{ site.baseurl }}/encyclopedia/">
+  <div class="card-num">Section 2</div>
+  <h3>Encyclopedia</h3>
+  <p>The reference layer. A plain-language glossary of every key term (LLM, token, context window, sub-agents, prompt injection, RAG), one-screen cheatsheets, and two tiers of documentation — workshop overview guides and the official Claude Code reference.</p>
 </a>
 
 <a class="card" href="{{ site.baseurl }}/activities/">
-  <div class="card-num">Section 2</div>
-  <h3>Moves &amp; Activities</h3>
-  <p>Want to build intuitions actively? Short exercises for Claude.ai or Claude Code — see how tokenization works, watch arithmetic fail, watch grounding rescue a Shakespeare reading, turn a folder of recipe-card photos into a structured site.</p>
-</a>
-
-<a class="card" href="{{ site.baseurl }}/gallery/">
   <div class="card-num">Section 3</div>
-  <h3>Project Gallery</h3>
-  <p>Looking for project inspiration? Twenty worked examples grouped into six pattern families — interactive simulations, course websites, practice &amp; assessment tools, source-to-teaching pipelines, reading at scale, and research &amp; curriculum synthesis. Each one a real faculty build with prompts, inputs, and outputs you can lift.</p>
+  <h3>Activities &amp; Examples</h3>
+  <p>The hands-on layer. Five short exercises that make how Claude works visible — tokenization, arithmetic failure, grounded close reading, code-driven data viz, messy-inputs-to-structured-output. Plus a gallery of real faculty builds grouped by pattern: interactive simulations, course websites, practice &amp; assessment tools, source-to-teaching pipelines, reading at scale, and research &amp; curriculum synthesis.</p>
 </a>
 
 </div>

@@ -20,6 +20,11 @@ defaults:
       layout: default
       section: encyclopedia
   - scope:
+      path: "encyclopedia/get-started"
+    values:
+      layout: default
+      section: get-started
+  - scope:
       path: "activities"
     values:
       layout: default
@@ -28,7 +33,7 @@ defaults:
       path: "gallery"
     values:
       layout: default
-      section: gallery
+      section: activities
 
 exclude:
   - ".claude"
