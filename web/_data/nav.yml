@@ -1,11 +1,16 @@
 get-started:
   - title: Overview
     url: /encyclopedia/get-started/
+  - label: Claude.ai (Web Browser)
   - title: Claude.ai Setup
     url: /encyclopedia/get-started/claude-ai-setup/
+  - label: Claude Desktop App
   - title: Cowork Setup
     url: /encyclopedia/get-started/claude-cowork-setup/
-  - title: Claude Code
+  - title: Claude Code from the Desktop App (Windows)
+    url: /encyclopedia/get-started/claude-code-from-desktop-app-windows/
+  - label: Claude Code (IDE / Terminal)
+  - title: Claude Code — Overview
     url: /encyclopedia/get-started/claude-code-setup/
     children:
       - title: Mac Setup
