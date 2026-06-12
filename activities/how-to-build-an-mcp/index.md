@@ -12,7 +12,7 @@ using Claude Code and the `/mcp-builder` skill. The target was the
 through the actual path that produced the server in this folder — you can use
 it as a template for wrapping any HTTP API.
 
-> **Heads-up for Harvard Edu accounts:** on a Harvard-managed account — especially Claude Code via the desktop app, where most workshop attendees work — MCP servers currently **won't load at all**, and the install and `.env` steps below are blocked too. That's not this walkthrough being broken; it's Harvard IT's managed permissions, and they shift as the service matures. The concepts here still transfer. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)** for the current state — we update it as we learn more.
+> **Heads-up for Harvard Edu accounts:** on a Harvard-managed account — especially Claude Code via the desktop app, where most workshop attendees work — MCP servers currently **won't load at all**, and the install and `.env` steps below are blocked too. That's not this walkthrough being broken; it's HUIT's managed permissions, and they shift as the service matures. The concepts here still transfer. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)** for the current state — we update it as we learn more.
 
 ---
 

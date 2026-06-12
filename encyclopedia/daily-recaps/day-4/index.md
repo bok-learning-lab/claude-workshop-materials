@@ -8,7 +8,7 @@ section: encyclopedia
 
 <div class="page-lead">The closing session. Faculty connect Claude Code to external services through the Model Context Protocol — Harvard Art Museums, arXiv, Replicate — and meet the security implications head-on. The day's central tension is responsibility: once Claude can take actions on your behalf, "yes yes yes" through permission prompts becomes a real attack surface. Two MCP handouts plus a security-concerns handout faculty are encouraged to keep next to their first MCP install — joined, after the June 8–11 run, by the UI/API/MCP conceptual frame and the closing "what you can make" gallery handout.</div>
 
-> **Heads-up for Harvard Edu accounts:** Harvard IT's managed permissions for Claude Code (especially via the desktop app) currently block MCP servers from loading at all, along with web fetching, installs, and `.env` reads. If a Day 4 example fails for you, it's the policy, not the example — and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)** for the current list; we update it as we learn more.
+> **Heads-up for Harvard Edu accounts:** HUIT's managed permissions for Claude Code (especially via the desktop app) currently block MCP servers from loading at all, along with web fetching, installs, and `.env` reads. If a Day 4 example fails for you, it's the policy, not the example — and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)** for the current list; we update it as we learn more.
 
 ## Handouts
 

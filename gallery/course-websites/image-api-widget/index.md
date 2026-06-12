@@ -14,7 +14,7 @@ section: activities
 >
 > **Workshop example:** [`claude-code-20260604/examples/image-API-widget/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/image-API-widget) — the Kluge rules input, the generate-operation doc, and the illustrative session outputs as a portable folder.
 
-> **Heads-up for Harvard Edu accounts:** the live demo above works in any browser. But *rebuilding or running* an app like this through Claude Code on a Harvard-managed account currently hits Harvard IT's managed permissions — installs, `npm run build`, `.env` reads (where the API tokens live), and direct API calls are blocked, especially via the desktop app. That's policy, not a broken example, and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)**.
+> **Heads-up for Harvard Edu accounts:** the live demo above works in any browser. But *rebuilding or running* an app like this through Claude Code on a Harvard-managed account currently hits HUIT's managed permissions — installs, `npm run build`, `.env` reads (where the API tokens live), and direct API calls are blocked, especially via the desktop app. That's policy, not a broken example, and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)**.
 
 ## What the site does
 

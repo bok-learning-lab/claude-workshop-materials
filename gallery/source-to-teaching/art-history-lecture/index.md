@@ -14,7 +14,7 @@ A small Claude Code project that turns a lecturer's plain-text notes into a sing
 >
 > **Source repo:** [`claude-code-20260604/examples/simple-art-history-lecture/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/simple-art-history-lecture)
 
-> **Heads-up for Harvard Edu accounts:** reproducing this on a Harvard-managed account currently won't work — Harvard IT's managed permissions block MCP servers from loading (along with installs and `.env` reads), especially in Claude Code via the desktop app. The finished output page above still works in any browser; only the *build* path is blocked, and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)**.
+> **Heads-up for Harvard Edu accounts:** reproducing this on a Harvard-managed account currently won't work — HUIT's managed permissions block MCP servers from loading (along with installs and `.env` reads), especially in Claude Code via the desktop app. The finished output page above still works in any browser; only the *build* path is blocked, and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)**.
 
 ---
 
