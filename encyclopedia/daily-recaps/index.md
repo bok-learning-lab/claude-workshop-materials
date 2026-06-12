@@ -22,12 +22,12 @@ The day that lays the foundation. Installing Claude Code, opening a project, the
 
 ## [Day 3 — Skills, prompts, and the workshop's own pipeline](day-3/)
 
-Skills as reusable prompts. The class-summarizer demo (the very pipeline producing these takeaways docs). Paper-to-teaching workflows, signature pedagogy, SMART text search. Handouts: claude-code commands and concepts. Plus Day 3 Key Takeaways.
+Skills as reusable prompts. The class-summarizer demo (the very pipeline producing these takeaways docs). Paper-to-teaching workflows, signature pedagogy, SMART text search. Handouts: claude-code commands and concepts, and the "Skills: a field guide" anatomy handout. Plus Day 3 Top Tips and Key Takeaways.
 
 ## [Day 4 — MCPs, security, and what's next](day-4/)
 
-Connecting Claude to external systems (Harvard Art Museums, arXiv, Replicate), prompt injection as a real threat model, the responsibility of write access. Handouts: a faculty-facing MCP overview, a longer MCP deep-dive, and a security-concerns handout faculty should keep next to their first MCP install.
+Connecting Claude to external systems (Harvard Art Museums, arXiv, Replicate), prompt injection as a real threat model, the responsibility of write access. Handouts: a faculty-facing MCP overview, a longer MCP deep-dive, a security-concerns handout faculty should keep next to their first MCP install, the UI/API/MCP conceptual frame, and the closing "what you can make" gallery.
 
 ---
 
-*All handouts and takeaways drawn from the [`claude-code-20260604`](https://github.com/bok-learning-lab/claude-code-20260604) workshop repo, June 2026 cohort.*
+*Handouts and takeaways drawn from the workshop repos of the two June 2026 runs: [`claude-code-20260604`](https://github.com/bok-learning-lab/claude-code-20260604) (June 1–4 cohort) and [`claude-code-20260610`](https://github.com/bok-learning-lab/claude-code-20260610) / [`claude-code-20260611`](https://github.com/bok-learning-lab/claude-code-20260611) (June 8–11 cohort).*

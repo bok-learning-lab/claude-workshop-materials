@@ -19,6 +19,8 @@ A worked example of turning a long session transcript into a **Top 10 Key Takeaw
 > All three are also surfaced in the [Daily Recaps]({{ site.baseurl }}/encyclopedia/daily-recaps/) section, alongside the corresponding workshop handouts.
 >
 > **Source repo:** [`claude-code-20260604/examples/class-summarizer/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/class-summarizer)
+>
+> **Where it went next:** in the June 8–11 cohort this example grew into **class-processor** — same transcript → Top-10 → house-style-handout path, now organized by input modality (transcripts, board work read with vision, audio, papers) with the house-style renderer as a project-scoped skill. See [`claude-code-20260610/examples/class-processor/`](https://github.com/bok-learning-lab/claude-code-20260610/tree/main/examples/class-processor).
 
 ---
 

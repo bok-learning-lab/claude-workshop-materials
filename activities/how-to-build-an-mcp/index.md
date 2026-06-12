@@ -296,3 +296,15 @@ existing Python client library. It's a worse fit for:
 For everything else — wrapping a public API so an LLM can use it
 fluently — `/mcp-builder` plus a pasted quickstart is the fastest route to a
 working tool.
+
+---
+
+## Working servers to study or clone
+
+If you'd rather start from a finished example than build from scratch, the
+June 8–11 workshop repo ships six self-contained servers and API clients —
+Semantic Scholar paper search, arXiv, Google Gemini vision, Replicate image
+generation, the Harvard Art Museums collection, and a HOLLIS (Harvard
+Library) Primo client — each with its own dependencies and setup notes,
+wired together through a project-scoped `.mcp.json`. See
+[`claude-code-20260611/mcps-apis/`](https://github.com/bok-learning-lab/claude-code-20260611/tree/main/mcps-apis).

@@ -7,7 +7,7 @@ title: Home
 
 **Bok Center for Teaching and Learning · Harvard University**
 
-An ongoing faculty workshop on using Claude for teaching, course development, and research. First taught as a four-day intensive in May 2026; repeated and extended in June 2026; iterated again as faculty bring it back to their own departments.
+An ongoing faculty workshop on using Claude for teaching, course development, and research. First taught as a four-day intensive in May 2026; repeated and extended twice in June 2026 (the weeks of June 1 and June 8); iterated again as faculty bring it back to their own departments.
 
 ---
 
@@ -35,4 +35,4 @@ An ongoing faculty workshop on using Claude for teaching, course development, an
 
 ---
 
-*This site is itself a repository: [claude-workshop-materials](https://github.com/bok-learning-lab/claude-workshop-materials). Source session repos accumulate as the workshop runs — most recently the June 2026 cohort: [claude-for-faculty-20260601](https://github.com/bok-learning-lab/claude-for-faculty-20260601) · [claude-code-20260602](https://github.com/bok-learning-lab/claude-code-20260602) · [claude-code-20260603](https://github.com/bok-learning-lab/claude-code-20260603) · [claude-code-20260604](https://github.com/bok-learning-lab/claude-code-20260604) — and the May 2026 sequence: [claude-code-20260519](https://github.com/bok-learning-lab/claude-code-20260519) · [claude-code-20260520](https://github.com/bok-learning-lab/claude-code-20260520) · [claude-code-20260521](https://github.com/bok-learning-lab/claude-code-20260521).*
+*This site is itself a repository: [claude-workshop-materials](https://github.com/bok-learning-lab/claude-workshop-materials). Source session repos accumulate as the workshop runs — most recently the June 8–11 cohort: [claude-for-faculty-20260608](https://github.com/bok-learning-lab/claude-for-faculty-20260608) · [claude-code-20260609](https://github.com/bok-learning-lab/claude-code-20260609) · [claude-code-20260610](https://github.com/bok-learning-lab/claude-code-20260610) · [claude-code-20260611](https://github.com/bok-learning-lab/claude-code-20260611) — the June 1–4 cohort: [claude-for-faculty-20260601](https://github.com/bok-learning-lab/claude-for-faculty-20260601) · [claude-code-20260602](https://github.com/bok-learning-lab/claude-code-20260602) · [claude-code-20260603](https://github.com/bok-learning-lab/claude-code-20260603) · [claude-code-20260604](https://github.com/bok-learning-lab/claude-code-20260604) — and the May 2026 sequence: [claude-code-20260519](https://github.com/bok-learning-lab/claude-code-20260519) · [claude-code-20260520](https://github.com/bok-learning-lab/claude-code-20260520) · [claude-code-20260521](https://github.com/bok-learning-lab/claude-code-20260521).*

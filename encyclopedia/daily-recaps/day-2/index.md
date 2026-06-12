@@ -10,11 +10,19 @@ section: encyclopedia
 
 ## Key Takeaways
 
-The Top 10 distillation produced by the class-summarizer pipeline.
+The Top 10 distillation produced by the class-summarizer pipeline. The workshop has now run twice, and each run produced its own — same pipeline, different room.
+
+**From the June 1–4 run:**
 
 - **[View as styled HTML](day-2-key-takeaways.html){:target="_blank"}** — house-style reading layout, opens in a new tab.
 - **[Download PDF](day-2-key-takeaways.pdf)** — for printing.
 - [Source markdown](day-2-key-takeaways.md)
+
+**From the June 8–11 run** (source: [`claude-code-20260610`](https://github.com/bok-learning-lab/claude-code-20260610/tree/main/resources/day-3-handouts/day-2-key-takeaways)):
+
+- **[View as styled HTML](day-2-key-takeaways-20260609.html){:target="_blank"}** — Day 2, 9 June 2026.
+- **[Download PDF](day-2-key-takeaways-20260609.pdf)** — for printing.
+- [Source markdown](day-2-key-takeaways-20260609.md)
 
 ## Handouts
 

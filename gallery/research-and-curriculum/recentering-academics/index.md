@@ -13,6 +13,8 @@ Built around the Bok Center's *Recentering Academics* initiative: centering stud
 The project ships two operations (one for a whole concentration, one for a single course syllabus) and worked examples for both, using Linguistics as the demo target. Generation discipline: **every recommendation must trace back to a specific source principle and a specific feature of the target** — generic best-practice boilerplate is the failure mode.
 
 > **Source repo:** [`claude-code-20260604/examples/recentering-academics/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/recentering-academics) — the operations, the three source layers, and the worked Linguistics outputs.
+>
+> **Where it went next:** in the June 8–11 cohort this example was folded into **course-preparation** as its first fully worked path, joined by a `/syllabus-redesign` skill (worked on the CS 20 syllabus) and a lecture-recordings → lecture-notes pipeline. See [`claude-code-20260610/examples/course-preparation/`](https://github.com/bok-learning-lab/claude-code-20260610/tree/main/examples/course-preparation).
 
 ## What it is
 
