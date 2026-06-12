@@ -18,6 +18,8 @@ A worked example of **deterministic textual analysis** + **2D semantic-embedding
 >
 > **The unwritten sixth memo.** Calvino died in September 1985 while drafting the lecture on **Consistency**. The page treats this as a pedagogical opportunity — the student writes the sixth memo themselves, and the same measurements that characterize Calvino's five extant lectures characterize the student's draft, side by side.
 
+> **Heads-up for Harvard Edu accounts:** the live page above works in any browser. But *rebuilding or running* an app like this through Claude Code on a Harvard-managed account currently hits Harvard IT's managed permissions — installs, `npm run build`, `.env` reads, and the embedding-API calls are blocked, especially via the desktop app. That's policy, not a broken example, and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)**.
+
 ## What it is
 
 A single page (a Vite + React app, despite the rest of the repo being Next.js) that does three distinct things in parallel:

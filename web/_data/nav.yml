@@ -24,6 +24,8 @@ get-started:
         url: /encyclopedia/get-started/checklists/mac/
       - title: Windows Checklist
         url: /encyclopedia/get-started/checklists/windows/
+  - title: Harvard Managed Settings
+    url: /encyclopedia/get-started/harvard-managed-settings/
 
 encyclopedia:
   - title: Daily Recaps

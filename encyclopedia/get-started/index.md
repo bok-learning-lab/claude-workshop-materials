@@ -37,3 +37,5 @@ Claude Code runs in **VS Code** and the terminal. You see every file it reads, e
 ---
 
 > **Not sure which to start with?** Use Claude.ai first — it needs no installation. Once you're comfortable with prompting and have run through the activities, come back for the desktop app and then Claude Code.
+
+> **Something not working that should?** Harvard Edu accounts run under managed permissions that currently block some capabilities (MCP servers, web fetching, installs, `.env` reads) — and the settings change over time. See **[Harvard Managed Settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)** for the current list before assuming an example is broken.

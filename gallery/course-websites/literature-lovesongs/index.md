@@ -17,6 +17,8 @@ Drawn from the pre-workshop site for **CompLit 126x: *Love Songs at the Learning
 >
 > **Workshop example:** [`claude-code-20260604/examples/literature-course-concept-website/`](https://github.com/bok-learning-lab/claude-code-20260604/tree/main/examples/literature-course-concept-website) — the three-demo arc operations (analyze prompt, generate-from-scores prompt, stuffing-the-prompt, voice-cloning step) and the illustrative outputs as a portable folder.
 
+> **Heads-up for Harvard Edu accounts:** the live site above works in any browser. But *rebuilding or running* an app like this through Claude Code on a Harvard-managed account currently hits Harvard IT's managed permissions — installs, `npm run build`, `.env` reads, and direct API calls are blocked, especially via the desktop app. That's policy, not a broken example, and the policy shifts as the service matures. See **[Harvard managed settings]({{ site.baseurl }}/encyclopedia/get-started/harvard-managed-settings/)**.
+
 ## What the site does
 
 A single Next.js app with three top-level demo routes plus a documentation layer. The three demos form a single pedagogical sequence: students work through them in order, and the reading order is fixed.
